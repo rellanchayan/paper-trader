@@ -1,0 +1,29 @@
+# secrets
+.env
+.env.local
+*.key
+*.pem
+
+# state files (account-specific; not for sharing)
+state/portfolio.json
+state/portfolio_history.jsonl
+state/pending_trades/
+state/completed_trades/
+
+# logs
+logs/
+
+# kill switch — never commit this either way
+.HALT_TRADING
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# OS
+.DS_Store

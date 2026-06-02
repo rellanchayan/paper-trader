@@ -1,0 +1,174 @@
+{
+  "timestamp_utc": "2026-06-02T16:45:29.891464+00:00",
+  "mode": "execute",
+  "market_open": true,
+  "blocked": null,
+  "equity": 99909.84,
+  "cash": 96540.25,
+  "held": [
+    "MA"
+  ],
+  "spy_ret20": 0.0575,
+  "planned": [
+    {
+      "ticker": "MA",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "MA sell: price below 50d average or paper loss exceeded 8%.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 481.35,
+      "qty": 7
+    },
+    {
+      "ticker": "AVGO",
+      "action": "BUY",
+      "score": 0.47932285261528196,
+      "reason": "AVGO is in an uptrend: close above 50d and 200d averages; 20d return 16.0% vs SPY 5.7%.",
+      "risk": "Momentum can reverse; limit order may fill before a pullback.",
+      "limit_price": 483.88,
+      "qty": 20
+    },
+    {
+      "ticker": "NVDA",
+      "action": "BUY",
+      "score": 0.24242177049257885,
+      "reason": "NVDA is in an uptrend: close above 50d and 200d averages; 20d return 13.4% vs SPY 5.7%.",
+      "risk": "Momentum can reverse; limit order may fill before a pullback.",
+      "limit_price": 225.09,
+      "qty": 44
+    }
+  ],
+  "submitted": [
+    {
+      "trade_id": "T-20260602-007",
+      "alpaca_order_id": "d97dc88a-1ada-4126-906f-ba4284851a73",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-02T16:45:28.532445+00:00",
+      "saved_to": "state/completed_trades/T-20260602-007.json"
+    },
+    {
+      "trade_id": "T-20260602-008",
+      "alpaca_order_id": "b285c729-e988-4dc4-a07b-d6015ea93e62",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-02T16:45:29.115479+00:00",
+      "saved_to": "state/completed_trades/T-20260602-008.json"
+    },
+    {
+      "trade_id": "T-20260602-009",
+      "alpaca_order_id": "fbf84951-e376-4da0-851d-e44f6731ad2a",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-02T16:45:29.829831+00:00",
+      "saved_to": "state/completed_trades/T-20260602-009.json"
+    }
+  ],
+  "diagnostics": [
+    {
+      "ticker": "AAPL",
+      "close": 312.05,
+      "sma20": 300.6,
+      "sma50": 277.7,
+      "sma200": 263.99,
+      "ret20": 0.1271,
+      "ret5": 0.0121
+    },
+    {
+      "ticker": "AMZN",
+      "close": 258.61,
+      "sma20": 267.7,
+      "sma50": 248.78,
+      "sma200": 231.84,
+      "ret20": -0.0496,
+      "ret5": -0.0251
+    },
+    {
+      "ticker": "AVGO",
+      "close": 483.06,
+      "sma20": 428.12,
+      "sma50": 391.93,
+      "sma200": 353.91,
+      "ret20": 0.1598,
+      "ret5": 0.1445
+    },
+    {
+      "ticker": "COST",
+      "close": 952.05,
+      "sma20": 1017.89,
+      "sma50": 1006.43,
+      "sma200": 957.12,
+      "ret20": -0.0603,
+      "ret5": -0.0505
+    },
+    {
+      "ticker": "GOOGL",
+      "close": 366.85,
+      "sma20": 389.84,
+      "sma50": 350.28,
+      "sma200": 301.62,
+      "ret20": -0.0427,
+      "ret5": -0.0567
+    },
+    {
+      "ticker": "JPM",
+      "close": 300.93,
+      "sma20": 302.15,
+      "sma50": 303.28,
+      "sma200": 305.83,
+      "ret20": -0.022,
+      "ret5": -0.0192
+    },
+    {
+      "ticker": "LLY",
+      "close": 1067.16,
+      "sma20": 1027.64,
+      "sma50": 961.1,
+      "sma200": 941.44,
+      "ret20": 0.1022,
+      "ret5": 0.0004
+    },
+    {
+      "ticker": "META",
+      "close": 607.22,
+      "sma20": 612.74,
+      "sma50": 618.69,
+      "sma200": 664.79,
+      "ret20": -0.0051,
+      "ret5": -0.0084
+    },
+    {
+      "ticker": "MSFT",
+      "close": 442.85,
+      "sma20": 421.3,
+      "sma50": 405.45,
+      "sma200": 457.76,
+      "ret20": 0.0706,
+      "ret5": 0.0643
+    },
+    {
+      "ticker": "NVDA",
+      "close": 225.1,
+      "sma20": 218.09,
+      "sma50": 201.31,
+      "sma200": 188.08,
+      "ret20": 0.1337,
+      "ret5": 0.048
+    },
+    {
+      "ticker": "QQQ",
+      "close": 744.67,
+      "sma20": 716.0,
+      "sma50": 659.14,
+      "sma200": 619.47,
+      "ret20": 0.1069,
+      "ret5": 0.0199
+    },
+    {
+      "ticker": "SPY",
+      "close": 759.35,
+      "sma20": 743.26,
+      "sma50": 707.79,
+      "sma200": 682.29,
+      "ret20": 0.0575,
+      "ret5": 0.0118
+    }
+  ]
+}

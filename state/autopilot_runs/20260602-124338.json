@@ -1,0 +1,165 @@
+{
+  "timestamp_utc": "2026-06-02T16:43:38.353761+00:00",
+  "mode": "execute",
+  "market_open": true,
+  "blocked": null,
+  "equity": 99911.1,
+  "cash": 96540.25,
+  "held": [
+    "MA"
+  ],
+  "spy_ret20": 0.0576,
+  "planned": [
+    {
+      "ticker": "MA",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "MA sell: price below 50d average or paper loss exceeded 8%.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 480.0,
+      "qty": 7
+    },
+    {
+      "ticker": "AVGO",
+      "action": "BUY",
+      "score": 0.47966089937816925,
+      "reason": "AVGO is in an uptrend: close above 50d and 200d averages; 20d return 16.0% vs SPY 5.8%.",
+      "risk": "Momentum can reverse; limit order may fill before a pullback.",
+      "limit_price": 483.25,
+      "qty": 20
+    },
+    {
+      "ticker": "NVDA",
+      "action": "BUY",
+      "score": 0.2401420002841137,
+      "reason": "NVDA is in an uptrend: close above 50d and 200d averages; 20d return 13.3% vs SPY 5.8%.",
+      "risk": "Momentum can reverse; limit order may fill before a pullback.",
+      "limit_price": 225.13,
+      "qty": 44
+    }
+  ],
+  "submitted": [
+    {
+      "trade": "/Users/chayanrellan/Desktop/Trading/state/pending_trades/T-20260602-001.json",
+      "error": "Constitution check: FAIL \u2014 T-20260602-001.json\n  [PASS] halt_switch\n  [FAIL] live_mode_forbidden: ALPACA_ENDPOINT must be paper-api.alpaca.markets, got: ''\n  [PASS] forbidden_instrument\n  [PASS] side\n  [PASS] order_type\n  [PASS] position_size: sell \u2014 not applicable\n  [PASS] cash_available: sell \u2014 not applicable\n  [PASS] frequency: day 0/20, week 0/50\n  [PASS] trade_reason"
+    },
+    {
+      "trade": "/Users/chayanrellan/Desktop/Trading/state/pending_trades/T-20260602-002.json",
+      "error": "Constitution check: FAIL \u2014 T-20260602-002.json\n  [PASS] halt_switch\n  [FAIL] live_mode_forbidden: ALPACA_ENDPOINT must be paper-api.alpaca.markets, got: ''\n  [PASS] forbidden_instrument\n  [PASS] side\n  [PASS] order_type\n  [PASS] position_size: post-trade position 9.7%\n  [PASS] cash_available: trade needs $9665.00, cash is $96540.25\n  [PASS] frequency: day 0/20, week 0/50\n  [PASS] trade_reason"
+    },
+    {
+      "trade": "/Users/chayanrellan/Desktop/Trading/state/pending_trades/T-20260602-003.json",
+      "error": "Constitution check: FAIL \u2014 T-20260602-003.json\n  [PASS] halt_switch\n  [FAIL] live_mode_forbidden: ALPACA_ENDPOINT must be paper-api.alpaca.markets, got: ''\n  [PASS] forbidden_instrument\n  [PASS] side\n  [PASS] order_type\n  [PASS] position_size: post-trade position 9.9%\n  [PASS] cash_available: trade needs $9905.72, cash is $96540.25\n  [PASS] frequency: day 0/20, week 0/50\n  [PASS] trade_reason"
+    }
+  ],
+  "diagnostics": [
+    {
+      "ticker": "AAPL",
+      "close": 312.19,
+      "sma20": 300.61,
+      "sma50": 277.7,
+      "sma200": 263.99,
+      "ret20": 0.1276,
+      "ret5": 0.0125
+    },
+    {
+      "ticker": "AMZN",
+      "close": 258.86,
+      "sma20": 267.71,
+      "sma50": 248.79,
+      "sma200": 231.84,
+      "ret20": -0.0487,
+      "ret5": -0.0242
+    },
+    {
+      "ticker": "AVGO",
+      "close": 483.12,
+      "sma20": 428.12,
+      "sma50": 391.93,
+      "sma200": 353.91,
+      "ret20": 0.1599,
+      "ret5": 0.1447
+    },
+    {
+      "ticker": "COST",
+      "close": 952.05,
+      "sma20": 1017.89,
+      "sma50": 1006.43,
+      "sma200": 957.12,
+      "ret20": -0.0603,
+      "ret5": -0.0505
+    },
+    {
+      "ticker": "GOOGL",
+      "close": 367.09,
+      "sma20": 389.85,
+      "sma50": 350.29,
+      "sma200": 301.62,
+      "ret20": -0.0421,
+      "ret5": -0.0561
+    },
+    {
+      "ticker": "JPM",
+      "close": 300.64,
+      "sma20": 302.13,
+      "sma50": 303.27,
+      "sma200": 305.83,
+      "ret20": -0.023,
+      "ret5": -0.0201
+    },
+    {
+      "ticker": "LLY",
+      "close": 1066.58,
+      "sma20": 1027.61,
+      "sma50": 961.09,
+      "sma200": 941.43,
+      "ret20": 0.1016,
+      "ret5": -0.0001
+    },
+    {
+      "ticker": "META",
+      "close": 607.85,
+      "sma20": 612.77,
+      "sma50": 618.71,
+      "sma200": 664.8,
+      "ret20": -0.004,
+      "ret5": -0.0074
+    },
+    {
+      "ticker": "MSFT",
+      "close": 443.27,
+      "sma20": 421.32,
+      "sma50": 405.46,
+      "sma200": 457.76,
+      "ret20": 0.0716,
+      "ret5": 0.0653
+    },
+    {
+      "ticker": "NVDA",
+      "close": 224.95,
+      "sma20": 218.09,
+      "sma50": 201.3,
+      "sma200": 188.08,
+      "ret20": 0.1329,
+      "ret5": 0.0473
+    },
+    {
+      "ticker": "QQQ",
+      "close": 744.87,
+      "sma20": 716.01,
+      "sma50": 659.14,
+      "sma200": 619.47,
+      "ret20": 0.1072,
+      "ret5": 0.0202
+    },
+    {
+      "ticker": "SPY",
+      "close": 759.42,
+      "sma20": 743.26,
+      "sma50": 707.79,
+      "sma200": 682.29,
+      "ret20": 0.0576,
+      "ret5": 0.0119
+    }
+  ]
+}

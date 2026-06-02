@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Edit(state/**)",
+      "WebSearch",
+      "WebFetch",
+      "Bash(bash code/run_daily.sh *)",
+      "Bash(python3 -m pip install -r requirements.txt)",
+      "Bash(python3 code/autopilot.py *)",
+      "Bash(python3 code/alpaca_client.py --healthcheck)",
+      "Bash(python3 code/alpaca_client.py --positions)",
+      "Bash(python3 code/alpaca_client.py --quote *)",
+      "Bash(python3 code/alpaca_client.py --bars *)",
+      "Bash(python3 code/alpaca_client.py --is-open)",
+      "Bash(python3 code/alpaca_client.py --order-status *)",
+      "Bash(python3 code/alpaca_client.py --submit *)",
+      "Bash(python3 code/constitution.py --check *)",
+      "Bash(grep *)",
+      "Bash(ls *)",
+      "Bash(cat state/*)",
+      "Bash(mkdir -p state/*)"
+    ],
+    "ask": [
+      "Bash(python3 code/alpaca_client.py --cancel-all)",
+      "Edit(CLAUDE.md)",
+      "Edit(.env)",
+      "Write(.HALT_TRADING)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(curl * paper-api*)",
+      "WebFetch(domain:live-api.alpaca.markets)"
+    ]
+  }
+}
