@@ -43,7 +43,9 @@ Use Claude Code `/schedule` for managed cloud execution.
 Suggested prompt:
 
 ```text
-/schedule every weekday at 10:00am New York time, in the Trading repo, run /daily-paper-trader. This is paper trading only. Use the repository environment secrets for Alpaca paper credentials. Do not edit strategy files unless the run fails because a file is missing.
+/schedule every weekday at 10:00am New York time, in the Trading repo, run /daily-paper-trader. This is paper trading only. Alpaca paper credentials are supplied as environment variables on the routine's cloud environment. Do not edit strategy files unless the run fails because a file is missing.
 ```
+
+Set `ALPACA_API_KEY`, `ALPACA_SECRET_KEY`, and `ALPACA_ENDPOINT` as **environment variables on the routine's cloud environment** (Edit routine → click the environment → Update cloud environment → Environment variables). Routines do **not** read GitHub repository secrets. See README "Step 4" for click-by-click steps.
 
 Managed routines are preferred because they run in Claude Code cloud infrastructure and do not require the laptop to stay awake.

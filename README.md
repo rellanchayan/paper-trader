@@ -47,20 +47,24 @@ This downloads the complete trading bot into a new folder.
    - The word "PAPER" should be visible in your key name
    - This is fake money only — that's important!
 
-### Step 4: Set Up GitHub Secrets
+### Step 4: Set Up Your Routine's Environment Variables
 
-Your bot runs in the cloud (so your computer doesn't need to stay on). You need to tell GitHub your Alpaca keys:
+Your bot runs in the cloud as a **Claude Code routine** (so your computer doesn't need to stay on). The routine clones this repo into a fresh sandbox and runs with the **environment variables you set on its cloud environment** — it does **not** read GitHub repository secrets. Put your Alpaca keys there:
 
-1. Go to https://github.com/rellanchayan/paper-trader
-2. Click **Settings** → **Secrets and variables** → **Agents**
-3. Click **New repository secret** and add:
-   - **Name:** `ALPACA_API_KEY` → **Value:** (paste your API key)
-   - **Name:** `ALPACA_SECRET_KEY` → **Value:** (paste your secret key)
-   - **Name:** `ALPACA_ENDPOINT` → **Value:** `https://paper-api.alpaca.markets`
+1. Go to **https://claude.ai/code/routines** and open your paper-trader routine.
+2. Click the **pencil** icon (**Edit routine**).
+3. Below the **Instructions** box, click the **cloud icon** showing the environment name (e.g. **Default**), hover over the environment in the list, and click the **settings gear** to open **Update cloud environment**.
+4. In the **Environment variables** section, add each of these:
+   - `ALPACA_API_KEY` → (paste your paper API key)
+   - `ALPACA_SECRET_KEY` → (paste your paper secret key)
+   - `ALPACA_ENDPOINT` → `https://paper-api.alpaca.markets`
+   - `LIVE_TRADING_AUTHORIZED` → `false`
+   - `RISK_FREE_RATE` → `0.045`
+5. Click **Save changes**. Values apply on the next run — click **Run now** to test immediately.
 
-4. Add these **Variables** (plain text, not secret):
-   - **Name:** `LIVE_TRADING_AUTHORIZED` → **Value:** `false`
-   - **Name:** `RISK_FREE_RATE` → **Value:** `0.045`
+> These are **paper** credentials (no real money), and `constitution.py` refuses any non-paper endpoint regardless, so storing them on the cloud environment is safe here.
+>
+> **Running locally instead?** Copy `.env.example` to `.env` and put the same values there — `load_dotenv()` reads them at startup. (`.env` is git-ignored and never committed.)
 
 ### Step 5: Start Trading
 
@@ -354,7 +358,7 @@ The bot uses Claude Code routines to run automatically. Check:
 | Orders not filling | Limit price set too low? | Check Alpaca dashboard for order status |
 | Python errors | Requirements installed? | Run `pip install -r requirements.txt` |
 | Settings not working | `.claude/settings.json` correct? | Check paths are relative (not hardcoded) |
-| Credentials rejected | Secrets added to GitHub? | Go to Secrets and Variables, verify they're there |
+| Credentials rejected | Env vars set on the routine? | At claude.ai/code/routines, edit the routine's cloud environment and verify `ALPACA_API_KEY`, `ALPACA_SECRET_KEY`, `ALPACA_ENDPOINT` are set |
 
 ### Reading the Logs
 
@@ -412,7 +416,7 @@ Read `CLAUDE.md` in the folder for the official rules. Quick summary:
 
 1. ✅ Install with `claude add paper-trader`
 2. ✅ Set up Alpaca account and get API keys
-3. ✅ Add secrets to GitHub
+3. ✅ Add Alpaca env vars to your routine's cloud environment
 4. ✅ Run a dry-run to see the strategy
 5. ✅ Let it run automatically (10am ET weekdays)
 6. ✅ Check results in Alpaca and logs folder
