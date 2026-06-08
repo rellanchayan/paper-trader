@@ -1,0 +1,5 @@
+date: 2026-06-08
+status: FAILED
+reason: Alpaca paper API returned unauthorized. Credentials (ALPACA_API_KEY, ALPACA_SECRET_KEY) are set in environment but rejected by paper-api.alpaca.markets.
+trades_submitted: 0
+action_required: Regenerate Alpaca paper API keys and update the routine environment variables.
