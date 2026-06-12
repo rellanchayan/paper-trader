@@ -15,7 +15,7 @@ import math
 import subprocess
 import sys
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -182,7 +182,9 @@ def sell_signal_for_position(pos: dict) -> Signal | None:
     sma50 = sma(closes, 50)
     plpc = float(pos.get("unrealized_plpc") or 0)
     if close < sma50 or plpc <= -0.08:
-        qty = max(1, math.floor(float(pos["qty"])))
+        qty = math.floor(float(pos["qty"]))
+        if qty < 1:
+            return None
         limit_price = get_quote_price(ticker, "SELL", close)
         reason = f"{ticker} sell: price below 50d average or paper loss exceeded 8%."
         risk = "May sell before a rebound."
@@ -190,10 +192,40 @@ def sell_signal_for_position(pos: dict) -> Signal | None:
     return None
 
 
+def recently_sold(days: int = 5) -> set[str]:
+    """Tickers we sold in the last `days` days — skip re-buying them (avoids whipsaw)."""
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+    tickers: set[str] = set()
+    if not COMPLETED.exists():
+        return tickers
+    for path in COMPLETED.glob("*.json"):
+        try:
+            trade = json.loads(path.read_text())
+            submitted = trade.get("submitted_at_utc")
+            if (
+                str(trade.get("side", "")).upper() == "SELL"
+                and submitted
+                and datetime.fromisoformat(submitted.replace("Z", "+00:00")) >= cutoff
+            ):
+                tickers.add(str(trade.get("ticker", "")).upper())
+        except Exception:
+            continue
+    return tickers
+
+
+def reconcile_orders() -> dict:
+    """Best-effort: update yesterday's trades with their real fill status."""
+    try:
+        return run_json([sys.executable, "code/alpaca_client.py", "--reconcile"])
+    except Exception as exc:
+        return {"error": str(exc)}
+
+
 def run_autopilot(execute: bool, max_buys: int, position_pct: float, max_holdings: int) -> dict:
     if HALT_FILE.exists():
         return {"status": "halted", "reason": ".HALT_TRADING exists"}
 
+    reconciled = reconcile_orders()
     portfolio = run_json([sys.executable, "code/alpaca_client.py", "--positions"])
     equity = float(portfolio.get("equity") or 0)
     cash = float(portfolio.get("cash") or 0)
@@ -209,10 +241,14 @@ def run_autopilot(execute: bool, max_buys: int, position_pct: float, max_holding
     diagnostics: list[dict] = []
     sells = [s for p in positions if (s := sell_signal_for_position(p))]
 
+    cooldown = recently_sold()
     buy_candidates: list[Signal] = []
     if len(held) < max_holdings:
         for ticker in load_watchlist():
             if ticker in held:
+                continue
+            if ticker in cooldown:
+                diagnostics.append({"ticker": ticker, "skip": "sold within last 5 days (cooldown)"})
                 continue
             signal, data = analyze_ticker(ticker, spy_ret20)
             diagnostics.append(data)
@@ -236,7 +272,8 @@ def run_autopilot(execute: bool, max_buys: int, position_pct: float, max_holding
 
     planned = sells + buys
     submitted: list[dict] = []
-    blocked = execute and not market_is_open()
+    market_open = market_is_open()
+    blocked = execute and not market_open
 
     if execute and not blocked:
         for signal in planned:
@@ -249,8 +286,9 @@ def run_autopilot(execute: bool, max_buys: int, position_pct: float, max_holding
     summary = {
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "mode": "execute" if execute else "dry_run",
-        "market_open": market_is_open(),
+        "market_open": market_open,
         "blocked": "market_closed" if blocked else None,
+        "reconciled_orders": reconciled,
         "equity": equity,
         "cash": cash,
         "held": sorted(held),

@@ -10,7 +10,13 @@ else
 fi
 
 if ! "$PY" -c "import alpaca, dotenv" >/dev/null 2>&1; then
-  "$PY" -m pip install -r requirements.txt
+  if ! "$PY" -m pip install -q -r requirements.txt >/dev/null 2>&1; then
+    # System Python refused the install (common on newer macOS).
+    # Build a private virtual environment instead.
+    python3 -m venv .venv
+    PY=".venv/bin/python"
+    "$PY" -m pip install -q -r requirements.txt
+  fi
 fi
 
 exec "$PY" code/autopilot.py "$@"

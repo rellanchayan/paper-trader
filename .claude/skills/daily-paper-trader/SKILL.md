@@ -1,7 +1,7 @@
 ---
 name: daily-paper-trader
 description: Run the autonomous daily Alpaca paper-trading routine. Use this skill directly with /daily-paper-trader or in a scheduled Claude Code routine to plan and optionally execute paper trades.
-allowed-tools: Bash(bash code/run_daily.sh *), Bash(python3 code/autopilot.py *), Bash(python3 code/alpaca_client.py *), Bash(python3 code/constitution.py *), Bash(python3 -m pip install -r requirements.txt), Read, Edit(state/**)
+allowed-tools: Bash(bash code/run_daily.sh *), Bash(python3 code/autopilot.py *), Bash(python3 code/alpaca_client.py *), Bash(python3 code/constitution.py *), Bash(python3 code/performance.py *), Bash(python3 -m pip install -r requirements.txt), Read, Edit(state/**)
 ---
 
 # Daily Paper Trader
@@ -17,16 +17,24 @@ bash code/run_daily.sh --execute
 ```
 
 The script:
-1. Refreshes Alpaca paper positions.
-2. Reads `state/watchlist.txt`.
-3. Uses a simple momentum strategy:
+1. Reconciles yesterday's orders (records what really filled, expired, or was canceled).
+2. Refreshes Alpaca paper positions.
+3. Reads `state/watchlist.txt`.
+4. Uses a simple momentum strategy:
    - buy candidates above their 50d and 200d moving averages
    - prefer names outperforming SPY over 20 trading days
+   - skip names sold within the last 5 days (cooldown against whipsaw)
    - sell held names below their 50d average or with paper loss worse than 8%
-4. Creates trade JSON files.
-5. Runs `constitution.py`.
-6. Submits LIMIT + DAY paper orders.
-7. Saves a daily summary in `state/autopilot_runs/`.
+5. Creates trade JSON files.
+6. Runs `constitution.py`.
+7. Submits LIMIT + DAY paper orders.
+8. Saves a daily summary in `state/autopilot_runs/`.
+
+After the run, report performance in plain English:
+
+```bash
+python3 code/performance.py
+```
 
 ## Dry Run
 

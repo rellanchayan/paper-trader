@@ -10,3 +10,10 @@ AVGO
 LLY
 JPM
 COST
+# --- Added 2026-06-03: candidates for next 3 positions ---
+MRVL
+GE
+GEV
+CAT
+XOM
+WMT

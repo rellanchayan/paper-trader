@@ -1,0 +1,61 @@
+# Runs the paper-trading bot every weekday morning — no laptop needed.
+#
+# One-time setup (see README "Make it run every morning"):
+#   GitHub repo → Settings → Secrets and variables → Actions → New repository secret
+#   Add: ALPACA_API_KEY and ALPACA_SECRET_KEY (your PAPER keys).
+#
+# You can also trigger a run by hand: GitHub → Actions → "Daily paper trade" → Run workflow.
+
+name: Daily paper trade
+
+on:
+  schedule:
+    # 14:35 UTC = 9:35am New York in winter, 10:35am in summer.
+    # Either way the market (9:30am-4pm ET) is open.
+    - cron: "35 14 * * 1-5"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  trade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Run the bot
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_ENDPOINT: https://paper-api.alpaca.markets
+          LIVE_TRADING_AUTHORIZED: "false"
+        run: python3 code/autopilot.py --execute
+
+      - name: Show performance report
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_ENDPOINT: https://paper-api.alpaca.markets
+        run: python3 code/performance.py || true
+
+      - name: Save today's records back to the repo
+        # -f because state files are git-ignored by default; the bot needs them
+        # committed so the next cloud run remembers past trades (daily/weekly
+        # limits and the re-buy cooldown read from these files).
+        run: |
+          git config user.name "paper-trader-bot"
+          git config user.email "actions@github.com"
+          git add -f state/
+          git diff --cached --quiet || git commit -m "Daily run: $(date -u +%Y-%m-%d)"
+          git pull --rebase origin main
+          git push
