@@ -13,6 +13,10 @@ Why so cautious? With only a few trades, "learning" is just chasing noise.
 Slow, bounded, explained changes are the honest kind. autopilot.py clamps
 every setting to hard bounds, so this script can never make the bot reckless.
 
+One asymmetry is deliberate: the learner may CUT risk per trade after a bad
+streak, and may RESTORE it toward normal when results improve — but it can
+never raise risk above the default. Machines don't get to get greedy.
+
 Usage:
     python3 code/learn.py            # review trades, maybe adjust one setting
     python3 code/learn.py --dry-run  # show what it would do, change nothing
@@ -36,7 +40,21 @@ CHANGES_FILE = ROOT / "state" / "strategy_changes.jsonl"
 
 MIN_TRADES_TO_LEARN = 10   # don't draw conclusions from less than this
 RECENT_WINDOW = 20         # judge the strategy on its last N finished trades
-STEP = 0.005               # one adjustment step
+MIN_NEW_EVIDENCE = 3       # finished trades required since the last settings
+                           # change — the same old losses must not move a
+                           # setting twice
+STEPS = {                  # one adjustment step per setting
+    "min_outperformance": 0.005,
+    "stop_loss_pct": 0.005,
+    "atr_stop_mult": 0.25,
+    "risk_per_trade": 0.001,
+}
+
+PARAMS_COMMENT = (
+    "Tunable strategy settings. code/learn.py adjusts these slowly based on "
+    "closed-trade results. code/autopilot.py clamps every value to hard bounds, "
+    "so edits (by human or learner) can never make the strategy reckless."
+)
 
 
 def _parse_dt(value: str) -> datetime:
@@ -44,18 +62,18 @@ def _parse_dt(value: str) -> datetime:
 
 
 def load_fills() -> list[dict]:
-    """All trades that really filled, oldest first."""
+    """All trades that really filled, oldest first. A malformed file is skipped, never fatal."""
     fills = []
     if not COMPLETED_DIR.exists():
         return fills
     for path in COMPLETED_DIR.glob("*.json"):
         try:
             t = json.loads(path.read_text())
+            if t.get("status") == "filled" and float(t.get("filled_qty") or 0) > 0 and float(t.get("filled_avg_price") or 0) > 0:
+                fills.append(t)
         except Exception:
             continue
-        if t.get("status") == "filled" and float(t.get("filled_qty") or 0) > 0 and t.get("filled_avg_price"):
-            fills.append(t)
-    fills.sort(key=lambda t: t.get("submitted_at_utc", ""))
+    fills.sort(key=lambda t: str(t.get("submitted_at_utc") or ""))
     return fills
 
 
@@ -64,10 +82,14 @@ def exit_rule_of(sell: dict) -> str:
     if rule:
         return rule
     reason = str(sell.get("reason", "")).lower()
-    if "loss" in reason and "stop" in reason or "exceeded" in reason:
+    if ("loss" in reason and "stop" in reason) or "exceeded" in reason:
         return "stop_loss"
+    if "trail" in reason or "protecting gains" in reason:
+        return "trail_stop"
     if "below" in reason and "50d" in reason:
         return "trend_break"
+    if "trim" in reason or "rebalanc" in reason:
+        return "rebalance_trim"
     return "unknown"
 
 
@@ -123,14 +145,32 @@ def build_round_trips(fills: list[dict]) -> tuple[list[dict], int]:
 def stats_for(trips: list[dict]) -> dict:
     wins = [t for t in trips if t["win"]]
     losses = [t for t in trips if not t["win"]]
-    stop_outs = [t for t in trips if t["exit_rule"] == "stop_loss"]
+
+    by_rule: dict[str, dict] = {}
+    for t in trips:
+        rule = t["exit_rule"]
+        entry = by_rule.setdefault(rule, {"trades": 0, "wins": 0, "pnl_pct_sum": 0.0})
+        entry["trades"] += 1
+        entry["wins"] += 1 if t["win"] else 0
+        entry["pnl_pct_sum"] += t["pnl_pct"]
+    for rule, entry in by_rule.items():
+        entry["win_rate"] = round(entry["wins"] / entry["trades"], 3)
+        entry["avg_pnl_pct"] = round(entry.pop("pnl_pct_sum") / entry["trades"], 4)
+
+    losing_streak = 0
+    for t in reversed(trips):
+        if t["win"]:
+            break
+        losing_streak += 1
+
     return {
         "trades": len(trips),
         "win_rate": round(len(wins) / len(trips), 3) if trips else None,
         "avg_win_pct": round(sum(t["pnl_pct"] for t in wins) / len(wins), 4) if wins else None,
         "avg_loss_pct": round(sum(t["pnl_pct"] for t in losses) / len(losses), 4) if losses else None,
-        "stop_out_share": round(len(stop_outs) / len(trips), 3) if trips else None,
+        "losing_streak": losing_streak,
         "total_pnl": round(sum(t["pnl"] for t in trips), 2),
+        "by_rule": by_rule,
     }
 
 
@@ -144,53 +184,107 @@ def propose_change(stats: dict, params: dict) -> tuple[dict, str] | None:
     win_rate = stats["win_rate"]
     avg_win = stats["avg_win_pct"]
     avg_loss = stats["avg_loss_pct"]
+    by_rule = stats.get("by_rule", {})
+
+    # 0. Capital preservation first: a losing streak means risk less per trade.
+    #    (The learner can cut risk and later restore it, but never raise it
+    #    above the default.)
+    if stats.get("losing_streak", 0) >= 4:
+        new = _clamp("risk_per_trade", params["risk_per_trade"] - STEPS["risk_per_trade"])
+        if new != params["risk_per_trade"]:
+            reason = (f"{stats['losing_streak']} losses in a row. Risking less per trade "
+                      f"({new:.1%} of the account, was {params['risk_per_trade']:.1%}) until results improve.")
+            return {"risk_per_trade": new}, reason
 
     # 1. Losing most trades -> be pickier about what we buy.
     if win_rate is not None and win_rate < 0.40:
-        new = _clamp("min_outperformance", params["min_outperformance"] + STEP)
+        new = _clamp("min_outperformance", params["min_outperformance"] + STEPS["min_outperformance"])
         if new != params["min_outperformance"]:
             reason = (f"Only {win_rate:.0%} of the last {stats['trades']} trades made money. "
-                      f"Raising the bar to buy: a stock must now beat SPY by {new:.1%} (was {params['min_outperformance']:.1%}).")
+                      f"Raising the bar to buy: a stock must now beat SPY by {new:.1%} "
+                      f"(was {params['min_outperformance']:.1%}).")
             return {"min_outperformance": new}, reason
 
     # 2. Losses much bigger than wins -> cut losers sooner.
     if avg_win is not None and avg_loss is not None and abs(avg_loss) > 1.5 * avg_win:
-        new = _clamp("stop_loss_pct", params["stop_loss_pct"] + STEP)
+        new = _clamp("stop_loss_pct", params["stop_loss_pct"] + STEPS["stop_loss_pct"])
         if new != params["stop_loss_pct"]:
             reason = (f"Average loss ({avg_loss:.1%}) is much bigger than average win ({avg_win:.1%}). "
-                      f"Tightening the stop loss to {new:.1%} (was {params['stop_loss_pct']:.1%}) to cut losers sooner.")
+                      f"Tightening the stop loss to {new:.1%} (was {params['stop_loss_pct']:.1%}) "
+                      f"to cut losers sooner.")
             return {"stop_loss_pct": new}, reason
 
-    # 3. Strategy is working well -> relax any setting we previously tightened,
-    #    one step back toward its default.
+    # 3. Trailing stop keeps selling at a loss -> it is too tight (whipsaw).
+    trail = by_rule.get("trail_stop")
+    if trail and trail["trades"] >= 4 and trail["win_rate"] < 0.40:
+        new = _clamp("atr_stop_mult", params["atr_stop_mult"] + STEPS["atr_stop_mult"])
+        if new != params["atr_stop_mult"]:
+            reason = (f"The trailing stop ended {trail['trades']} trades and most lost money "
+                      f"(win rate {trail['win_rate']:.0%}) — it is cutting too early. "
+                      f"Widening it to {new:g} ATRs (was {params['atr_stop_mult']:g}).")
+            return {"atr_stop_mult": new}, reason
+
+    # 4. Strategy is working well -> relax one previously-tightened setting,
+    #    one step back toward its default (risk gets restored first).
     if win_rate is not None and win_rate >= 0.60:
+        if params["risk_per_trade"] < PARAM_DEFAULTS["risk_per_trade"]:
+            new = min(_clamp("risk_per_trade", params["risk_per_trade"] + STEPS["risk_per_trade"]),
+                      PARAM_DEFAULTS["risk_per_trade"])
+            reason = (f"{win_rate:.0%} of the last {stats['trades']} trades made money. "
+                      f"Restoring risk per trade to {new:.1%} (was {params['risk_per_trade']:.1%}).")
+            return {"risk_per_trade": new}, reason
         if params["min_outperformance"] > PARAM_DEFAULTS["min_outperformance"]:
-            new = _clamp("min_outperformance", params["min_outperformance"] - STEP)
+            new = max(_clamp("min_outperformance", params["min_outperformance"] - STEPS["min_outperformance"]),
+                      PARAM_DEFAULTS["min_outperformance"])
             reason = (f"{win_rate:.0%} of the last {stats['trades']} trades made money. "
                       f"Easing the buy bar back to {new:.1%} (was {params['min_outperformance']:.1%}).")
             return {"min_outperformance": new}, reason
         if params["stop_loss_pct"] > PARAM_DEFAULTS["stop_loss_pct"]:
-            new = _clamp("stop_loss_pct", params["stop_loss_pct"] - STEP)
+            new = max(_clamp("stop_loss_pct", params["stop_loss_pct"] - STEPS["stop_loss_pct"]),
+                      PARAM_DEFAULTS["stop_loss_pct"])
             reason = (f"{win_rate:.0%} of the last {stats['trades']} trades made money. "
                       f"Easing the stop loss back to {new:.1%} (was {params['stop_loss_pct']:.1%}).")
             return {"stop_loss_pct": new}, reason
+        if params["atr_stop_mult"] > PARAM_DEFAULTS["atr_stop_mult"]:
+            new = max(_clamp("atr_stop_mult", params["atr_stop_mult"] - STEPS["atr_stop_mult"]),
+                      PARAM_DEFAULTS["atr_stop_mult"])
+            reason = (f"{win_rate:.0%} of the last {stats['trades']} trades made money. "
+                      f"Easing the trailing stop back to {new:g} ATRs (was {params['atr_stop_mult']:g}).")
+            return {"atr_stop_mult": new}, reason
 
     return None
 
 
-def apply_change(change: dict, reason: str, stats: dict) -> None:
+def last_change_evidence_count() -> int | None:
+    """How many finished trades existed when the settings were last changed."""
+    if not CHANGES_FILE.exists():
+        return None
+    last = None
+    for line in CHANGES_FILE.read_text().splitlines():
+        try:
+            last = json.loads(line)
+        except Exception:
+            continue
+    if last is None:
+        return None
+    try:
+        return int(last.get("evidence_trades_total", 0))
+    except (TypeError, ValueError):
+        return 0
+
+
+def apply_change(change: dict, reason: str, stats: dict, evidence_trades_total: int) -> None:
     params = load_params()
     params.update(change)
     body = {k: params[k] for k in PARAM_DEFAULTS}
-    body["_comment"] = ("Tunable strategy settings. code/learn.py adjusts these slowly based on "
-                        "closed-trade results. code/autopilot.py clamps every value to hard bounds, "
-                        "so edits (by human or learner) can never make the strategy reckless.")
+    body["_comment"] = PARAMS_COMMENT
     PARAMS_FILE.write_text(json.dumps(body, indent=2) + "\n")
     entry = {
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "change": change,
         "reason": reason,
         "based_on": stats,
+        "evidence_trades_total": evidence_trades_total,
     }
     with CHANGES_FILE.open("a") as f:
         f.write(json.dumps(entry) + "\n")
@@ -208,7 +302,11 @@ def main() -> int:
     REVIEWS_FILE.parent.mkdir(parents=True, exist_ok=True)
     REVIEWS_FILE.write_text("".join(json.dumps(t) + "\n" for t in trips))
 
-    recent = trips[-RECENT_WINDOW:]
+    # Rebalancing trims are bookkeeping, not strategy verdicts — they mostly
+    # realize gains on big winners and would flatter the win rate. Judge the
+    # strategy only on real exits.
+    strategy_trips = [t for t in trips if t["exit_rule"] != "rebalance_trim"]
+    recent = strategy_trips[-RECENT_WINDOW:]
     stats = stats_for(recent)
     params = load_params()
 
@@ -223,12 +321,24 @@ def main() -> int:
             parts.append(f"avg loss {s['avg_loss_pct']:+.1%}")
         parts.append(f"total P&L ${s['total_pnl']:,.2f}")
         print(f"  Last {s['trades']} trades: " + ", ".join(parts))
+        for rule, r in sorted(s["by_rule"].items()):
+            print(f"    exits via {rule}: {r['trades']} trades, "
+                  f"win rate {r['win_rate']:.0%}, avg {r['avg_pnl_pct']:+.1%}")
     print(f"  Current settings: buy bar {params['min_outperformance']:.1%} over SPY, "
-          f"stop loss {params['stop_loss_pct']:.1%}, cooldown {params['cooldown_days']}d")
+          f"stop loss {params['stop_loss_pct']:.1%}, trail {params['atr_stop_mult']:g} ATRs, "
+          f"risk/trade {params['risk_per_trade']:.1%}, cooldown {params['cooldown_days']}d")
 
     if len(recent) < MIN_TRADES_TO_LEARN:
         print(f"  Learning: not yet — need {MIN_TRADES_TO_LEARN} finished trades to draw conclusions, "
               f"have {len(recent)}. No settings changed.")
+        return 0
+
+    # New-evidence rule: the same old trades must not move a setting twice.
+    prior = last_change_evidence_count()
+    new_evidence = len(strategy_trips) - prior if prior is not None else None
+    if new_evidence is not None and new_evidence < MIN_NEW_EVIDENCE:
+        print(f"  Learning: waiting for new evidence — only {max(new_evidence, 0)} finished trade(s) "
+              f"since the last settings change (need {MIN_NEW_EVIDENCE}). No settings changed.")
         return 0
 
     proposal = propose_change(stats, params)
@@ -241,7 +351,7 @@ def main() -> int:
         print(f"  Learning (dry run): WOULD change {change}. {reason}")
         return 0
 
-    apply_change(change, reason, stats)
+    apply_change(change, reason, stats, evidence_trades_total=len(strategy_trips))
     print(f"  Learning: changed {change}. {reason}")
     print(f"  (full history in {CHANGES_FILE.relative_to(ROOT)})")
     return 0

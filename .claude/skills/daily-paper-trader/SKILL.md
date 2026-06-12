@@ -20,13 +20,20 @@ The script:
 1. Reconciles yesterday's orders (records what really filled, expired, or was canceled).
 2. Refreshes Alpaca paper positions.
 3. Reads `state/watchlist.txt`.
-4. Uses a simple momentum strategy (tunables live in `state/strategy_params.json`):
-   - no new buys while SPY is below its 200d average (defensive regime)
-   - buy candidates above their 50d and 200d moving averages
-   - require beating SPY over 20 trading days by `min_outperformance`
-   - skip names sold within the last `cooldown_days` (cooldown against whipsaw)
-   - sell held names below their 50d average (trend break) or with paper loss
-     worse than `stop_loss_pct` (stop loss)
+4. Uses a wealth-manager-style momentum strategy (tunables in `state/strategy_params.json`):
+   - regime checks first: no new buys if SPY is below its 200d average OR the
+     account is >10% below its high-water mark; half-size buys when market
+     volatility is elevated
+   - buy candidates above their 50d and 200d averages that are up at least
+     `min_outperformance` over 20 trading days AND beat SPY by the same
+     margin, ranked by risk-adjusted momentum (1m/3m/6m blend / volatility)
+   - diversification gates: max `max_per_sector` holdings per sector
+     (`state/sectors.json`), skip candidates correlated > `max_corr` with a
+     holding, never chase a >2% gap, cooldown `cooldown_days` after a sell
+   - position sizing by risk: each buy risks ~`risk_per_trade` of equity
+     (ATR-based), capped at 10% of equity per position
+   - exits: hard stop `stop_loss_pct`, trailing stop `atr_stop_mult` ATRs
+     below the 22d high, 50d trend break, and overweight trims above 20%
 5. Creates trade JSON files.
 6. Runs `constitution.py`.
 7. Submits LIMIT + DAY paper orders.

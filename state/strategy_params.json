@@ -1,6 +1,10 @@
 {
-  "_comment": "Tunable strategy settings. code/learn.py adjusts these slowly based on closed-trade results. code/autopilot.py clamps every value to hard bounds, so edits (by human or learner) can never make the strategy reckless.",
   "min_outperformance": 0.02,
   "stop_loss_pct": -0.08,
-  "cooldown_days": 5
+  "cooldown_days": 5,
+  "atr_stop_mult": 3.0,
+  "risk_per_trade": 0.005,
+  "max_corr": 0.85,
+  "max_per_sector": 3,
+  "_comment": "Tunable strategy settings. code/learn.py adjusts these slowly based on closed-trade results. code/autopilot.py clamps every value to hard bounds, so edits (by human or learner) can never make the strategy reckless."
 }

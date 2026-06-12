@@ -17,3 +17,15 @@ GEV
 CAT
 XOM
 WMT
+# --- Added 2026-06-12: sector diversification (so the bot has good
+# candidates outside tech; see state/sectors.json) ---
+UNH
+JNJ
+V
+HD
+PG
+ORCL
+NEE
+LIN
+UNP
+NFLX

@@ -162,43 +162,77 @@ Notes for Option C:
 
 ### The Trading Strategy
 
-The bot looks for stocks that meet **all three** conditions:
+The bot runs its money the way a professional wealth manager would. Each rule
+below is a real technique used on Wall Street (the pro name is in parentheses).
 
-1. **Uptrend** — Price is above its 50-day and 200-day averages
-   - Imagine a stock is climbing steadily uphill
-   - We only buy when it's clearly going up, not down
+**What it buys (momentum / relative strength):**
 
-2. **Outperforming the market** — Gained more than SPY in the last 20 days
-   - SPY is like "the average market"
-   - We want stocks doing better than average
-   - If SPY is up 5% but a stock is up 15%, that stock is hot
+1. **Uptrend** — Price is above its 50-day and 200-day averages.
+   We only buy stocks that are clearly climbing.
+2. **Stronger than the market** — Up at least ~2% itself over the last 20
+   days AND beat SPY by at least ~2%. SPY is "the average market"; we want
+   stocks that are rising on their own, not just falling slower than average.
+3. **Steady climbers beat wild swingers** — Candidates are ranked by their
+   1, 3, and 6-month gains *divided by how jumpy they are* (risk-adjusted
+   momentum). A stock that calmly grinds up scores higher than one that
+   doubles and crashes.
+4. **Well-known companies only** — From the watchlist. No penny stocks.
 
-3. **Well-known companies** — From our watchlist (AAPL, MSFT, NVDA, etc.)
-   - No penny stocks or weird stuff
-   - We stick to popular, liquid stocks
+**What stops a buy (diversification):**
 
-### Buying Rules
+- **Sector limit** — Never more than 3 holdings from the same industry
+  (`state/sectors.json` says which stock is in which). Five chip stocks is
+  not five ideas; it's one idea five times.
+- **Similarity check (correlation)** — If a candidate has moved almost
+  identically to something you already own, it's skipped. Owning twins isn't
+  diversification. (Index funds you hold, like SPY or QQQ, are exempt from
+  this check — they're your diversified "core", and almost every big stock
+  moves somewhat with them. The sector limit above is what stops you from
+  piling into one industry next to the core.)
+- **No chasing** — If the price gapped more than 2% above where the signal
+  was measured, skip it. Pros don't buy panic.
+- **Cooldown** — Don't re-buy something sold in the last 5 days.
 
-When the bot finds a good stock:
-- **Amount:** Buys ~10% of account balance per trade
-- **Price:** Uses a limit order (never pays more than we set)
-- **Time:** Only during market hours (9:30am - 4:00pm ET)
-- **Order type:** Limit order with DAY time-in-force (expires if not filled by end of day)
+**How much it buys (risk-based position sizing):**
+
+This is the most important professional habit. Amateurs put the same dollars
+in every stock. Pros size every position so it risks **the same small slice
+of the account** — by default 0.5% — if its stop is hit:
+
+- A calm stock (small daily swings) → more shares
+- A jumpy stock (big daily swings) → fewer shares
+- Always capped at 10% of the account per position and 25% max per ticker
+
+So one bad trade costs about half a percent. Ten bad trades in a row — an
+awful month — costs about 5%, not 50%.
 
 ### Selling Rules
 
-The bot sells when a stock:
-- Falls below its 50-day average (trend is broken)
-- OR loses more than 8% from when we bought it (cutting losses early —
-  this number is a setting the bot can tune as it learns, see "How the Bot Learns")
+Four ways out, each with its Wall Street name:
 
-### The Market Mood Check (Regime Filter)
+1. **Hard stop (stop loss)** — Down more than 8% from what we paid → sell.
+   Cut losses before they become disasters.
+2. **Trailing stop (chandelier exit)** — The stock fell roughly 3 "normal
+   daily swings" (ATRs) below its recent high → sell. This protects profits:
+   a stock that ran up 30% and starts breaking down gets sold while most of
+   the gain is still there.
+3. **Trend break** — Closed below its 50-day average → sell. The ride is over.
+4. **Overweight trim (rebalancing)** — Any position that grows past 20% of
+   the account gets trimmed back to 15%. Winners are great; one position
+   that can sink the whole boat is not.
 
-Before buying anything, the bot checks the overall market's health: is SPY
-above its own 200-day average? If not, the whole market is in a downtrend,
-and buying "strong" stocks in a falling market is how accounts bleed. In that
-case the bot goes **defensive**: no new buys, but it still watches and sells
-your existing positions by the normal rules.
+### Reading the Room (Regime Filter)
+
+Before buying anything, the bot checks the weather — three separate checks,
+like a real risk desk:
+
+- **Market trend** — SPY below its own 200-day average? The whole market is
+  in a downtrend → **no new buys** (still manages exits).
+- **Market stress** — Market swinging more than ~30% annualized? Nervous
+  markets → **buys at half size**.
+- **Drawdown brake** — Your account more than 10% below its own high-water
+  mark? Something's not working → **no new buys** until it recovers. This is
+  how professional risk desks stop a bad streak from compounding.
 
 ### How the Bot Learns
 
@@ -217,11 +251,27 @@ Three rules keep the learning honest:
 
 - **It needs evidence.** No changes until at least 10 finished trades.
   (Changing strategy after 2 trades is superstition, not learning.)
-- **It moves slowly.** One setting, one small step, per day at most.
+- **It moves slowly.** One setting, one small step, per day at most — and
+  only after at least 3 *new* finished trades since its last change, so the
+  same old losses can never push a setting twice.
 - **It has hard walls.** The settings live in `state/strategy_params.json`,
-  and the trading code clamps them to fixed safe ranges (for example, the
-  stop loss can never be looser than -12% or tighter than -5%). Neither the
-  learner nor a typo can make the bot reckless.
+  and the trading code clamps them to fixed safe ranges. Neither the learner
+  nor a typo can make the bot reckless.
+- **It can get scared but never greedy.** After 4 losses in a row it cuts
+  how much each trade risks, and restores it when results improve — but it
+  can never raise risk above the normal level. Only you can do that.
+
+The settings it tunes, in plain English:
+
+| Setting | Meaning | Normal | Allowed range |
+|---|---|---|---|
+| Buy bar | How much a stock must be up, and beat SPY by | 2% | 1% – 6% |
+| Stop loss | Worst loss allowed before selling | -8% | -5% – -12% |
+| Trailing stop | How far below its recent high a stock may fall | 3 ATRs | 2 – 4 |
+| Risk per trade | Slice of the account one trade may lose | 0.5% | 0.3% – 1% |
+
+(One more setting, the 5-day re-buy cooldown, lives in the same file but is
+**not** auto-tuned — you can edit it yourself, between 3 and 10 days.)
 
 Check what it's thinking anytime:
 
