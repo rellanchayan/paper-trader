@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260612-003",
+  "created_at_utc": "2026-06-12T17:25:17.121419+00:00",
+  "ticker": "NVDA",
+  "side": "SELL",
+  "qty": 44,
+  "limit_price": 204.99,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "NVDA sell: paper loss -8.9% breached the -8% stop.",
+  "risk": "May sell before a rebound.",
+  "strategy": "daily_momentum",
+  "score": 1.0,
+  "status": "submitted",
+  "exit_rule": "stop_loss",
+  "alpaca_order_id": "58289a9a-ea04-4151-ae69-f03a45fc91bb",
+  "submitted_at_utc": "2026-06-12T17:25:17.995167+00:00"
+}

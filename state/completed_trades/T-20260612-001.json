@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260612-001",
+  "created_at_utc": "2026-06-12T17:25:15.565883+00:00",
+  "ticker": "AAPL",
+  "side": "SELL",
+  "qty": 31,
+  "limit_price": 291.82,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "AAPL sell: $291.90 dropped more than 3 ATRs below its 22d high $315.19 (trail $292.62) \u2014 protecting gains.",
+  "risk": "May sell before a rebound.",
+  "strategy": "daily_momentum",
+  "score": 1.0,
+  "status": "submitted",
+  "exit_rule": "trail_stop",
+  "alpaca_order_id": "bc985c2d-4c03-4379-abf1-f66b37ca4b95",
+  "submitted_at_utc": "2026-06-12T17:25:16.270940+00:00"
+}

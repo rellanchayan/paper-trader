@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260612-002",
+  "created_at_utc": "2026-06-12T17:25:16.343467+00:00",
+  "ticker": "AVGO",
+  "side": "SELL",
+  "qty": 20,
+  "limit_price": 382.0,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "AVGO sell: paper loss -20.9% breached the -8% stop.",
+  "risk": "May sell before a rebound.",
+  "strategy": "daily_momentum",
+  "score": 1.0,
+  "status": "submitted",
+  "exit_rule": "stop_loss",
+  "alpaca_order_id": "b77158d8-5190-485d-8af8-137c6d9d2c39",
+  "submitted_at_utc": "2026-06-12T17:25:17.052624+00:00"
+}
