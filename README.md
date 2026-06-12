@@ -189,7 +189,46 @@ When the bot finds a good stock:
 
 The bot sells when a stock:
 - Falls below its 50-day average (trend is broken)
-- OR loses more than 8% from when we bought it (cutting losses early)
+- OR loses more than 8% from when we bought it (cutting losses early —
+  this number is a setting the bot can tune as it learns, see "How the Bot Learns")
+
+### The Market Mood Check (Regime Filter)
+
+Before buying anything, the bot checks the overall market's health: is SPY
+above its own 200-day average? If not, the whole market is in a downtrend,
+and buying "strong" stocks in a falling market is how accounts bleed. In that
+case the bot goes **defensive**: no new buys, but it still watches and sells
+your existing positions by the normal rules.
+
+### How the Bot Learns
+
+After every run, the bot does homework (`code/learn.py`):
+
+1. **Grades every finished trade.** When a buy and its later sell have both
+   really filled, that's one finished trade. It records the profit or loss,
+   how long it was held, and which rule ended it — in `state/trade_reviews.jsonl`.
+2. **Looks for patterns** in its last 20 finished trades: Is it losing more
+   often than winning? Are the losses bigger than the wins?
+3. **Adjusts at most ONE setting by ONE small step** — for example, "require
+   stocks to beat SPY by 2.5% instead of 2%" — and writes down exactly why in
+   `state/strategy_changes.jsonl`. You can read its reasoning anytime.
+
+Three rules keep the learning honest:
+
+- **It needs evidence.** No changes until at least 10 finished trades.
+  (Changing strategy after 2 trades is superstition, not learning.)
+- **It moves slowly.** One setting, one small step, per day at most.
+- **It has hard walls.** The settings live in `state/strategy_params.json`,
+  and the trading code clamps them to fixed safe ranges (for example, the
+  stop loss can never be looser than -12% or tighter than -5%). Neither the
+  learner nor a typo can make the bot reckless.
+
+Check what it's thinking anytime:
+
+```bash
+python3 code/learn.py --dry-run   # shows the analysis, changes nothing
+cat state/strategy_changes.jsonl  # every change it ever made, with reasons
+```
 
 ### Safety Guardrails
 

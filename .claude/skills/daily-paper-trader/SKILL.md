@@ -20,21 +20,30 @@ The script:
 1. Reconciles yesterday's orders (records what really filled, expired, or was canceled).
 2. Refreshes Alpaca paper positions.
 3. Reads `state/watchlist.txt`.
-4. Uses a simple momentum strategy:
+4. Uses a simple momentum strategy (tunables live in `state/strategy_params.json`):
+   - no new buys while SPY is below its 200d average (defensive regime)
    - buy candidates above their 50d and 200d moving averages
-   - prefer names outperforming SPY over 20 trading days
-   - skip names sold within the last 5 days (cooldown against whipsaw)
-   - sell held names below their 50d average or with paper loss worse than 8%
+   - require beating SPY over 20 trading days by `min_outperformance`
+   - skip names sold within the last `cooldown_days` (cooldown against whipsaw)
+   - sell held names below their 50d average (trend break) or with paper loss
+     worse than `stop_loss_pct` (stop loss)
 5. Creates trade JSON files.
 6. Runs `constitution.py`.
 7. Submits LIMIT + DAY paper orders.
 8. Saves a daily summary in `state/autopilot_runs/`.
 
-After the run, report performance in plain English:
+After the run, let the bot learn from finished trades and report performance:
 
 ```bash
+python3 code/learn.py
 python3 code/performance.py
 ```
+
+`learn.py` grades every finished BUY→SELL pair and may adjust ONE setting in
+`state/strategy_params.json` by one small step (within hard bounds enforced by
+`autopilot.py`). Every change is logged with its reason in
+`state/strategy_changes.jsonl`. Do not hand-edit strategy settings in the same
+run; let the evidence-based loop do it.
 
 ## Dry Run
 

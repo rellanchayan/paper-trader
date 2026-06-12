@@ -41,6 +41,11 @@ jobs:
           LIVE_TRADING_AUTHORIZED: "false"
         run: python3 code/autopilot.py --execute
 
+      - name: Learn from results
+        # Reviews finished trades and may adjust ONE strategy setting by one
+        # small step (see code/learn.py). Never blocks the run.
+        run: python3 code/learn.py || echo "learning step failed — continuing so today's records still get saved"
+
       - name: Show performance report
         env:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}

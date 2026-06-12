@@ -29,6 +29,38 @@ HALT_FILE = ROOT / ".HALT_TRADING"
 DEFAULT_POSITION_PCT = 0.10
 DEFAULT_MAX_HOLDINGS = 8
 
+PARAMS_FILE = STATE / "strategy_params.json"
+PARAM_DEFAULTS = {
+    "min_outperformance": 0.02,  # how much a stock must beat SPY by (20d) to qualify
+    "stop_loss_pct": -0.08,      # sell when paper loss is worse than this
+    "cooldown_days": 5,          # days to wait before re-buying something we sold
+}
+# learn.py tunes the params above, but can NEVER push them past these bounds.
+PARAM_BOUNDS = {
+    "min_outperformance": (0.01, 0.06),
+    "stop_loss_pct": (-0.12, -0.05),
+    "cooldown_days": (3, 10),
+}
+
+
+def load_params() -> dict:
+    data: dict = {}
+    if PARAMS_FILE.exists():
+        try:
+            data = json.loads(PARAMS_FILE.read_text())
+        except Exception:
+            data = {}
+    params = {}
+    for key, default in PARAM_DEFAULTS.items():
+        try:
+            value = float(data.get(key, default))
+        except (TypeError, ValueError):
+            value = default
+        lo, hi = PARAM_BOUNDS[key]
+        params[key] = min(max(value, lo), hi)
+    params["cooldown_days"] = int(params["cooldown_days"])
+    return params
+
 
 @dataclass
 class Signal:
@@ -39,6 +71,7 @@ class Signal:
     risk: str
     limit_price: float
     qty: int = 0
+    exit_rule: str = ""
 
 
 def run_json(args: list[str]) -> dict:
@@ -127,6 +160,8 @@ def build_trade(signal: Signal) -> Path:
         "score": round(signal.score, 4),
         "status": "ready",
     }
+    if signal.exit_rule:
+        trade["exit_rule"] = signal.exit_rule
     path = PENDING / f"{trade['trade_id']}.json"
     path.write_text(json.dumps(trade, indent=2))
     return path
@@ -137,7 +172,7 @@ def submit_trade(path: Path) -> dict:
     return run_json([sys.executable, "code/alpaca_client.py", "--submit", str(path)])
 
 
-def analyze_ticker(ticker: str, spy_ret20: float) -> tuple[Signal | None, dict]:
+def analyze_ticker(ticker: str, spy_ret20: float, min_outperformance: float) -> tuple[Signal | None, dict]:
     bars = get_bars(ticker)
     if len(bars) < 210:
         return None, {"ticker": ticker, "skip": "not enough bars"}
@@ -160,11 +195,14 @@ def analyze_ticker(ticker: str, spy_ret20: float) -> tuple[Signal | None, dict]:
         "ret5": round(ret5, 4),
     }
 
-    if close > sma50 > sma200 and ret20 > max(0.02, spy_ret20):
+    uptrend = close > sma50 > sma200
+    strong = ret20 >= min_outperformance and (ret20 - spy_ret20) >= min_outperformance
+    if uptrend and strong:
         score = (ret20 - spy_ret20) + (close / sma50 - 1) + max(ret5, 0)
         reason = (
             f"{ticker} is in an uptrend: close above 50d and 200d averages; "
-            f"20d return {ret20:.1%} vs SPY {spy_ret20:.1%}."
+            f"20d return {ret20:.1%} vs SPY {spy_ret20:.1%} "
+            f"(needs to beat SPY by {min_outperformance:.1%})."
         )
         risk = "Momentum can reverse; limit order may fill before a pullback."
         return Signal(ticker, "BUY", score, reason, risk, close), data
@@ -172,7 +210,7 @@ def analyze_ticker(ticker: str, spy_ret20: float) -> tuple[Signal | None, dict]:
     return None, data
 
 
-def sell_signal_for_position(pos: dict) -> Signal | None:
+def sell_signal_for_position(pos: dict, stop_loss_pct: float) -> Signal | None:
     ticker = str(pos["ticker"]).upper()
     bars = get_bars(ticker)
     if len(bars) < 60:
@@ -181,14 +219,21 @@ def sell_signal_for_position(pos: dict) -> Signal | None:
     close = closes[-1]
     sma50 = sma(closes, 50)
     plpc = float(pos.get("unrealized_plpc") or 0)
-    if close < sma50 or plpc <= -0.08:
+    stopped = plpc <= stop_loss_pct
+    trend_break = close < sma50
+    if stopped or trend_break:
         qty = math.floor(float(pos["qty"]))
         if qty < 1:
             return None
         limit_price = get_quote_price(ticker, "SELL", close)
-        reason = f"{ticker} sell: price below 50d average or paper loss exceeded 8%."
+        if stopped:
+            exit_rule = "stop_loss"
+            reason = f"{ticker} sell: paper loss {plpc:.1%} breached the {stop_loss_pct:.0%} stop."
+        else:
+            exit_rule = "trend_break"
+            reason = f"{ticker} sell: price ${close:.2f} fell below its 50d average ${sma50:.2f}."
         risk = "May sell before a rebound."
-        return Signal(ticker, "SELL", 1.0, reason, risk, limit_price, qty)
+        return Signal(ticker, "SELL", 1.0, reason, risk, limit_price, qty, exit_rule=exit_rule)
     return None
 
 
@@ -225,6 +270,7 @@ def run_autopilot(execute: bool, max_buys: int, position_pct: float, max_holding
     if HALT_FILE.exists():
         return {"status": "halted", "reason": ".HALT_TRADING exists"}
 
+    params = load_params()
     reconciled = reconcile_orders()
     portfolio = run_json([sys.executable, "code/alpaca_client.py", "--positions"])
     equity = float(portfolio.get("equity") or 0)
@@ -238,19 +284,27 @@ def run_autopilot(execute: bool, max_buys: int, position_pct: float, max_holding
     spy_closes = [float(b["c"]) for b in spy_bars]
     spy_ret20 = spy_closes[-1] / spy_closes[-21] - 1
 
-    diagnostics: list[dict] = []
-    sells = [s for p in positions if (s := sell_signal_for_position(p))]
+    # Regime filter: when SPY itself is below its 200d average the whole market
+    # is in a downtrend — stop opening new positions, keep managing exits.
+    regime = "normal"
+    if len(spy_closes) >= 200 and spy_closes[-1] < sma(spy_closes, 200):
+        regime = "defensive"
 
-    cooldown = recently_sold()
+    diagnostics: list[dict] = []
+    sells = [s for p in positions if (s := sell_signal_for_position(p, params["stop_loss_pct"]))]
+
+    cooldown = recently_sold(params["cooldown_days"])
     buy_candidates: list[Signal] = []
-    if len(held) < max_holdings:
+    if regime == "defensive":
+        diagnostics.append({"skip_all_buys": "SPY below its 200d average (defensive regime)"})
+    elif len(held) < max_holdings:
         for ticker in load_watchlist():
             if ticker in held:
                 continue
             if ticker in cooldown:
-                diagnostics.append({"ticker": ticker, "skip": "sold within last 5 days (cooldown)"})
+                diagnostics.append({"ticker": ticker, "skip": f"sold within last {params['cooldown_days']} days (cooldown)"})
                 continue
-            signal, data = analyze_ticker(ticker, spy_ret20)
+            signal, data = analyze_ticker(ticker, spy_ret20, params["min_outperformance"])
             diagnostics.append(data)
             if signal:
                 buy_candidates.append(signal)
@@ -293,6 +347,8 @@ def run_autopilot(execute: bool, max_buys: int, position_pct: float, max_holding
         "cash": cash,
         "held": sorted(held),
         "spy_ret20": round(spy_ret20, 4),
+        "regime": regime,
+        "params": params,
         "planned": [s.__dict__ for s in planned],
         "submitted": submitted,
         "diagnostics": diagnostics,
