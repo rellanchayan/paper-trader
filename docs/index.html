@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DTA Strategy — Documentation</title>
+<title>BLEND Strategy — Documentation</title>
 <style>
   :root{
     --bg:#0b1020; --bg2:#111834; --ink:#1f2937; --ink-soft:#475569;
@@ -18,12 +18,11 @@
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased}
   a{color:var(--brand-d);text-decoration:none}
-  /* layout */
   .app{display:flex;min-height:100vh}
-  .sidebar{width:280px;flex:0 0 280px;background:linear-gradient(180deg,var(--bg),var(--bg2));
+  .sidebar{width:290px;flex:0 0 290px;background:linear-gradient(180deg,var(--bg),var(--bg2));
     color:#c7d2fe;position:sticky;top:0;height:100vh;overflow-y:auto;padding:24px 16px}
   .brand{display:flex;align-items:center;gap:12px;padding:6px 10px 18px}
-  .brand .logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--brand),var(--teal));
+  .brand .logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--brand),var(--pink));
     display:grid;place-items:center;font-size:20px;box-shadow:0 6px 18px rgba(99,102,241,.5)}
   .brand h1{font-size:16px;color:#fff;margin:0;line-height:1.15}
   .brand small{color:#8ea2d6;font-size:11.5px;letter-spacing:.02em}
@@ -33,12 +32,11 @@
     color:#c7d2fe;font-size:14px;font-weight:500;transition:.15s}
   .nav button .ic{width:20px;text-align:center;opacity:.9}
   .nav button:hover{background:rgba(255,255,255,.06);color:#fff}
-  .nav button.active{background:linear-gradient(135deg,rgba(99,102,241,.9),rgba(20,184,166,.75));color:#fff;
+  .nav button.active{background:linear-gradient(135deg,rgba(99,102,241,.9),rgba(236,72,153,.7));color:#fff;
     box-shadow:0 6px 16px rgba(99,102,241,.35)}
   .sidebar .foot{margin-top:18px;padding:14px 12px;border-top:1px solid rgba(255,255,255,.08);
     color:#8ea2d6;font-size:11.5px}
   .sidebar .foot b{color:#c7d2fe}
-  /* content */
   .main{flex:1;min-width:0}
   .topbar{display:none;align-items:center;gap:12px;padding:12px 16px;background:#0b1020;color:#fff;position:sticky;top:0;z-index:20}
   .topbar button{all:unset;cursor:pointer;font-size:22px;padding:4px 8px}
@@ -54,17 +52,13 @@
   p{margin:0 0 14px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;margin:18px 0}
   .grid{display:grid;gap:16px}
-  .grid.c2{grid-template-columns:1fr 1fr}
-  .grid.c3{grid-template-columns:repeat(3,1fr)}
-  .grid.c4{grid-template-columns:repeat(4,1fr)}
+  .grid.c2{grid-template-columns:1fr 1fr}.grid.c3{grid-template-columns:repeat(3,1fr)}.grid.c4{grid-template-columns:repeat(4,1fr)}
   .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
   .stat .k{font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em}
   .stat .v{font-size:26px;font-weight:750;letter-spacing:-.02em;margin-top:4px}
-  .stat .v.s{font-size:19px}
+  .stat .v.s{font-size:18px}
   .pill{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:650;padding:5px 11px;border-radius:999px}
-  .pill.idx{background:#eef2ff;color:#4338ca}
-  .pill.on{background:#dcfce7;color:#15803d}
-  .pill.off{background:#fee2e2;color:#b91c1c}
+  .pill.idx{background:#eef2ff;color:#4338ca}.pill.on{background:#dcfce7;color:#15803d}.pill.off{background:#fee2e2;color:#b91c1c}
   .callout{border-radius:var(--radius);padding:16px 18px 16px 46px;position:relative;margin:18px 0;border:1px solid}
   .callout .em{position:absolute;left:15px;top:15px;font-size:18px}
   .callout.info{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}
@@ -82,13 +76,13 @@
   .figcap{font-size:12.5px;color:var(--ink-soft);margin-top:10px}
   .donutwrap{display:flex;align-items:center;gap:30px;flex-wrap:wrap;justify-content:center}
   .donut{width:230px;height:230px;border-radius:50%;flex:0 0 230px;
-    background:conic-gradient(var(--brand) 0 16%,var(--sky) 16% 32%,var(--teal) 32% 48%,var(--gold) 48% 64%,var(--pink) 64% 80%,var(--slate) 80% 100%);
+    background:conic-gradient(var(--brand) 0 75%,var(--sky) 75% 87.5%,var(--teal) 87.5% 93.75%,var(--gold) 93.75% 100%);
     position:relative;box-shadow:var(--shadow)}
   .donut::after{content:"";position:absolute;inset:34px;background:var(--card);border-radius:50%}
   .donut .mid{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:2}
   .donut .mid b{font-size:30px;display:block;letter-spacing:-.02em}
   .donut .mid span{font-size:12px;color:var(--ink-soft)}
-  .legend{display:flex;flex-direction:column;gap:9px;font-size:14px;min-width:230px}
+  .legend{display:flex;flex-direction:column;gap:9px;font-size:14px;min-width:250px}
   .legend .row{display:flex;align-items:center;justify-content:space-between;gap:14px}
   .legend .row .lbl{display:flex;align-items:center}
   .legend .row .pct{font-variant-numeric:tabular-nums;font-weight:650;color:var(--ink-soft)}
@@ -96,377 +90,274 @@
   .step{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
   .step::before{counter-increment:s;content:counter(s);flex:0 0 30px;height:30px;border-radius:50%;
     background:linear-gradient(135deg,var(--brand),var(--brand-d));color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
-  .step h5{margin:2px 0 3px;font-size:15px}
-  .step p{margin:0;font-size:14px;color:var(--ink-soft)}
+  .step h5{margin:2px 0 3px;font-size:15px}.step p{margin:0;font-size:14px;color:var(--ink-soft)}
   .flow{display:flex;flex-direction:column;gap:0;margin:16px 0}
   .fnode{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:10px;padding:12px 16px;box-shadow:var(--shadow)}
-  .fnode.green{border-left-color:var(--green)}
-  .fnode.red{border-left-color:var(--red)}
-  .fnode.slate{border-left-color:var(--slate)}
+  .fnode.green{border-left-color:var(--green)}.fnode.red{border-left-color:var(--red)}.fnode.slate{border-left-color:var(--slate)}
   .farr{align-self:center;color:#94a3b8;font-size:20px;line-height:1;padding:5px 0}
   .checklist{list-style:none;padding:0;margin:10px 0}
   .checklist li{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
   .checklist li .bx{flex:0 0 20px;height:20px;border-radius:6px;margin-top:2px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff}
-  .checklist li.done .bx{background:var(--green)}
-  .checklist li.todo .bx{background:#cbd5e1}
-  .gloss dt{font-weight:700;margin-top:14px}
-  .gloss dd{margin:2px 0 0;color:var(--ink-soft)}
+  .checklist li.done .bx{background:var(--green)}.checklist li.todo .bx{background:#cbd5e1}
+  .gloss dt{font-weight:700;margin-top:14px}.gloss dd{margin:2px 0 0;color:var(--ink-soft)}
   .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b1020;color:#c7d2fe;padding:2px 7px;border-radius:6px;font-size:12.5px}
   .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:#eef2ff;color:#4338ca;letter-spacing:.03em}
   @media(max-width:880px){
     .sidebar{position:fixed;left:0;top:0;z-index:30;transform:translateX(-100%);transition:.25s;box-shadow:0 0 40px rgba(0,0,0,.4)}
-    .sidebar.open{transform:none}
-    .topbar{display:flex}
-    .wrap{padding:26px 18px 70px}
-    .grid.c2,.grid.c3,.grid.c4{grid-template-columns:1fr}
-    h2.title{font-size:26px}
+    .sidebar.open{transform:none}.topbar{display:flex}.wrap{padding:26px 18px 70px}
+    .grid.c2,.grid.c3,.grid.c4{grid-template-columns:1fr}h2.title{font-size:26px}
   }
 </style>
 </head>
 <body>
 <div class="app">
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
-      <div class="logo">📊</div>
-      <div><h1>DTA Strategy</h1><small>Diversified Trend Allocator · Docs</small></div>
+      <div class="logo">📈</div>
+      <div><h1>BLEND Strategy</h1><small>75% stocks · 25% ETFs · Docs</small></div>
     </div>
     <nav class="nav" id="nav">
       <div class="grp">Start here</div>
       <button data-p="overview" class="active"><span class="ic">🏠</span> Overview</button>
-      <button data-p="why"><span class="ic">🤔</span> Why we changed</button>
+      <button data-p="why"><span class="ic">🧭</span> Why this design</button>
       <div class="grp">How it works</div>
-      <button data-p="portfolio"><span class="ic">🧺</span> The portfolio</button>
-      <button data-p="rule"><span class="ic">📏</span> The one rule</button>
+      <button data-p="portfolio"><span class="ic">🥧</span> The 75 / 25 split</button>
+      <button data-p="picks"><span class="ic">🎯</span> How stocks are picked</button>
+      <button data-p="rules"><span class="ic">📋</span> Rules &amp; limits</button>
       <button data-p="safety"><span class="ic">🛡️</span> The safety net</button>
       <button data-p="day"><span class="ic">📅</span> How a day works</button>
-      <button data-p="satellite"><span class="ic">🛰️</span> The satellite</button>
       <div class="grp">Reality check</div>
       <button data-p="expect"><span class="ic">⚖️</span> Honest expectations</button>
-      <button data-p="realmoney"><span class="ic">💵</span> Path to real money</button>
+      <button data-p="realmoney"><span class="ic">💵</span> Going to Robinhood</button>
       <button data-p="glossary"><span class="ic">📖</span> Glossary</button>
     </nav>
     <div class="foot">
-      <b>Paper money only.</b> Nothing here is financial advice or a promise of profit.<br><br>
+      <b>Paper money only.</b> Not financial advice or a promise of profit. Currently runs on Alpaca paper.<br><br>
       Status: <b>paper / validating</b><br>Updated: <b>Jun 15, 2026</b>
     </div>
   </aside>
 
-  <!-- MAIN -->
   <div class="main">
-    <div class="topbar"><button id="menu">☰</button><b>DTA Strategy Docs</b></div>
+    <div class="topbar"><button id="menu">☰</button><b>BLEND Strategy Docs</b></div>
     <div class="wrap">
 
-      <!-- ============ OVERVIEW ============ -->
+      <!-- OVERVIEW -->
       <section class="page active" id="overview">
         <div class="eyebrow">Overview</div>
-        <h2 class="title">A calm, diversified robot — built to lose less, not to gamble more</h2>
-        <p class="lede">The DTA (Diversified Trend Allocator) is an automated paper-trading strategy. Instead of chasing hot stocks, it holds a small basket of broad funds, follows one simple trend rule on each, and hides in safe T-bills when things turn down. Its goal is a <b>smoother ride</b>, not the biggest possible win.</p>
+        <h2 class="title">A hand-picked stock portfolio with an ETF safety anchor</h2>
+        <p class="lede">The BLEND strategy puts <b>75% of the money into a diversified set of hand-picked individual stocks</b> (the growth engine) and <b>25% into broad ETFs</b> (the ballast). It buys slowly — never more than <b>$5,000 a day</b> — follows trend rules to cut losers, and is built to obey a Robinhood "agentic" investment account: no day trading, no options, no margin.</p>
 
         <div class="grid c4">
-          <div class="stat"><div class="k">Holds</div><div class="v">5 + cash</div></div>
-          <div class="stat"><div class="k">The rule</div><div class="v s">200-day trend</div></div>
-          <div class="stat"><div class="k">Checks to sell</div><div class="v s">Every day</div></div>
-          <div class="stat"><div class="k">Buys</div><div class="v s">Once a month</div></div>
+          <div class="stat"><div class="k">Stocks</div><div class="v">75%</div></div>
+          <div class="stat"><div class="k">ETF ballast</div><div class="v">25%</div></div>
+          <div class="stat"><div class="k">Max invested/day</div><div class="v s">$5,000</div></div>
+          <div class="stat"><div class="k">Day trading</div><div class="v s">Never</div></div>
         </div>
 
-        <h3>The big idea in one minute</h3>
+        <h3>The idea in one minute</h3>
         <div class="card">
-          <p>Imagine five buckets: <b>US stocks, international stocks, government bonds, gold, and real estate</b>. Spread your money evenly across them, and keep a permanent <b>cash cushion</b> in ultra-safe T-bills that earns interest.</p>
-          <p>For each bucket there's <b>one rule</b>: if it's trending up (above its 200-day average price), hold it. If it falls below that line, <b>sell it and move that money to T-bills</b>. That's basically the whole strategy.</p>
-          <p style="margin:0">Because it owns broad funds instead of single stocks, no one company blowing up overnight can sink it — and because it steps aside from anything in a downtrend, it sidesteps the worst of big market crashes.</p>
+          <p>Most of the portfolio (75%) is a basket of roughly a dozen <b>individual stocks</b> chosen for strong, steady uptrends — but spread across sectors so it's never a bet on just one industry. The other 25% is a calm <b>ETF anchor</b> (broad US stocks + bonds + gold) that steadies the ride.</p>
+          <p>It only deploys <b>up to $5,000 per day</b>, so it eases into the market gradually instead of going all-in at once. It sells a stock when its trend breaks, steps aside entirely when the whole market turns down, and parks idle money in interest-earning T-bills.</p>
+          <p style="margin:0">Every rule is chosen to stay inside what a Robinhood agentic <b>investment</b> account allows — long-term-style investing, never day trading.</p>
         </div>
 
-        <div class="callout good"><span class="em">✅</span><b>What it's good at:</b> staying diversified, avoiding single-stock disasters, and cutting losers automatically so a bad year stays a small dent instead of a deep hole.</div>
-        <div class="callout warn"><span class="em">⚠️</span><b>What to expect:</b> in a roaring bull market it will <b>trail a plain S&amp;P 500 fund</b> — sometimes for years. That's the trade-off for a calmer ride, and it's the design working as intended. <a href="#" data-go="expect">See "Honest expectations" →</a></div>
-
-        <h3>What's on each page</h3>
-        <div class="grid c2">
-          <div class="card" style="margin:0"><b>🤔 Why we changed</b><p style="margin:6px 0 0;color:var(--ink-soft)">The old momentum bot and the lesson that replaced it.</p></div>
-          <div class="card" style="margin:0"><b>🧺 The portfolio</b><p style="margin:6px 0 0;color:var(--ink-soft)">The five buckets and the cash cushion.</p></div>
-          <div class="card" style="margin:0"><b>📏 The one rule</b><p style="margin:6px 0 0;color:var(--ink-soft)">How the 200-day trend gate decides hold vs sell.</p></div>
-          <div class="card" style="margin:0"><b>🛡️ The safety net</b><p style="margin:6px 0 0;color:var(--ink-soft)">Three brakes that turn risk down automatically.</p></div>
-          <div class="card" style="margin:0"><b>📅 How a day works</b><p style="margin:6px 0 0;color:var(--ink-soft)">The exact routine the robot runs each morning.</p></div>
-          <div class="card" style="margin:0"><b>💵 Path to real money</b><p style="margin:6px 0 0;color:var(--ink-soft)">What must be proven before risking a real dollar.</p></div>
-        </div>
+        <div class="callout warn"><span class="em">⚠️</span><b>This is the higher-growth, higher-risk choice.</b> Owning 75% individual stocks can grow faster than a broad fund — but individual stocks can also fall hard and gap overnight. The guardrails below reduce that risk; they don't erase it. <a href="#" data-go="expect">See "Honest expectations" →</a></div>
+        <div class="callout good"><span class="em">✅</span><b>What keeps it sane:</b> max 2 stocks per sector, ≤10% in any one name, a "don't pick two near-identical stocks" filter, automatic trend-break exits, and a market-wide off-switch that moves everything to safety in a downturn.</div>
       </section>
 
-      <!-- ============ WHY ============ -->
+      <!-- WHY -->
       <section class="page" id="why">
-        <div class="eyebrow">Why we changed</div>
-        <h2 class="title">The lesson that built this strategy</h2>
-        <p class="lede">The first version of this bot chased "hot" stocks with strong recent momentum. It looked clever — until it wasn't. Here's what went wrong and why the new design is safer.</p>
-
-        <h3>What the old bot did</h3>
-        <p>It scanned a list of stocks and bought whichever were climbing fastest. The problem: the fastest climbers are usually the same kind of stock — high-flying, jumpy names that all move together. The bot quietly turned into a concentrated bet.</p>
-
-        <div class="callout bad"><span class="em">💥</span><b>The blow-up:</b> it ended up holding four semiconductor stocks at once (AMD, AVGO, MRVL, NVDA). When chips sold off, <b>all four hit their stop-losses on the same day</b>. That's not four small bets — it's one big bet wearing a disguise.</div>
-
-        <h3>Three deeper problems</h3>
-        <div class="grid c3">
-          <div class="card" style="margin:0"><b>🎯 One idea only</b><p style="margin:6px 0 0;color:var(--ink-soft)">100% "momentum." That single style suffers brutal crashes when the market suddenly reverses (2009, 2020).</p></div>
-          <div class="card" style="margin:0"><b>🕳️ Fake stops</b><p style="margin:6px 0 0;color:var(--ink-soft)">The bot only acts once a day. A "stop" at −8% can become −20% overnight before it ever looks. It gave false comfort.</p></div>
-          <div class="card" style="margin:0"><b>🎲 Tuning on noise</b><p style="margin:6px 0 0;color:var(--ink-soft)">It auto-adjusted its own settings after a handful of trades — which just fits random luck, not real skill.</p></div>
+        <div class="eyebrow">Why this design</div>
+        <h2 class="title">How we got here</h2>
+        <p class="lede">This strategy is the result of three deliberate steps — and one decision you made about how much risk you want.</p>
+        <div class="steps">
+          <div class="step"><div><h5>v1 — Pure momentum bot</h5><p>Chased the hottest stocks. It accidentally bought four semiconductor names at once and they all crashed together. Lesson: concentration kills.</p></div></div>
+          <div class="step"><div><h5>v2 — DTA (all-ETF, ultra-safe)</h5><p>An all-ETF "lose less" design. Very safe, but built to <i>trail</i> the market in raw return — more caution than you wanted.</p></div></div>
+          <div class="step"><div><h5>v3 — BLEND (this one)</h5><p>Your call: reach for more growth with <b>75% hand-picked stocks</b>, but keep hard diversification limits so it can never become "all chips" again, plus a 25% ETF anchor and a daily spend cap.</p></div></div>
         </div>
-
-        <h3>The shift in thinking</h3>
-        <table>
-          <tr><th>Old momentum bot</th><th>New DTA</th></tr>
-          <tr><td>Picks individual hot stocks</td><td>Holds broad funds (whole markets)</td></tr>
-          <tr><td>Tries to <b>beat</b> the market</td><td>Tries to <b>survive</b> the market with a smooth ride</td></tr>
-          <tr><td>Can blow up on one bad name</td><td>No single company can sink it</td></tr>
-          <tr><td>Sits in 0% cash when scared</td><td>Earns ~4% in T-bills when scared</td></tr>
-          <tr><td>Re-tunes itself constantly</td><td>Fixed rules — no second-guessing</td></tr>
-        </table>
-        <div class="callout info"><span class="em">💡</span>The old bot still exists for comparison only (run with <span class="kbd">--momentum</span>). The DTA is the real path forward.</div>
+        <div class="callout info"><span class="em">🧭</span><b>The honest trade-off you accepted:</b> more individual-stock exposure means more potential upside <i>and</i> more potential drawdown than the all-ETF version. The guardrails are what make that risk deliberate instead of reckless.</div>
+        <p>The two safer alternatives still live in the code and can be switched on any time: <span class="kbd">--dta</span> (all-ETF anchor) and <span class="kbd">--momentum</span> (the original, for comparison only).</p>
       </section>
 
-      <!-- ============ PORTFOLIO ============ -->
+      <!-- PORTFOLIO -->
       <section class="page" id="portfolio">
         <div class="eyebrow">How it works</div>
-        <h2 class="title">The portfolio: five buckets and a cash cushion</h2>
-        <p class="lede">When everything is healthy, the money is split evenly across five very different funds, with a fifth of it always kept safe in T-bills. "Different" is the point — these buckets don't all fall at the same time.</p>
-
+        <h2 class="title">The 75 / 25 split</h2>
+        <p class="lede">When the market is healthy, the target mix is 75% individual stocks and 25% ETF ballast. Anything the trend rules pull out of the market waits safely in T-bills.</p>
         <div class="figure">
           <div class="donutwrap">
-            <div class="donut"><div class="mid"><b>5</b><span>broad funds<br>+ cash cushion</span></div></div>
+            <div class="donut"><div class="mid"><b>75/25</b><span>stocks /<br>ETF anchor</span></div></div>
             <div class="legend">
-              <div class="row"><span class="lbl"><span class="swatch" style="background:var(--brand)"></span>SPY — US stocks</span><span class="pct">16%</span></div>
-              <div class="row"><span class="lbl"><span class="swatch" style="background:var(--sky)"></span>VEA — International stocks</span><span class="pct">16%</span></div>
-              <div class="row"><span class="lbl"><span class="swatch" style="background:var(--teal)"></span>IEF — US Treasuries (bonds)</span><span class="pct">16%</span></div>
-              <div class="row"><span class="lbl"><span class="swatch" style="background:var(--gold)"></span>GLD — Gold</span><span class="pct">16%</span></div>
-              <div class="row"><span class="lbl"><span class="swatch" style="background:var(--pink)"></span>VNQ — Real estate</span><span class="pct">16%</span></div>
-              <div class="row"><span class="lbl"><span class="swatch" style="background:var(--slate)"></span>T-bills — Safe cushion</span><span class="pct">20%</span></div>
+              <div class="row"><span class="lbl"><span class="swatch" style="background:var(--brand)"></span>Hand-picked stocks (~12 names)</span><span class="pct">75%</span></div>
+              <div class="row"><span class="lbl"><span class="swatch" style="background:var(--sky)"></span>SPY — US stock market</span><span class="pct">12.5%</span></div>
+              <div class="row"><span class="lbl"><span class="swatch" style="background:var(--teal)"></span>IEF — US Treasuries</span><span class="pct">6.25%</span></div>
+              <div class="row"><span class="lbl"><span class="swatch" style="background:var(--gold)"></span>GLD — Gold</span><span class="pct">6.25%</span></div>
             </div>
           </div>
-          <div class="figcap">Target mix when all five buckets are trending up. Each can shrink to 0% if its trend breaks — that money moves to the T-bill cushion.</div>
+          <div class="figcap">Target when the market is risk-on. Each ETF is trend-gated — if it falls below its 200-day average, its slice moves to T-bills instead. Stocks fill in gradually at ≤$5k/day.</div>
         </div>
 
-        <h3>Why these five?</h3>
+        <h3>The 75% — hand-picked stocks</h3>
+        <p>Around a dozen individual stocks picked from a curated S&amp;P 500 watchlist, chosen for strong risk-adjusted uptrends. Diversification is <b>enforced</b>, not hoped for:</p>
         <table>
-          <tr><th>Bucket</th><th>What it is</th><th>When it tends to shine</th></tr>
-          <tr><td><span class="pill idx">SPY</span></td><td>The 500 biggest US companies</td><td>Healthy economy, bull markets</td></tr>
-          <tr><td><span class="pill idx">VEA</span></td><td>Big companies outside the US</td><td>When the US lags the rest of the world</td></tr>
-          <tr><td><span class="pill idx">IEF</span></td><td>US government bonds (7–10 yr)</td><td>Recessions, "flight to safety"</td></tr>
-          <tr><td><span class="pill idx">GLD</span></td><td>Gold</td><td>Inflation, currency or crisis fears</td></tr>
-          <tr><td><span class="pill idx">VNQ</span></td><td>US real estate (REITs)</td><td>Steady growth, income, soft inflation</td></tr>
+          <tr><th>Guardrail</th><th>Limit</th><th>Why</th></tr>
+          <tr><td>Max per sector</td><td><b>2 stocks</b></td><td>No "all semiconductors" cluster ever again</td></tr>
+          <tr><td>Max in one stock</td><td><b>10%</b></td><td>No single name can dominate</td></tr>
+          <tr><td>Correlation filter</td><td><b>on</b></td><td>Won't pick two stocks that move near-identically</td></tr>
+          <tr><td>Weighting</td><td><b>calmer = bigger</b></td><td>Lower-volatility names get a larger slice (inverse-vol)</td></tr>
         </table>
-        <div class="callout info"><span class="em">🧩</span><b>The trick:</b> these five don't usually crash together. When stocks fall, bonds or gold often hold up. Spreading across them smooths out the bumps.</div>
 
-        <h3>The cash cushion (the "harbor")</h3>
-        <p>20% is always parked in <b>ultra-short T-bill funds</b> — about as safe as cash, but it earns the going interest rate (~4% lately). When buckets get sold for being in a downtrend, that money sails into this harbor too.</p>
-        <div class="callout good"><span class="em">⚓</span>To respect the rule that no single holding can exceed 25% of the account, the harbor is spread across several T-bill funds (<b>SGOV, BIL, USFR, TBLL, GBIL</b>), filling one before spilling into the next. Even a near-total retreat to cash stays within the rules.</div>
+        <h3>The 25% — ETF ballast</h3>
+        <p>A steadying anchor: <b>SPY</b> (the whole US market), <b>IEF</b> (government bonds), and <b>GLD</b> (gold). Each follows the same 200-day trend rule — if it's falling, its money goes to T-bills rather than riding it down.</p>
+        <div class="callout good"><span class="em">⚓</span>Idle or risk-off cash sits in <b>ultra-short T-bill ETFs</b> (SGOV, BIL, USFR…), spread so no single one breaks the 25%-per-holding rule. Safe, and it earns the going interest rate (~4%).</div>
       </section>
 
-      <!-- ============ THE ONE RULE ============ -->
-      <section class="page" id="rule">
+      <!-- PICKS -->
+      <section class="page" id="picks">
         <div class="eyebrow">How it works</div>
-        <h2 class="title">The one rule: the 200-day trend gate</h2>
-        <p class="lede">Each bucket is judged by a single, time-tested question: <b>is its price above or below its average price of the last 200 days?</b> Above means uptrend (hold). Below means downtrend (step aside).</p>
-
-        <div class="figure">
-          <svg viewBox="0 0 820 320" role="img" aria-label="Trend gate diagram">
-            <defs>
-              <linearGradient id="gz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16a34a" stop-opacity=".14"/><stop offset="1" stop-color="#16a34a" stop-opacity="0"/></linearGradient>
-              <linearGradient id="rz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dc2626" stop-opacity="0"/><stop offset="1" stop-color="#dc2626" stop-opacity=".14"/></linearGradient>
-            </defs>
-            <!-- zones -->
-            <rect x="60" y="30" width="700" height="120" fill="url(#gz)"/>
-            <rect x="60" y="170" width="700" height="120" fill="url(#rz)"/>
-            <!-- band -->
-            <rect x="60" y="150" width="700" height="20" fill="#94a3b8" opacity=".18"/>
-            <!-- 200d average line -->
-            <line x1="60" y1="160" x2="760" y2="160" stroke="#64748b" stroke-width="2.5" stroke-dasharray="7 5"/>
-            <text x="64" y="146" font-size="12" fill="#15803d" font-weight="700">UPTREND → HOLD the bucket</text>
-            <text x="64" y="280" font-size="12" fill="#b91c1c" font-weight="700">DOWNTREND → SELL it, move cash to T-bills</text>
-            <text x="600" y="184" font-size="11" fill="#475569">200-day average (±2% buffer)</text>
-            <!-- price line -->
-            <polyline fill="none" stroke="#6366f1" stroke-width="3"
-              points="60,250 120,235 180,205 240,210 300,150 360,120 420,90 480,110 540,70 600,95 660,140 720,200 760,235"/>
-            <circle cx="420" cy="90" r="5" fill="#16a34a"/><text x="402" y="78" font-size="11" fill="#15803d" font-weight="700">BUY/HOLD</text>
-            <circle cx="720" cy="200" r="5" fill="#dc2626"/><text x="700" y="222" font-size="11" fill="#b91c1c" font-weight="700">SELL</text>
-            <text x="60" y="312" font-size="11" fill="#94a3b8">time →</text>
-          </svg>
-          <div class="figcap">Illustrative. The purple line is a fund's price; the dashed line is its 200-day average. Cross clearly above → hold. Cross clearly below → sell into T-bills.</div>
+        <h2 class="title">How stocks get picked</h2>
+        <p class="lede">A stock only enters the 75% sleeve if it passes a series of filters — then survives the diversification gates. Held stocks are kept until their trend breaks, so the bot isn't constantly churning.</p>
+        <div class="steps">
+          <div class="step"><div><h5>1 · Must be in a real uptrend</h5><p>Price above its 50-day average, which is above its 200-day average. No catching falling knives.</p></div></div>
+          <div class="step"><div><h5>2 · Must be beating the market</h5><p>Its recent return has to beat the S&amp;P 500 — relative strength, not just "up a little."</p></div></div>
+          <div class="step"><div><h5>3 · Ranked by risk-adjusted momentum</h5><p>A blend of 1-, 3-, and 6-month gains divided by how jumpy the stock is — rewards steady climbers over wild swingers.</p></div></div>
+          <div class="step"><div><h5>4 · Diversification gates</h5><p>Keep going down the ranked list, but skip a name if its sector is already full (2) or it moves almost identically to one already chosen.</p></div></div>
+          <div class="step"><div><h5>5 · Sized by calmness</h5><p>The ~12 survivors split the 75% budget weighted toward lower-volatility names, each capped at 10%.</p></div></div>
         </div>
-
-        <h3>Three states</h3>
-        <div class="grid c3">
-          <div class="card" style="margin:0"><span class="pill on">▲ ON</span><p style="margin:8px 0 0;color:var(--ink-soft)">Price is more than <b>2% above</b> the 200-day line. Clear uptrend — own it.</p></div>
-          <div class="card" style="margin:0"><span class="pill off">▼ OFF</span><p style="margin:8px 0 0;color:var(--ink-soft)">Price is more than <b>2% below</b> the line. Clear downtrend — sell, go to T-bills.</p></div>
-          <div class="card" style="margin:0"><span class="pill idx">↔ HOLD</span><p style="margin:8px 0 0;color:var(--ink-soft)">Within the 2% buffer. <b>Do nothing new</b> — keep yesterday's decision.</p></div>
-        </div>
-
-        <div class="callout info"><span class="em">🎚️</span><b>Why the 2% buffer (hysteresis)?</b> Without it, a price wobbling right at the line would trigger buy-sell-buy-sell every day. The buffer means a bucket only changes its mind when the trend <b>clearly</b> changes — far less pointless trading.</div>
-
-        <div class="callout good"><span class="em">📚</span><b>Why 200 days?</b> It's the most studied, most stable trend signal in investing. Decades of research show that simply stepping aside when major markets fall below their long-term average dramatically reduces the worst crashes — without needing to predict anything.</div>
+        <h3>When does it sell a stock?</h3>
+        <table>
+          <tr><th>Trigger</th><th>What happens</th></tr>
+          <tr><td>Closes below its 50-day average</td><td>Trend break → sell the whole position</td></tr>
+          <tr><td>The whole market turns down (S&amp;P below 200-day)</td><td>Exit <b>all</b> stocks → move to safety</td></tr>
+          <tr><td>Account down 15% from its peak</td><td>Drawdown brake → rotate everything to T-bills</td></tr>
+          <tr><td>Grown far above its target weight</td><td>Trim back toward target</td></tr>
+        </table>
+        <div class="callout info"><span class="em">🧠</span><b>Keep winners, cut losers:</b> a held stock isn't sold just for slipping in the rankings — only when its trend actually breaks. That lowers needless trading (and avoids day-trading rules).</div>
       </section>
 
-      <!-- ============ SAFETY NET ============ -->
+      <!-- RULES & LIMITS -->
+      <section class="page" id="rules">
+        <div class="eyebrow">How it works</div>
+        <h2 class="title">Rules &amp; limits (Robinhood-ready)</h2>
+        <p class="lede">Every rule here is chosen so the bot fits what a Robinhood <b>agentic investment account</b> allows. It invests; it does not day-trade or speculate with leverage.</p>
+        <div class="grid c2">
+          <div class="stat"><div class="k">Daily invest cap</div><div class="v s">$5,000 / day</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">Total buys per day are hard-capped. Selling to reduce risk is never capped.</p></div>
+          <div class="stat"><div class="k">No day trading</div><div class="v s">Enforced</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">It will never buy and sell the same stock on the same day.</p></div>
+          <div class="stat"><div class="k">Cash account</div><div class="v s">Settled funds only</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">No margin, no borrowing. Buys only use money that's actually settled.</p></div>
+          <div class="stat"><div class="k">Investments only</div><div class="v s">Equities</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">Stocks &amp; ETFs only — no options, futures, or crypto.</p></div>
+        </div>
+        <div class="callout good"><span class="em">🔒</span><b>Double-locked.</b> These limits are enforced in two places: the strategy plans within them, and a separate checker (<span class="kbd">constitution.py</span>) <i>refuses</i> any order that would break the $5,000/day cap, the no-day-trade rule, the 25%-per-holding cap, or spend more cash than is settled.</div>
+        <h3>Why a $5,000/day cap helps</h3>
+        <p>Instead of dumping all your cash into the market in one morning, it eases in over a couple of weeks — a built-in form of <b>dollar-cost averaging</b>. You're never fully exposed on a single day's prices, and a bad pick can't consume the whole account at once.</p>
+        <div class="callout warn"><span class="em">🌙</span><b>Honest limit:</b> like any once-a-day system, it can't react to an overnight crash before markets reopen. Owning ~12 diversified names (not one big bet) and capping each at 10% is what limits the damage from any single surprise.</div>
+      </section>
+
+      <!-- SAFETY -->
       <section class="page" id="safety">
         <div class="eyebrow">How it works</div>
-        <h2 class="title">The safety net: three automatic brakes</h2>
-        <p class="lede">Beyond the per-bucket trend rule, three portfolio-wide brakes turn risk <b>down</b> (never up) when conditions worsen. They run automatically — no human, no emotion.</p>
-
+        <h2 class="title">The safety net</h2>
+        <p class="lede">Three portfolio-wide brakes sit on top of the per-stock trend rule. They only ever turn risk <b>down</b>, automatically.</p>
         <div class="grid c3">
-          <div class="stat"><div class="k">Brake 1</div><div class="v s">Trend gate</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">Any bucket below its 200-day trend is sold into T-bills.</p></div>
-          <div class="stat"><div class="k">Brake 2</div><div class="v s">Volatility</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">If markets get jumpy, shrink every position proportionally.</p></div>
-          <div class="stat"><div class="k">Brake 3</div><div class="v s">Drawdown</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">If the account falls 15% from its peak, retreat to T-bills.</p></div>
+          <div class="stat"><div class="k">Brake 1</div><div class="v s">Market regime</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">If the S&amp;P 500 is below its 200-day average, it stops picking stocks entirely.</p></div>
+          <div class="stat"><div class="k">Brake 2</div><div class="v s">Volatility</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">If markets get jumpy, it shrinks how much it holds in risk assets.</p></div>
+          <div class="stat"><div class="k">Brake 3</div><div class="v s">Drawdown</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">Down 15% from the peak → rotate everything to T-bills.</p></div>
         </div>
-
-        <h3>Brake 2 — the volatility brake</h3>
-        <p>If the market's recent swings (20-day volatility) climb above <b>18% a year</b>, the strategy scales down how much it holds in the risky buckets, parking the difference in T-bills. Calmer markets → full size. Wild markets → smaller size. It <b>never</b> uses this to take <i>more</i> risk.</p>
-
-        <h3>Brake 3 — the drawdown brake</h3>
-        <p>If the whole account ever drops <b>15% below its highest-ever value</b>, the strategy rotates everything risky into T-bills and waits for trends to recover.</p>
-        <div class="callout warn"><span class="em">🛑</span><b>Important distinction:</b> this brake <b>sells and rotates</b> — it does <u>not</u> freeze trading. The only thing that fully freezes the bot is a manual kill-switch file (<span class="kbd">.HALT_TRADING</span>) that a human creates on purpose. The robot must always be able to sell to protect itself.</div>
-
-        <h3>The honest limit: overnight gaps</h3>
-        <div class="callout bad"><span class="em">🌙</span>Because the bot only acts once a day, it <b>cannot</b> stop a price that crashes overnight while markets are closed. No once-a-day system can. Its real defense isn't a magic stop button — it's <b>owning broad funds (which can't gap on one company's bad news) plus always holding a cash cushion.</b></div>
+        <div class="callout info"><span class="em">🚦</span><b>The big one is the regime brake.</b> Picking individual stocks is only allowed while the overall market is in an uptrend. The moment the market breaks down, the 75% stock engine switches off and existing stocks are sold to safety — exactly when single stocks are most dangerous.</div>
+        <div class="callout warn"><span class="em">🛑</span>The drawdown brake <b>sells and rotates to T-bills</b> — it does not freeze trading. Only a manual kill-switch file (<span class="kbd">.HALT_TRADING</span>) fully stops the bot, and a human creates that on purpose.</div>
       </section>
 
-      <!-- ============ DAY ============ -->
+      <!-- DAY -->
       <section class="page" id="day">
         <div class="eyebrow">How it works</div>
         <h2 class="title">How a single day works</h2>
-        <p class="lede">Every weekday morning the robot wakes up and runs the same checklist. Selling-to-protect can happen <b>any day</b>; buying-to-grow happens <b>once a month</b>. That asymmetry is on purpose: be quick to reduce risk, slow and deliberate to add it.</p>
-
+        <p class="lede">Each weekday morning it runs the same routine: protect first, then invest up to $5,000 — selling fast, buying slow.</p>
         <div class="steps">
-          <div class="step"><div><h5>Check yesterday's orders</h5><p>See which orders actually filled. Never assume — read the real result from the broker.</p></div></div>
-          <div class="step"><div><h5>Read the account &amp; the market</h5><p>How much money, what's held, how far from the peak, how jumpy is the market.</p></div></div>
-          <div class="step"><div><h5>Run the three brakes</h5><p>Trend gate per bucket, volatility brake, drawdown brake → decide the target mix for today.</p></div></div>
-          <div class="step"><div><h5>Protect first (every day)</h5><p>Sell any bucket whose trend broke, and anything not in the plan. Move that money toward T-bills.</p></div></div>
-          <div class="step"><div><h5>Grow (first run of the month only)</h5><p>Top up under-weight buckets that are trending up, back toward their targets.</p></div></div>
-          <div class="step"><div><h5>Place safe orders &amp; record</h5><p>Sell orders first, then buys. Limit orders only. Save a plain-English summary and a risk-adjusted report.</p></div></div>
+          <div class="step"><div><h5>Check fills &amp; read the account</h5><p>What actually filled yesterday, how much cash/equity, how far from the peak, how much it has already invested today.</p></div></div>
+          <div class="step"><div><h5>Run the brakes</h5><p>Market regime, volatility, drawdown → decide today's target mix.</p></div></div>
+          <div class="step"><div><h5>Protect (uncapped)</h5><p>Sell any stock whose trend broke, anything off-plan, or everything if a brake fired. Reducing risk is never throttled.</p></div></div>
+          <div class="step"><div><h5>Invest (capped at $5,000)</h5><p>Top up the stock sleeve toward target, then the ETF anchor, then park leftovers in T-bills — stopping at the daily cap.</p></div></div>
+          <div class="step"><div><h5>Place safe orders &amp; report</h5><p>Sells first, then buys. Limit orders only. No same-day round trips. Save a summary + risk-adjusted report.</p></div></div>
         </div>
-
-        <h3>Sell first, then buy</h3>
         <div class="flow">
-          <div class="fnode red"><b>1 · SELLS</b> — exit broken trends &amp; off-plan holdings (any day)</div>
+          <div class="fnode red"><b>1 · SELLS</b> — broken trends &amp; off-plan names (uncapped)</div>
           <div class="farr">↓</div>
-          <div class="fnode slate"><b>2 · PARK CASH</b> — settled proceeds go into the T-bill harbor</div>
-          <div class="farr">↓</div>
-          <div class="fnode green"><b>3 · BUYS</b> — top up trending buckets toward target (monthly only)</div>
+          <div class="fnode green"><b>2 · BUYS</b> — stocks → ETF anchor → T-bills, until $5,000 is reached</div>
         </div>
-        <div class="callout info"><span class="em">🧮</span><b>Guardrails built in:</b> only LIMIT + DAY orders, whole shares, never spend more than the settled cash, no single holding over 25%, and a hard cap on how many trades per day/week. A separate checker (<span class="kbd">constitution.py</span>) refuses any order that breaks a rule.</div>
-        <div class="callout good"><span class="em">🐢</span><b>Low effort, low cost:</b> because buys are monthly and the trend signal is slow, the strategy trades rarely — roughly a handful of times per fund per year. Fewer trades means fewer fees and fewer mistakes.</div>
       </section>
 
-      <!-- ============ SATELLITE ============ -->
-      <section class="page" id="satellite">
-        <div class="eyebrow">How it works</div>
-        <h2 class="title">The optional momentum "satellite"</h2>
-        <p class="lede">There's a small, optional add-on that <b>can</b> pick a few individual momentum stocks for extra upside — but it's switched <b>OFF by default</b> and stays off until the safe core has proven itself on paper.</p>
-
-        <div class="callout warn"><span class="em">🔒</span><b>Off by default.</b> In the config, <span class="kbd">satellite_enabled = false</span>. It only turns on after the core clears the real-money checklist — and even then it's tightly leashed.</div>
-
-        <h3>The leash (hard caps)</h3>
-        <table>
-          <tr><th>Limit</th><th>Value</th><th>Why</th></tr>
-          <tr><td>Max share of the whole account</td><td><b>20%</b></td><td>The safe core always stays the majority</td></tr>
-          <tr><td>Max in any one stock</td><td><b>8%</b></td><td>No single name can do real damage</td></tr>
-          <tr><td>Max stocks per sector</td><td><b>2</b></td><td>Prevents another "all chips" cluster</td></tr>
-          <tr><td>Only runs when…</td><td><b>market is risk-on</b></td><td>No stock-picking into a falling market</td></tr>
-        </table>
-
-        <div class="callout info"><span class="em">🧠</span><b>Core-and-satellite</b> is a classic professional design: a big, boring, safe core does the heavy lifting, while a small satellite reaches for a little extra return — capped so a mistake there can't wreck the whole plan.</div>
-        <div class="callout good"><span class="em">🎓</span>This is exactly the "blend" you chose: keep the calm core, but leave room for a small, disciplined bet on individual winners — earned, not assumed.</div>
-      </section>
-
-      <!-- ============ EXPECTATIONS ============ -->
+      <!-- EXPECTATIONS -->
       <section class="page" id="expect">
         <div class="eyebrow">Reality check</div>
-        <h2 class="title">Honest expectations — no hype</h2>
-        <p class="lede">This matters more than any feature. The DTA is built to <b>lose less in bad markets, not to win more in good ones.</b> If you judge it by the wrong scoreboard, you'll quit it at exactly the wrong time.</p>
-
+        <h2 class="title">Honest expectations</h2>
+        <p class="lede">This is the growth-tilted choice. It can beat a plain index fund in good times — and it can also fall harder. Here's the unvarnished picture.</p>
         <div class="figure">
-          <svg viewBox="0 0 820 300" role="img" aria-label="Illustrative equity curves">
+          <svg viewBox="0 0 820 300" role="img" aria-label="Illustrative risk comparison">
             <line x1="55" y1="20" x2="55" y2="250" stroke="#cbd5e1"/><line x1="55" y1="250" x2="780" y2="250" stroke="#cbd5e1"/>
             <text x="20" y="40" font-size="11" fill="#94a3b8">value</text><text x="740" y="270" font-size="11" fill="#94a3b8">time →</text>
-            <!-- SPY: higher highs but a deep crash -->
-            <polyline fill="none" stroke="#94a3b8" stroke-width="3"
-              points="55,210 140,180 225,150 310,120 395,95 480,210 540,235 600,180 680,120 760,70"/>
-            <!-- DTA: smoother, shallower dip, lower peak -->
-            <polyline fill="none" stroke="#6366f1" stroke-width="3"
-              points="55,210 140,192 225,176 310,160 395,150 480,170 540,168 600,150 680,128 760,108"/>
-            <circle cx="480" cy="210" r="4" fill="#dc2626"/><text x="430" y="205" font-size="11" fill="#b91c1c" font-weight="700">crash</text>
-            <text x="690" y="62" font-size="12" fill="#64748b" font-weight="700">SPY</text>
-            <text x="690" y="124" font-size="12" fill="#4338ca" font-weight="700">DTA</text>
+            <polyline fill="none" stroke="#94a3b8" stroke-width="2.5" points="55,210 160,185 265,165 370,140 475,120 540,150 620,120 720,95"/>
+            <polyline fill="none" stroke="#6366f1" stroke-width="3" points="55,210 160,170 265,150 370,108 475,150 540,200 620,150 720,70"/>
+            <text x="726" y="70" font-size="12" fill="#4338ca" font-weight="700">BLEND</text>
+            <text x="726" y="98" font-size="12" fill="#64748b" font-weight="700">index</text>
+            <circle cx="540" cy="200" r="4" fill="#dc2626"/><text x="500" y="222" font-size="11" fill="#b91c1c" font-weight="700">bigger dips</text>
           </svg>
-          <div class="figcap"><b>Illustrative only — not real results.</b> SPY (grey) often climbs higher in good times but takes deep falls. The DTA (purple) aims for a smoother line with shallower dips, accepting a lower peak.</div>
+          <div class="figcap"><b>Illustrative only — not real results.</b> The BLEND (purple) can rise faster <i>and</i> dip deeper than a broad index (grey). More upside comes with more bumps.</div>
         </div>
-
-        <h3>What to realistically expect</h3>
         <table>
           <tr><th>Measure</th><th>Rough expectation</th></tr>
-          <tr><td>Raw return vs SPY</td><td><b>Often lower</b>, especially in strong bull markets — possibly for years</td></tr>
-          <tr><td>Volatility (bumpiness)</td><td>Roughly <b>half</b> of an all-stock portfolio</td></tr>
-          <tr><td>Worst-case drawdown</td><td>Target <b>~15–20%</b>, versus 30–50% for stocks alone</td></tr>
-          <tr><td>How it "wins"</td><td>Better <b>risk-adjusted</b> return (Sharpe / return-per-drop), not bigger raw return</td></tr>
-          <tr><td>Trading frequency</td><td>Low — a few trades per fund per year</td></tr>
+          <tr><td>Upside vs an index fund</td><td>Can be <b>higher</b> in strong, trending markets</td></tr>
+          <tr><td>Drawdowns</td><td><b>Larger</b> than the all-ETF DTA — individual stocks fall harder</td></tr>
+          <tr><td>Single-stock surprise (earnings, news, gap)</td><td>Capped at ~10% of the book per name; can't be fully prevented</td></tr>
+          <tr><td>Ramp-up speed</td><td>Slow — ~2–3 weeks to build, by design ($5k/day)</td></tr>
+          <tr><td>Behavior in a market downturn</td><td>Exits all stocks to T-bills when the S&amp;P breaks its 200-day</td></tr>
         </table>
-
-        <div class="callout warn"><span class="em">📉</span><b>It WILL underperform SPY in:</b> strong bull markets, especially narrow "mega-cap melt-ups" like the current one; choppy sideways markets (the trend can whipsaw); and sharp V-shaped rebounds (it re-enters a bit late). Expect it to trail in <b>roughly half of all years</b>. <b>That is the design working — not a reason to abandon it.</b></div>
-
-        <div class="callout good"><span class="em">⚖️</span><b>The right scoreboard:</b> compare <b>Sharpe ratio, maximum drawdown, and volatility</b> against SPY — not the raw monthly return. The daily report (<span class="kbd">dta_metrics.py</span>) prints exactly these.</div>
-        <div class="callout bad"><span class="em">🧠</span><b>The #1 risk is you, not the model.</b> The most likely way this fails is a human getting impatient during an expected stretch of underperformance and switching it off — right before it does its job in the next downturn.</div>
+        <div class="callout bad"><span class="em">📉</span><b>The real risk you chose:</b> 75% in individual stocks means a few bad picks or a sharp sector move will hurt more than a diversified fund would. The sector cap, 10%-per-name cap, correlation filter, and trend exits are there to keep that contained — but a string of stocks gapping down overnight can still bite before the bot acts the next morning.</div>
+        <div class="callout good"><span class="em">⚖️</span><b>Judge it on risk-adjusted results</b> (Sharpe ratio, max drawdown), not just raw return. The daily report prints these. If the drawdowns feel too large, the safer <span class="kbd">--dta</span> mode is one switch away.</div>
       </section>
 
-      <!-- ============ REAL MONEY ============ -->
+      <!-- REAL MONEY -->
       <section class="page" id="realmoney">
         <div class="eyebrow">Reality check</div>
-        <h2 class="title">Path to real money</h2>
-        <p class="lede">This is <b>paper money only</b> today. Before a single real dollar, everything below must be true. The checklist exists because the biggest danger is rushing.</p>
-
-        <h3>A · Code that must be proven</h3>
+        <h2 class="title">Going to Robinhood (real money)</h2>
+        <p class="lede">Today this runs on <b>Alpaca paper money</b>. Robinhood is where it could eventually run for real — but there are real steps and gaps first.</p>
+        <div class="callout warn"><span class="em">🔌</span><b>Robinhood has no traditional stock API.</b> Its agentic trading connects through an <b>MCP connector</b> you authorize at <span class="kbd">claude.ai/customize/connectors</span>, into a separate, ring-fenced agentic account you fund. That connector is <b>not connected yet</b>, so nothing trades on Robinhood right now.</div>
+        <h3>What's needed to actually trade on Robinhood</h3>
         <ul class="checklist">
-          <li class="done"><span class="bx">✓</span><div><b>Drawdown brake rotates, doesn't halt.</b> A −15% event sells into T-bills; only a manual switch freezes the book. <span class="tag">tested</span></div></li>
-          <li class="done"><span class="bx">✓</span><div><b>Daily protection works.</b> A bucket that breaks trend is sold the very next run. <span class="tag">tested</span></div></li>
-          <li class="done"><span class="bx">✓</span><div><b>Safe ordering.</b> Sells before buys, never overspend cash, no holding over 25%. <span class="tag">tested</span></div></li>
-          <li class="done"><span class="bx">✓</span><div><b>No self-tuning.</b> The DTA's settings are frozen — no learning on noise.</div></li>
-          <li class="todo"><span class="bx">○</span><div><b>Unfilled-order retry.</b> Re-price a limit order that didn't fill and track the fill rate. <span class="tag">to build</span></div></li>
-          <li class="todo"><span class="bx">○</span><div><b>Missed-run catch-up.</b> If a scheduled run is skipped, do the protective leg first next time. <span class="tag">to build</span></div></li>
+          <li class="todo"><span class="bx">○</span><div><b>You</b> connect the Robinhood MCP connector and open + fund the agentic account.</div></li>
+          <li class="todo"><span class="bx">○</span><div>Build a Robinhood execution adapter — the strategy <i>brain</i> stays identical; only the order-placing layer changes from Alpaca to Robinhood. <span class="tag">to build</span></div></li>
+          <li class="done"><span class="bx">✓</span><div>Compliance already built in: equities-only, cash account, no options/margin, no day trading, $5,000/day cap.</div></li>
         </ul>
-
-        <h3>B · Paper track record (12–24 months)</h3>
+        <h3>Prove it on paper first</h3>
         <ul class="checklist">
-          <li class="todo"><span class="bx">○</span><div>Live through <b>one full cycle</b>: a bucket going risk-off → into T-bills → and back. If the gate never fires, it's untested.</div></li>
-          <li class="todo"><span class="bx">○</span><div><b>Sharpe ≥ SPY</b> and <b>return-per-drawdown ≥ SPY</b>, with clearly lower volatility and shallower drops.</div></li>
-          <li class="todo"><span class="bx">○</span><div>Worst drop stays in the <b>~15–20%</b> design band.</div></li>
-          <li class="todo"><span class="bx">○</span><div><b>Order fill rate ≥ 90%</b>, logged weekly.</div></li>
+          <li class="todo"><span class="bx">○</span><div>Run on paper through at least one market downturn and recovery — confirm the regime brake exits stocks and re-enters later.</div></li>
+          <li class="todo"><span class="bx">○</span><div>Reasonable risk-adjusted results (Sharpe / drawdown) and a high order fill rate.</div></li>
+          <li class="todo"><span class="bx">○</span><div>Start with a small slice of real money; scale up only after it behaves as expected.</div></li>
         </ul>
-
-        <h3>C · Guardrails before funding</h3>
-        <ul class="checklist">
-          <li class="todo"><span class="bx">○</span><div><b>Account ≥ ~$25–50k</b> so whole-share rebalancing actually works.</div></li>
-          <li class="todo"><span class="bx">○</span><div><b>A written promise</b> not to abandon it during expected underperformance.</div></li>
-          <li class="todo"><span class="bx">○</span><div><b>Stage the money:</b> start with 10–25%, scale up only after a real risk-off→risk-on cycle with real fills.</div></li>
-        </ul>
-        <div class="callout info"><span class="em">📄</span>The live version of this list lives in the repo as <span class="kbd">MIGRATION_CHECKLIST.md</span>.</div>
+        <div class="callout info"><span class="em">📄</span>The detailed checklist lives in the repo as <span class="kbd">MIGRATION_CHECKLIST.md</span>.</div>
       </section>
 
-      <!-- ============ GLOSSARY ============ -->
+      <!-- GLOSSARY -->
       <section class="page" id="glossary">
         <div class="eyebrow">Reference</div>
         <h2 class="title">Glossary — plain English</h2>
-        <p class="lede">Every bit of jargon on this site, in one place.</p>
+        <p class="lede">Every term used on this site.</p>
         <div class="card">
           <dl class="gloss">
-            <dt>ETF (fund)</dt><dd>A single ticker that holds a whole basket of investments — e.g. SPY holds all 500 big US companies. One purchase, instant diversification.</dd>
-            <dt>200-day average (SMA200)</dt><dd>The average closing price over the last ~200 trading days. A widely used line between "long-term uptrend" and "downtrend."</dd>
-            <dt>Trend gate</dt><dd>Our one rule: price above the 200-day line → hold the fund; below → sell it and move to T-bills.</dd>
-            <dt>Hysteresis (the 2% buffer)</dt><dd>A small dead-zone around the line so the strategy doesn't flip-flop when price hovers right at it.</dd>
-            <dt>T-bills / the harbor</dt><dd>Ultra-short US government debt funds (SGOV, BIL…). About as safe as cash, but earns interest. Where money hides when markets are risky.</dd>
-            <dt>Volatility</dt><dd>How much prices swing. High volatility = bumpy and risky; low = calm.</dd>
-            <dt>Drawdown</dt><dd>How far the account has fallen from its highest-ever value. A "15% drawdown" means down 15% from the peak.</dd>
-            <dt>Sharpe ratio</dt><dd>Return earned for each unit of bumpiness. Higher = a smoother, more efficient ride. The DTA's true scoreboard.</dd>
-            <dt>Rebalance</dt><dd>Topping buckets back up to their target sizes (done monthly here).</dd>
-            <dt>Risk-on / risk-off</dt><dd>Risk-on = markets healthy, own growth assets. Risk-off = markets shaky, retreat to safety.</dd>
-            <dt>LIMIT + DAY order</dt><dd>An order to trade only at a set price or better, that expires at day's end if it doesn't fill. Safer than a "buy at any price" market order.</dd>
-            <dt>Core &amp; satellite</dt><dd>A big safe "core" portfolio plus a small, capped "satellite" reaching for extra return.</dd>
+            <dt>Stock vs ETF</dt><dd>A stock is one company (e.g. Apple). An ETF is a basket bundled into one ticker (e.g. SPY = the whole S&amp;P 500). This strategy is 75% individual stocks, 25% ETFs.</dd>
+            <dt>Hand-picked / momentum</dt><dd>The bot "picks" stocks by rules — strong, steady uptrends that are beating the market — not by a human's hunch.</dd>
+            <dt>Sector cap</dt><dd>At most 2 stocks from the same industry, so the portfolio is never a disguised bet on one sector.</dd>
+            <dt>Correlation filter</dt><dd>Won't hold two stocks that move almost identically — that's fake diversification.</dd>
+            <dt>Inverse-vol weighting</dt><dd>Calmer (less jumpy) stocks get a bigger slice; wilder ones get less.</dd>
+            <dt>200-day / 50-day average</dt><dd>Average price over the last ~200 or ~50 trading days. Above = uptrend; below = trouble.</dd>
+            <dt>ETF ballast</dt><dd>The steadying 25%: SPY (US market) + IEF (bonds) + GLD (gold).</dd>
+            <dt>T-bills / harbor</dt><dd>Ultra-safe short-term government funds where risk-off or idle cash waits, earning interest.</dd>
+            <dt>Day trading</dt><dd>Buying and selling the same security the same day. This bot never does it — it's an investor, not a day trader.</dd>
+            <dt>Daily invest cap</dt><dd>It will not place more than $5,000 of buy orders in a single day.</dd>
+            <dt>Drawdown</dt><dd>How far the account has fallen from its highest value.</dd>
+            <dt>Regime brake</dt><dd>Stops all stock-picking when the overall market is in a downtrend.</dd>
+            <dt>MCP connector</dt><dd>The plug-in standard Robinhood uses to let an AI agent trade your agentic account.</dd>
           </dl>
         </div>
-        <div class="callout good"><span class="em">🎉</span>That's the whole strategy. Calm, diversified, rule-based, and honest about its limits.</div>
+        <div class="callout good"><span class="em">🎉</span>That's the whole strategy: growth-tilted, hand-picked, diversified, capped, and honest about its risks.</div>
       </section>
 
     </div>
@@ -479,7 +370,6 @@
   function show(id){
     pages.forEach(p=>p.classList.toggle('active',p.id===id));
     btns.forEach(b=>b.classList.toggle('active',b.dataset.p===id));
-    document.querySelector('.main').scrollTo({top:0,behavior:'instant'});
     window.scrollTo({top:0});
     if(location.hash!=='#'+id) history.replaceState(null,'','#'+id);
     document.getElementById('sidebar').classList.remove('open');
