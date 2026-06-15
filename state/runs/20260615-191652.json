@@ -1,0 +1,127 @@
+{
+  "timestamp_utc": "2026-06-15T19:16:52.402562+00:00",
+  "strategy": "blend",
+  "mode": "execute",
+  "market_open": true,
+  "blocked": null,
+  "equity": 96527.8,
+  "cash": 32962.97,
+  "drawdown_from_hwm": 0.0296,
+  "invested_today_before_run": 46645.01,
+  "regime": "normal",
+  "regime_detail": {
+    "spy_gate": "close 755.01 > SMA200 686.82 x 1.02 (700.55) \u2014 uptrend",
+    "vol_brake": "market vol 16% <= 18% target \u2014 full risk sizing",
+    "drawdown_brake": "account -3% from high-water mark > -15% brake \u2014 normal operation",
+    "spy_risk_on": true
+  },
+  "gates": {
+    "SPY": "on",
+    "IEF": "off",
+    "GLD": "off"
+  },
+  "targets": {
+    "SPY": 12065.98,
+    "TROW": 9652.78,
+    "UNH": 7945.66,
+    "LIN": 9652.78,
+    "BAC": 9652.78,
+    "LLY": 7299.14,
+    "BA": 6822.4,
+    "RTX": 9652.78,
+    "SGOV": 23166.67,
+    "BIL": 616.83
+  },
+  "compliance": {
+    "equities_only": true,
+    "cash_settled_only": true,
+    "no_options_margin": true,
+    "no_day_trading": true,
+    "daily_invest_cap_usd": 50000,
+    "invested_today_before_run": 46645.01
+  },
+  "planned_trades": [
+    {
+      "ticker": "TROW",
+      "side": "BUY",
+      "qty": 28,
+      "limit_price": 116.9,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "TROW: hand-picked stock (momentum/trend), building toward 10% of book."
+    },
+    {
+      "ticker": "BAC",
+      "side": "BUY",
+      "qty": 1,
+      "limit_price": 56.24,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "BAC: hand-picked stock (momentum/trend), building toward 10% of book."
+    }
+  ],
+  "submitted": [
+    {
+      "trade_id": "T-20260615-012",
+      "alpaca_order_id": "645cfba4-64ab-43a7-8400-764fddcf6f4c",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T19:16:51.337197+00:00",
+      "saved_to": "state/completed_trades/T-20260615-012.json"
+    },
+    {
+      "trade_id": "T-20260615-013",
+      "alpaca_order_id": "e6befb31-3ba4-42e3-a9a7-e0806d8ff0a3",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T19:16:52.277653+00:00",
+      "saved_to": "state/completed_trades/T-20260615-013.json"
+    }
+  ],
+  "diagnostics": [
+    {
+      "ticker": "JPM",
+      "skip": "sector cap (financials)"
+    },
+    {
+      "ticker": "JNJ",
+      "skip": "sector cap (healthcare)"
+    },
+    {
+      "ticker": "TROW",
+      "stock_target": 9652.78,
+      "score": 0.848
+    },
+    {
+      "ticker": "UNH",
+      "stock_target": 7945.66,
+      "score": 0.899
+    },
+    {
+      "ticker": "LIN",
+      "stock_target": 9652.78,
+      "score": 0.638
+    },
+    {
+      "ticker": "BAC",
+      "stock_target": 9652.78,
+      "score": 0.609
+    },
+    {
+      "ticker": "LLY",
+      "stock_target": 7299.14,
+      "score": 0.36
+    },
+    {
+      "ticker": "BA",
+      "stock_target": 6822.4,
+      "score": 0.239
+    },
+    {
+      "ticker": "RTX",
+      "stock_target": 9652.78,
+      "score": -0.082
+    },
+    {
+      "daily_cap": "$46,645 invested earlier today; this run capped buys at $3,355 (limit $50,000/day)"
+    }
+  ]
+}

@@ -11,8 +11,11 @@
   "risk": "Momentum can reverse. Protected by: (1) hard stop at --8%, (2) trailing stop 3.0x ATR ($10.30), (3) trend break at SMA50 ($64.20).",
   "strategy": "daily_momentum",
   "score": 0.4568,
-  "status": "submitted",
+  "status": "filled",
   "initial_stop": 59.93,
   "alpaca_order_id": "6eae169d-fae8-4f94-9039-510de93f3ff6",
-  "submitted_at_utc": "2026-06-15T18:52:50.604768+00:00"
+  "submitted_at_utc": "2026-06-15T18:52:50.604768+00:00",
+  "filled_qty": 46.0,
+  "filled_avg_price": 70.22,
+  "reconciled_at_utc": "2026-06-15T19:15:46.923354+00:00"
 }

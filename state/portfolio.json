@@ -1,36 +1,117 @@
 {
-  "timestamp_utc": "2026-06-15T18:51:47.354556+00:00",
-  "equity": 96507.6,
-  "cash": 79429.69,
-  "buying_power": 365536.9,
+  "timestamp_utc": "2026-06-15T19:15:47.909466+00:00",
+  "equity": 96527.8,
+  "cash": 32962.97,
+  "buying_power": 309712.41,
   "positions": [
+    {
+      "ticker": "AMD",
+      "qty": 4.0,
+      "avg_entry_price": 548.195,
+      "market_value": 2179.5,
+      "unrealized_pl": -13.28,
+      "unrealized_plpc": -0.00606,
+      "pct_of_portfolio": 0.02257898760771508
+    },
+    {
+      "ticker": "CAT",
+      "qty": 4.0,
+      "avg_entry_price": 936.79,
+      "market_value": 3747.0,
+      "unrealized_pl": -0.16,
+      "unrealized_plpc": -4e-05,
+      "pct_of_portfolio": 0.038817832790139215
+    },
+    {
+      "ticker": "D",
+      "qty": 119.0,
+      "avg_entry_price": 68.49,
+      "market_value": 8166.97,
+      "unrealized_pl": 16.66,
+      "unrealized_plpc": 0.00204,
+      "pct_of_portfolio": 0.08460743951483407
+    },
+    {
+      "ticker": "FCX",
+      "qty": 46.0,
+      "avg_entry_price": 70.22,
+      "market_value": 3226.44,
+      "unrealized_pl": -3.68,
+      "unrealized_plpc": -0.00114,
+      "pct_of_portfolio": 0.033424982233097617
+    },
+    {
+      "ticker": "GS",
+      "qty": 4.0,
+      "avg_entry_price": 1081.72,
+      "market_value": 4320.04,
+      "unrealized_pl": -6.84,
+      "unrealized_plpc": -0.00158,
+      "pct_of_portfolio": 0.044754360919859355
+    },
+    {
+      "ticker": "MRVL",
+      "qty": 4.0,
+      "avg_entry_price": 309.3,
+      "market_value": 1231.6,
+      "unrealized_pl": -5.6,
+      "unrealized_plpc": -0.00453,
+      "pct_of_portfolio": 0.012759018645405778
+    },
+    {
+      "ticker": "MS",
+      "qty": 27.0,
+      "avg_entry_price": 219.33,
+      "market_value": 5923.8,
+      "unrealized_pl": 1.89,
+      "unrealized_plpc": 0.00032,
+      "pct_of_portfolio": 0.06136884918127213
+    },
+    {
+      "ticker": "PLD",
+      "qty": 56.0,
+      "avg_entry_price": 148.55,
+      "market_value": 8327.76,
+      "unrealized_pl": 8.96,
+      "unrealized_plpc": 0.00108,
+      "pct_of_portfolio": 0.08627317726085128
+    },
+    {
+      "ticker": "SPG",
+      "qty": 44.0,
+      "avg_entry_price": 214.6,
+      "market_value": 9469.24,
+      "unrealized_pl": 26.84,
+      "unrealized_plpc": 0.00284,
+      "pct_of_portfolio": 0.09809857885500342
+    },
     {
       "ticker": "SPY",
       "qty": 16.0,
       "avg_entry_price": 756.29,
-      "market_value": 12081.536,
-      "unrealized_pl": -19.104,
-      "unrealized_plpc": -0.00158,
-      "pct_of_portfolio": 0.12518740492976718
+      "market_value": 12082.5584,
+      "unrealized_pl": -18.0816,
+      "unrealized_plpc": -0.00149,
+      "pct_of_portfolio": 0.12517179921224766
     },
     {
       "ticker": "TROW",
       "qty": 45.0,
       "avg_entry_price": 109.93,
-      "market_value": 4945.95,
-      "unrealized_pl": -0.9,
-      "unrealized_plpc": -0.00018,
-      "pct_of_portfolio": 0.05124933165885381
+      "market_value": 4940.325,
+      "unrealized_pl": -6.525,
+      "unrealized_plpc": -0.00132,
+      "pct_of_portfolio": 0.051180333541218176
     },
     {
       "ticker": "USFR",
-      "qty": 1.0,
-      "avg_entry_price": 50.43,
-      "market_value": 50.42,
-      "unrealized_pl": -0.01,
-      "unrealized_plpc": -0.0002,
-      "pct_of_portfolio": 0.0005224459006337325
+      "qty": -1.0,
+      "avg_entry_price": 50.42,
+      "market_value": -50.42,
+      "unrealized_pl": 0.0,
+      "unrealized_plpc": 0.0,
+      "pct_of_portfolio": -0.0005223365703973363
     }
   ],
-  "drawdown_from_hwm": 0.02983148846610735
+  "drawdown_from_hwm": 0.029628422552821956
 }

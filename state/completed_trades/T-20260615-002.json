@@ -11,8 +11,11 @@
   "risk": "Tiny position has negligible impact.",
   "strategy": "daily_momentum",
   "score": 1.0,
-  "status": "submitted",
+  "status": "filled",
   "exit_rule": "position_too_small",
   "alpaca_order_id": "5e4077a0-ae02-4e5c-af46-119bd7f34f2b",
-  "submitted_at_utc": "2026-06-15T18:52:44.641365+00:00"
+  "submitted_at_utc": "2026-06-15T18:52:44.641365+00:00",
+  "filled_qty": 1.0,
+  "filled_avg_price": 50.42,
+  "reconciled_at_utc": "2026-06-15T19:15:46.598758+00:00"
 }
