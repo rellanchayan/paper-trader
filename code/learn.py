@@ -357,10 +357,14 @@ def main() -> int:
             by_ticker = s["by_ticker"]
             best = sorted(by_ticker.items(), key=lambda x: x[1]["total_pnl"], reverse=True)[:3]
             worst = sorted(by_ticker.items(), key=lambda x: x[1]["total_pnl"])[:3]
+
+            def _fmt(items):
+                return ", ".join(f"{t[0]} ({t[1]['trades']}t, ${t[1]['total_pnl']:+.0f})" for t in items)
+
             if best:
-                print(f"  Best performers: {', '.join(f\"{t[0]} ({t[1]['trades']}t, +${t[1]['total_pnl']:.0f})\" for t in best)}")
+                print(f"  Best performers: {_fmt(best)}")
             if worst and worst[0][1]["total_pnl"] < 0:
-                print(f"  Worst performers: {', '.join(f\"{t[0]} ({t[1]['trades']}t, ${t[1]['total_pnl']:.0f})\" for t in worst)}")
+                print(f"  Worst performers: {_fmt(worst)}")
     print(f"  Current settings: buy bar {params['min_outperformance']:.1%} over SPY, "
           f"stop loss {params['stop_loss_pct']:.1%}, trail {params['atr_stop_mult']:g} ATRs, "
           f"risk/trade {params['risk_per_trade']:.1%}, cooldown {params['cooldown_days']}d")

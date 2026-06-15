@@ -125,3 +125,39 @@ If `.HALT_TRADING` exists:
 Learn by doing, but keep it honest.
 
 Paper money is for practice. Keep the system simple.
+
+---
+
+## 10. Active Strategy — DTA (Diversified Trend Allocator)
+
+The active strategy is the **DTA**, in `code/dta_autopilot.py`. The old momentum
+bot (`code/autopilot.py`) is **legacy**, kept only for paper comparison
+(`bash code/run_daily.sh --momentum`).
+
+**What it is (plain English):** instead of picking hot stocks, hold a small
+basket of broad ETFs — US stocks (SPY), international (VEA), Treasuries (IEF),
+gold (GLD), real estate (VNQ), equal-weighted — plus a permanent cash-like
+cushion in ultra-short T-bill ETFs (SGOV/BIL/USFR…). Each sleeve has one rule:
+above its 200-day average → hold it; below → sell it and park the money in
+T-bills (which earn the bill rate). Checked **daily for selling**, rebalanced
+**monthly for buying**. A small momentum "satellite" (the `watchlist.txt`
+stocks) is **off** by default and only turns on after the core proves itself.
+
+**Files:** `dta_signals.py` (pure math), `dta_engine.py` (pure planner),
+`dta_autopilot.py` (entry point), `dta_metrics.py` (risk-adjusted report).
+Config: `state/dta_universe.json` (what it trades) + `state/dta_config.json`
+(frozen constants). State: `state/dta_state.json` (trend-gate memory). Runs in
+`state/dta_runs/`.
+
+**No learning loop.** DTA parameters are frozen on purpose — tuning a weak
+signal on a few dozen trades fits noise. Do not re-enable auto-tuning for DTA.
+
+**Read "beat SPY" as beat SPY RISK-ADJUSTED.** The DTA is built to lose less in
+bad markets, not to win more in good ones. It will trail SPY in raw return
+during bull markets — possibly for years — and that is the design working, not
+failing. Judge it on Sharpe / max-drawdown / volatility vs SPY (see
+`dta_metrics.py`), never on raw monthly return.
+
+**Real money:** not yet. See `MIGRATION_CHECKLIST.md` for what must be proven on
+paper first. `.HALT_TRADING` stays a manual, human-only kill switch; the
+automated drawdown brake rotates to T-bills, it does NOT halt.

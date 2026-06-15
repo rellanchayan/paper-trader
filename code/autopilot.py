@@ -1,6 +1,12 @@
 """
 Daily paper-trading autopilot.
 
+LEGACY (momentum). The active strategy is now the DTA in code/dta_autopilot.py.
+This single-factor momentum bot is kept ONLY for paper comparison and is run via
+`bash code/run_daily.sh --momentum`. It is not the path to real money — its pure
+price-momentum design concentrates into high-beta correlated names (the
+semiconductor blow-up) and its "stops" cannot protect against overnight gaps.
+
 Strategy v2 — runs a momentum book the way a careful wealth manager would:
 - Trend + relative-strength entries from state/watchlist.txt.
 - Diversification gates: sector caps and a similarity (correlation) check.

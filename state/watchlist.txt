@@ -1,33 +1,39 @@
-# S&P 500 Diversified Watchlist — updated 2026-06-15
-# Sectors: Technology, Healthcare, Financials, Energy, Industrials, Cons Staples, Cons Disc, Materials, Real Estate, Utilities, Comm Services
-# Goal: 40-50 liquid large-cap stocks for trend/momentum screening
+# Momentum SATELLITE candidate list (S&P 500 large caps across 11 sectors).
+# NOTE: This is ONLY used by the optional momentum satellite, which is OFF by
+# default (see state/dta_config.json -> satellite_enabled). The DTA core trades
+# the fixed ETF universe in state/dta_universe.json, NOT this list.
+# Every ticker here must also appear in state/sectors.json so the per-sector cap works.
 
-# Technology & Software (12)
+# Technology (10)
 AAPL
 MSFT
 NVDA
-GOOGL
-GOOG
-META
 ADBE
 CRM
-SNOWFLAKE
-TSLA
 AMD
 AVGO
+ORCL
+MRVL
+SNOW
 
-# Healthcare & Pharma (8)
-JNJ
+# Communication services (3)
+META
+GOOGL
+NFLX
+
+# Healthcare (8)
+LLY
 UNH
-PFE
+JNJ
 ABBV
 MRK
-LLY
 TMO
 VRTX
+PFE
 
-# Financials & Banking (8)
+# Financials (9)
 JPM
+V
 BAC
 WFC
 GS
@@ -36,39 +42,48 @@ SCHW
 ICE
 TROW
 
-# Industrials & Transportation (6)
-BA
+# Industrials (9)
+GE
+GEV
 CAT
+UNP
+BA
 LMT
 MMM
 RTX
 NSC
 
-# Energy & Materials (6)
+# Energy (3)
 XOM
 CVX
 COP
+
+# Consumer discretionary (4)
+AMZN
+TSLA
+HD
+MCD
+
+# Consumer staples (4)
+COST
+WMT
+PG
+KO
+
+# Materials (4)
+LIN
 FCX
 CLF
 NEM
 
-# Consumer & Retail (6)
-AMZN
-WMT
-MCD
-KO
-PG
-COST
-
-# Real Estate & Infrastructure (4)
+# Real estate (4)
 PLD
 SPG
 AMT
 CCI
 
-# Utilities & Staples (4)
+# Utilities (4)
 NEE
 D
 SRE
 XEL
-
