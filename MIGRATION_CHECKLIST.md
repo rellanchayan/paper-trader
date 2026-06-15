@@ -1,6 +1,6 @@
-# DTA → Real Money Checklist
+# the strategy → Real Money Checklist
 
-The DTA (Diversified Trend Allocator) is the strategy intended for eventual real
+The the strategy (Diversified Trend Allocator) is the strategy intended for eventual real
 money. **Do not fund it until every box below is checked.** This list exists
 because the dominant failure mode is human impatience, not the model.
 
@@ -15,7 +15,7 @@ because the dominant failure mode is human impatience, not the model.
   next run, not just at month-end. (Tested: `test_riskoff_sleeve_is_exited_daily`.)
 - [x] **Sells before buys; never over-spend cash; no single holding > 25%.**
   (Tested: `test_sells_before_buys_and_position_cap`, `test_buys_never_exceed_cash`.)
-- [x] **No learning loop for DTA.** Parameters are frozen in `dta_config.json`.
+- [x] **No learning loop.** Parameters are frozen in `config.json`.
 - [ ] **Unfilled-order retry.** Re-price a DAY limit that didn't fill and resubmit
   next session; log the fill rate. (Today: orders simply expire; the next daily
   run re-creates any still-needed trade at a fresh limit — acceptable for paper,
@@ -32,7 +32,7 @@ because the dominant failure mode is human impatience, not the model.
   **materially lower volatility and max drawdown.** (Raw return may trail — that
   is fine and expected.)
 - [ ] **Max drawdown stays within the designed ~15–20% band.**
-- [ ] **LIMIT fill rate ≥ ~90%**, logged weekly (`dta_metrics.py`).
+- [ ] **LIMIT fill rate ≥ ~90%**, logged weekly (`metrics.py`).
 - [ ] **Zero accidental trade-cap violations** (20/day, 50/week) even on a full
   rotation week.
 
@@ -49,5 +49,5 @@ because the dominant failure mode is human impatience, not the model.
 
 ---
 
-_Sign-off:_ once all A items are done and B is achieved on paper, DTA is approved
+_Sign-off:_ once all A items are done and B is achieved on paper, the strategy is approved
 for **staged** real-money deployment.

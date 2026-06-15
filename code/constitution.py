@@ -34,7 +34,7 @@ MAX_TRADES_PER_WEEK = 50
 MAX_TRADES_PER_DAY = 20
 # Most we will deploy into the market (BUY orders) in a single day. Selling to
 # raise cash / de-risk is never capped. Keeps the bot from front-loading risk.
-# Must match daily_invest_cap_usd in state/blend_config.json.
+# Must match daily_invest_cap_usd in state/config.json.
 MAX_DAILY_INVEST_USD = 50000.0
 
 FORBIDDEN_SUBSTRINGS_IN_SYMBOL = {

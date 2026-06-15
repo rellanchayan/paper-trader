@@ -175,8 +175,7 @@
           <div class="step"><div><h5>v2 — DTA (all-ETF, ultra-safe)</h5><p>An all-ETF "lose less" design. Very safe, but built to <i>trail</i> the market in raw return — more caution than you wanted.</p></div></div>
           <div class="step"><div><h5>v3 — BLEND (this one)</h5><p>Your call: reach for more growth with <b>75% hand-picked stocks</b>, but keep hard diversification limits so it can never become "all chips" again, plus a 25% ETF anchor and a daily spend cap.</p></div></div>
         </div>
-        <div class="callout info"><span class="em">🧭</span><b>The honest trade-off you accepted:</b> more individual-stock exposure means more potential upside <i>and</i> more potential drawdown than the all-ETF version. The guardrails are what make that risk deliberate instead of reckless.</div>
-        <p>The two safer alternatives still live in the code and can be switched on any time: <span class="kbd">--dta</span> (all-ETF anchor) and <span class="kbd">--momentum</span> (the original, for comparison only).</p>
+        <div class="callout info"><span class="em">🧭</span><b>The honest trade-off you accepted:</b> more individual-stock exposure means more potential upside <i>and</i> more potential drawdown than a broad index fund. The guardrails are what make that risk deliberate instead of reckless.</div>
       </section>
 
       <!-- PORTFOLIO -->
@@ -311,7 +310,7 @@
           <tr><td>Behavior in a market downturn</td><td>Exits all stocks to T-bills when the S&amp;P breaks its 200-day</td></tr>
         </table>
         <div class="callout bad"><span class="em">📉</span><b>The real risk you chose:</b> 75% in individual stocks means a few bad picks or a sharp sector move will hurt more than a diversified fund would. The sector cap, 10%-per-name cap, correlation filter, and trend exits are there to keep that contained — but a string of stocks gapping down overnight can still bite before the bot acts the next morning.</div>
-        <div class="callout good"><span class="em">⚖️</span><b>Judge it on risk-adjusted results</b> (Sharpe ratio, max drawdown), not just raw return. The daily report prints these. If the drawdowns feel too large, the safer <span class="kbd">--dta</span> mode is one switch away.</div>
+        <div class="callout good"><span class="em">⚖️</span><b>Judge it on risk-adjusted results</b> (Sharpe ratio, max drawdown), not just raw return. The daily report prints these. If the drawdowns feel too large, lower the per-name/sector caps or the daily invest cap in <span class="kbd">state/config.json</span>.</div>
       </section>
 
       <!-- REAL MONEY -->

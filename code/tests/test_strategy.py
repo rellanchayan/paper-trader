@@ -1,8 +1,8 @@
 """
-Unit tests for the BLEND strategy brain (75% stocks / 25% ETFs) and the new
-constitution guards. Pure logic + a tmp-dir constitution test — no network.
+Unit tests for the strategy brain (75% stocks / 25% ETFs) and the constitution
+guards. Pure logic + a tmp-dir constitution test — no network.
 
-Run:  python3 code/tests/test_blend.py
+Run:  python3 code/tests/test_strategy.py
 """
 
 import json
@@ -13,8 +13,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-import blend_engine  # noqa: E402
 import constitution  # noqa: E402
+import engine  # noqa: E402
 
 CONFIG = {
     "stock_sleeve_pct": 0.75, "etf_sleeve_pct": 0.25, "daily_invest_cap_usd": 5000,
@@ -76,7 +76,7 @@ def plan(**over):
                 config=CONFIG, sectors=SECTORS, watchlist=WATCHLIST,
                 bars_provider=bars, price_provider=price)
     args.update(over)
-    return blend_engine.plan_trades(**args)
+    return engine.plan_trades(**args)
 
 
 # ---- engine tests ----

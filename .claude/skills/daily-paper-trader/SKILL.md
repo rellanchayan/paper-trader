@@ -1,7 +1,7 @@
 ---
 name: daily-paper-trader
 description: Run the autonomous daily Alpaca paper-trading routine. Use this skill directly with /daily-paper-trader or in a scheduled Claude Code routine to plan and optionally execute paper trades.
-allowed-tools: Bash(bash code/run_daily.sh *), Bash(python3 code/autopilot.py *), Bash(python3 code/alpaca_client.py *), Bash(python3 code/constitution.py *), Bash(python3 code/performance.py *), Bash(python3 -m pip install -r requirements.txt), Read, Edit(state/**)
+allowed-tools: Bash(bash code/run_daily.sh *), Bash(python3 code/autopilot.py *), Bash(python3 code/alpaca_client.py *), Bash(python3 code/constitution.py *), Bash(python3 code/metrics.py *), Bash(python3 -m pip install -r requirements.txt), Read, Edit(state/**)
 ---
 
 # Daily Paper Trader
@@ -16,41 +16,34 @@ Run:
 bash code/run_daily.sh --execute
 ```
 
-The script:
+The script (`code/autopilot.py` → `code/engine.py`):
 1. Reconciles yesterday's orders (records what really filled, expired, or was canceled).
 2. Refreshes Alpaca paper positions.
-3. Reads `state/watchlist.txt`.
-4. Uses a wealth-manager-style momentum strategy (tunables in `state/strategy_params.json`):
-   - regime checks first: no new buys if SPY is below its 200d average OR the
-     account is >10% below its high-water mark; half-size buys when market
-     volatility is elevated
-   - buy candidates above their 50d and 200d averages that are up at least
-     `min_outperformance` over 20 trading days AND beat SPY by the same
-     margin, ranked by risk-adjusted momentum (1m/3m/6m blend / volatility)
-   - diversification gates: max `max_per_sector` holdings per sector
-     (`state/sectors.json`), skip candidates correlated > `max_corr` with a
-     holding, never chase a >2% gap, cooldown `cooldown_days` after a sell
-   - position sizing by risk: each buy risks ~`risk_per_trade` of equity
-     (ATR-based), capped at 10% of equity per position
-   - exits: hard stop `stop_loss_pct`, trailing stop `atr_stop_mult` ATRs
-     below the 22d high, 50d trend break, and overweight trims above 20%
-5. Creates trade JSON files.
-6. Runs `constitution.py`.
-7. Submits LIMIT + DAY paper orders.
-8. Saves a daily summary in `state/autopilot_runs/`.
+3. Reads `state/watchlist.txt` (stock candidates) and `state/config.json` (frozen params).
+4. Plans the **75% hand-picked stocks + 25% ETF ballast** strategy:
+   - market regime gate first: no stock-picking when SPY is below its 200d average;
+     drawdown brake rotates everything to T-bills below −15% from the high-water mark;
+     volatility brake scales risk down when markets are jumpy
+   - stock sleeve: names above their 50d and 200d averages that beat SPY, ranked by
+     risk-adjusted momentum, then filtered by diversification gates — **max 2 per
+     sector** (`state/sectors.json`), **≤10% per name**, correlation gate
+   - ETF ballast: SPY + IEF + GLD, each trend-gated; risk-off cash goes to the
+     T-bill harbor (SGOV/BIL/USFR…)
+   - exits: 50d trend break, regime/drawdown brakes, overweight trims
+5. Sizes buys against settled cash, **capped at the daily invest limit**
+   (`daily_invest_cap_usd` in `state/config.json`; hard-enforced by `constitution.py`).
+6. Runs `constitution.py` on every order (incl. no-day-trade + daily-cap checks).
+7. Submits LIMIT + DAY paper orders, sells before buys.
+8. Saves a daily summary in `state/runs/`.
 
-After the run, let the bot learn from finished trades and report performance:
+After the run it prints a **risk-adjusted** report (Sharpe / drawdown / vol vs SPY):
 
 ```bash
-python3 code/learn.py
-python3 code/performance.py
+python3 code/metrics.py
 ```
 
-`learn.py` grades every finished BUY→SELL pair and may adjust ONE setting in
-`state/strategy_params.json` by one small step (within hard bounds enforced by
-`autopilot.py`). Every change is logged with its reason in
-`state/strategy_changes.jsonl`. Do not hand-edit strategy settings in the same
-run; let the evidence-based loop do it.
+There is **no learning loop** — strategy params are frozen on purpose. Change them
+by hand in `state/config.json` only, with a reason, and re-validate on paper.
 
 ## Dry Run
 
@@ -67,9 +60,9 @@ Use Claude Code `/schedule` for managed cloud execution.
 Suggested prompt:
 
 ```text
-/schedule every weekday at 10:00am New York time, in the Trading repo, run /daily-paper-trader. This is paper trading only. Alpaca paper credentials are supplied as environment variables on the routine's cloud environment. Do not edit strategy files unless the run fails because a file is missing.
+/schedule every weekday at 10:00am New York time, in the Trading repo, run /daily-paper-trader. This is paper trading only. Alpaca paper credentials are supplied as environment variables on the routine's cloud environment.
 ```
 
-Set `ALPACA_API_KEY`, `ALPACA_SECRET_KEY`, and `ALPACA_ENDPOINT` as **environment variables on the routine's cloud environment** (Edit routine → click the environment → Update cloud environment → Environment variables). Routines do **not** read GitHub repository secrets. See README "Step 4" for click-by-click steps.
+Set `ALPACA_API_KEY`, `ALPACA_SECRET_KEY`, and `ALPACA_ENDPOINT` as **environment variables on the routine's cloud environment** (Edit routine → click the environment → Update cloud environment → Environment variables). Routines do **not** read GitHub repository secrets.
 
-Managed routines are preferred because they run in Claude Code cloud infrastructure and do not require the laptop to stay awake.
+Managed routines run in Claude Code cloud infrastructure and do not require the laptop to stay awake.

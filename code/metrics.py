@@ -1,15 +1,14 @@
 """
-dta_metrics.py — honest, risk-adjusted scorekeeping for the DTA.
+metrics.py — honest, risk-adjusted scorekeeping for the strategy.
 
-The DTA's job is a smoother ride, not a higher raw return. Judging it on "did it
-beat SPY this month" would get it abandoned at the worst time. So this reports
-the metrics that actually matter for a capital-preservation strategy:
-Sharpe ratio, MAR (return per unit of drawdown), max drawdown, realized vol, and
+Judging an automated strategy on "did it beat SPY this month" gets it abandoned
+at the worst time. So this reports the metrics that actually matter: Sharpe
+ratio, MAR (return per unit of drawdown), max drawdown, realized vol, and
 LIMIT-order fill rate — each next to SPY for context.
 
 Usage:
-    python3 code/dta_metrics.py          # plain-English report
-    python3 code/dta_metrics.py --json   # machine-readable
+    python3 code/metrics.py          # plain-English report
+    python3 code/metrics.py --json   # machine-readable
 """
 
 from __future__ import annotations
@@ -183,7 +182,7 @@ def print_plain(r: dict) -> None:
     if "error" in r:
         print(r["error"])
         return
-    print(f"DTA RISK-ADJUSTED REPORT — as of {r['as_of']} (started {r['started']}, {r['days_of_history']} days)")
+    print(f"RISK-ADJUSTED REPORT — as of {r['as_of']} (started {r['started']}, {r['days_of_history']} days)")
     print(f"  Account value:       ${r['equity']:,.2f}   (total return {r['total_return']:+.2%})")
     print(f"  Sharpe ratio:        {r['sharpe']}" + (f"   vs SPY {r['spy_sharpe']}" if r.get('spy_sharpe') is not None else ""))
     print(f"  Max drawdown:        {r['max_drawdown']:.2%}" + (f"   vs SPY {r['spy_max_drawdown']:.2%}" if r.get('spy_max_drawdown') is not None else ""))
@@ -194,8 +193,7 @@ def print_plain(r: dict) -> None:
         print(f"  LIMIT fill rate:     {r['fill_rate']:.0%}  ({fd['filled']} filled / {fd['final_orders']} final, {fd['pending']} pending)")
     else:
         print("  LIMIT fill rate:     no completed orders yet")
-    print("  Reminder: the DTA is built to LOSE LESS in bad markets, not to win more in good ones.")
-    print("  Judge it on Sharpe / drawdown vs SPY, not on raw return. Trailing SPY in a bull market is expected.")
+    print("  Reminder: judge this on Sharpe / drawdown vs SPY, not on raw monthly return.")
 
 
 def main() -> int:

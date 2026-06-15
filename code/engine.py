@@ -1,13 +1,13 @@
 """
-blend_engine.py — the BLEND planner: 75% hand-picked stocks + 25% ETF ballast.
+engine.py — the strategy planner: 75% hand-picked stocks + 25% ETF ballast.
 
 Built to fit a Robinhood-style agentic INVESTMENT account:
 - Equities only (stocks + ETFs), long-only, cash account (no margin/options).
 - No day trading: never buys and sells the same ticker on the same day.
-- Buys use settled cash only and are capped at a daily dollar limit ($5,000).
-- Safety kept from the DTA: per-sleeve trend gates, a market regime gate (no
-  stock-picking while the market is in a downtrend), a volatility brake, and a
-  drawdown brake that rotates to T-bills.
+- Buys use settled cash only and are capped at a daily dollar limit.
+- Per-sleeve trend gates, a market regime gate (no stock-picking while the
+  market is in a downtrend), a volatility brake, and a drawdown brake that
+  rotates to T-bills.
 
 Pure logic: data is injected, so it is fully unit-testable with no network.
 The stock sleeve is diversified on purpose (max 2 per sector, <=10% per name,
@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import math
 
-from dta_signals import (
+from signals import (
     annualized_vol, correlation, daily_returns, drawdown_brake, sma,
     trend_gate, vol_brake_factor,
 )

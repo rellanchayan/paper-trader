@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
-# Daily driver. Default strategy is the BLEND (75% hand-picked stocks + 25% ETF
+# Daily driver for the trading strategy (75% hand-picked stocks + 25% ETF
 # ballast), built to fit a Robinhood-style agentic investment account.
-# Alternatives are opt-in: --dta (diversified ETF core) or --momentum (legacy).
 #
-#   bash code/run_daily.sh --dry-run        # BLEND, plan only
-#   bash code/run_daily.sh --execute        # BLEND, submit paper orders + report
-#   bash code/run_daily.sh --dta --execute       # DTA ETF core
-#   bash code/run_daily.sh --momentum --execute  # legacy momentum bot + learn loop
+#   bash code/run_daily.sh --dry-run        # plan only, no orders
+#   bash code/run_daily.sh --execute        # submit paper orders + report
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -26,35 +23,8 @@ if ! "$PY" -c "import alpaca, dotenv" >/dev/null 2>&1; then
   fi
 fi
 
-# Split the strategy flag out of the args; pass the rest through.
-STRATEGY="blend"
-ARGS=()
-for a in "$@"; do
-  case "$a" in
-    --blend)    STRATEGY="blend" ;;
-    --dta)      STRATEGY="dta" ;;
-    --momentum) STRATEGY="momentum" ;;
-    *)          ARGS+=("$a") ;;
-  esac
-done
-# Safe expansion of a possibly-empty array under `set -u`.
-PASS=("${ARGS[@]+"${ARGS[@]}"}")
-
-case "$STRATEGY" in
-  momentum)
-    "$PY" code/autopilot.py "${PASS[@]}"
-    # Legacy bot learns from closed trades (never blocks the run).
-    "$PY" code/learn.py || echo "learning step failed — continuing"
-    ;;
-  dta)
-    "$PY" code/dta_autopilot.py "${PASS[@]}"
-    # DTA has NO learning loop (frozen params by design).
-    ;;
-  *)
-    "$PY" code/blend_autopilot.py "${PASS[@]}"
-    # BLEND has NO learning loop (frozen params by design).
-    ;;
-esac
+# Run the strategy (frozen params — no learning loop by design).
+"$PY" code/autopilot.py "$@"
 
 # Always print a risk-adjusted performance report (never blocks the run).
-"$PY" code/dta_metrics.py || true
+"$PY" code/metrics.py || true

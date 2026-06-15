@@ -1,10 +1,10 @@
 """
-dta_signals.py — the pure math behind the Diversified Trend Allocator (DTA).
+signals.py — the pure math behind the strategy (trend gates, brakes, momentum).
 
-Three layers, all computed from daily closing prices only (nothing else is in
-the data feed). Every function here is pure: same inputs -> same output, no
-network, no files. That is deliberate — it makes the strategy's brain fully
-unit-testable without touching Alpaca.
+All computed from daily closing prices only (nothing else is in the data feed).
+Every function here is pure: same inputs -> same output, no network, no files.
+That is deliberate — it makes the strategy's brain fully unit-testable without
+touching Alpaca.
 
 1. Per-sleeve TREND GATE (SMA200 with a hysteresis band) — the one real signal.
 2. Portfolio VOL BRAKE — scales risk down (never up) when markets get wild.
