@@ -1,81 +1,54 @@
 {
-  "timestamp_utc": "2026-06-12T17:25:04.392968+00:00",
-  "equity": 95195.03,
-  "cash": 22056.36,
-  "buying_power": 285649.11,
+  "timestamp_utc": "2026-06-15T14:56:09.516082+00:00",
+  "equity": 96278.16,
+  "cash": 47768.09,
+  "buying_power": 319365.48,
   "positions": [
-    {
-      "ticker": "AAPL",
-      "qty": 31.0,
-      "avg_entry_price": 313.1,
-      "market_value": 9048.59,
-      "unrealized_pl": -657.51,
-      "unrealized_plpc": -0.06774,
-      "pct_of_portfolio": 0.09505317662067023
-    },
     {
       "ticker": "AMD",
       "qty": 18.0,
       "avg_entry_price": 543.343333,
-      "market_value": 9343.8,
-      "unrealized_pl": -436.379994,
-      "unrealized_plpc": -0.04462,
-      "pct_of_portfolio": 0.098154283894863
-    },
-    {
-      "ticker": "AVGO",
-      "qty": 20.0,
-      "avg_entry_price": 483.1005,
-      "market_value": 7642.6,
-      "unrealized_pl": -2019.41,
-      "unrealized_plpc": -0.20901,
-      "pct_of_portfolio": 0.08028360304104112
+      "market_value": 9877.32,
+      "unrealized_pl": 97.140006,
+      "unrealized_plpc": 0.00993,
+      "pct_of_portfolio": 0.10259149115438018
     },
     {
       "ticker": "LLY",
       "qty": 9.0,
       "avg_entry_price": 1086.61,
-      "market_value": 10294.3665,
-      "unrealized_pl": 514.8765,
-      "unrealized_plpc": 0.05265,
-      "pct_of_portfolio": 0.10813974742168787
+      "market_value": 10208.655,
+      "unrealized_pl": 429.165,
+      "unrealized_plpc": 0.04388,
+      "pct_of_portfolio": 0.10603292584735728
     },
     {
       "ticker": "MRVL",
       "qty": 32.0,
       "avg_entry_price": 300.517813,
-      "market_value": 9179.36,
-      "unrealized_pl": -437.210016,
-      "unrealized_plpc": -0.04546,
-      "pct_of_portfolio": 0.0964268827899944
-    },
-    {
-      "ticker": "NVDA",
-      "qty": 44.0,
-      "avg_entry_price": 225.07,
-      "market_value": 9020.0,
-      "unrealized_pl": -883.08,
-      "unrealized_plpc": -0.08917,
-      "pct_of_portfolio": 0.09475284581558512
+      "market_value": 9370.56,
+      "unrealized_pl": -246.010016,
+      "unrealized_plpc": -0.02558,
+      "pct_of_portfolio": 0.09732799214276633
     },
     {
       "ticker": "QQQ",
       "qty": 13.0,
       "avg_entry_price": 745.57,
-      "market_value": 9404.2,
-      "unrealized_pl": -288.21,
-      "unrealized_plpc": -0.02974,
-      "pct_of_portfolio": 0.09878877080032436
+      "market_value": 9634.69,
+      "unrealized_pl": -57.72,
+      "unrealized_plpc": -0.00596,
+      "pct_of_portfolio": 0.10007139729301018
     },
     {
       "ticker": "TSLA",
       "qty": 23.0,
       "avg_entry_price": 422.331304,
-      "market_value": 9205.75,
-      "unrealized_pl": -507.869992,
-      "unrealized_plpc": -0.05228,
-      "pct_of_portfolio": 0.09670410314488057
+      "market_value": 9418.615,
+      "unrealized_pl": -295.004992,
+      "unrealized_plpc": -0.03037,
+      "pct_of_portfolio": 0.09782711883982825
     }
   ],
-  "drawdown_from_hwm": 0.043026450139426846
+  "drawdown_from_hwm": 0.03213799555245432
 }

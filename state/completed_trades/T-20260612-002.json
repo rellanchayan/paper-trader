@@ -11,8 +11,11 @@
   "risk": "May sell before a rebound.",
   "strategy": "daily_momentum",
   "score": 1.0,
-  "status": "submitted",
+  "status": "filled",
   "exit_rule": "stop_loss",
   "alpaca_order_id": "b77158d8-5190-485d-8af8-137c6d9d2c39",
-  "submitted_at_utc": "2026-06-12T17:25:17.052624+00:00"
+  "submitted_at_utc": "2026-06-12T17:25:17.052624+00:00",
+  "filled_qty": 20.0,
+  "filled_avg_price": 382.15,
+  "reconciled_at_utc": "2026-06-15T14:56:08.803350+00:00"
 }
