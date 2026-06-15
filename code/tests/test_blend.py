@@ -179,15 +179,18 @@ def _with_tmp_completed(fn):
 
 
 def test_constitution_daily_cap():
+    # Robust to whatever the cap constant is set to: leave $100 of headroom.
+    cap = constitution.MAX_DAILY_INVEST_USD
+
     def body(d):
         from datetime import datetime, timezone
         today = datetime.now(timezone.utc).isoformat()
-        (d / "a.json").write_text(json.dumps({"ticker": "AAPL", "side": "BUY", "qty": 10,
-            "limit_price": 480.0, "submitted_at_utc": today}))  # $4,800 already
+        (d / "a.json").write_text(json.dumps({"ticker": "AAPL", "side": "BUY", "qty": 1,
+            "limit_price": cap - 100, "submitted_at_utc": today}))  # $100 of headroom left
         r = constitution.check_daily_invest_cap({"ticker": "MSFT", "side": "BUY", "qty": 1, "limit_price": 300.0})
-        assert not r.passed, "should reject buy that pushes past $5,000/day"
-        r2 = constitution.check_daily_invest_cap({"ticker": "MSFT", "side": "BUY", "qty": 1, "limit_price": 150.0})
-        assert r2.passed, "a $150 buy fits under the remaining ~$200"
+        assert not r.passed, "should reject a buy that pushes past the daily cap"
+        r2 = constitution.check_daily_invest_cap({"ticker": "MSFT", "side": "BUY", "qty": 1, "limit_price": 50.0})
+        assert r2.passed, "a $50 buy fits under the remaining $100"
     _with_tmp_completed(body)
 
 

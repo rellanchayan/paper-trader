@@ -143,8 +143,9 @@ GLD, each trend-gated). Risk-off capital goes to the T-bill harbor.
 - **No day trading** — never buys and sells the same ticker the same day
   (enforced in `blend_engine.py` and by `constitution.check_no_day_trade`).
 - Cash account: buys use settled cash only.
-- **Invests at most $5,000/day** — `constitution.MAX_DAILY_INVEST_USD` and the
-  engine both cap total daily BUY notional. Sells are never capped.
+- **Invests at most $50,000/day** — `constitution.MAX_DAILY_INVEST_USD` and the
+  engine both cap total daily BUY notional (must stay in sync). Sells are never
+  capped.
 - Robinhood has **no official stock API**; agentic trading runs over an MCP
   connector the user must connect at claude.ai/customize/connectors. This repo
   still executes via Alpaca paper until that adapter is built.

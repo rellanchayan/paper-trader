@@ -4,7 +4,7 @@
   "stock_sleeve_pct": 0.75,
   "etf_sleeve_pct": 0.25,
 
-  "daily_invest_cap_usd": 5000,
+  "daily_invest_cap_usd": 50000,
 
   "etf_ballast": {
     "SPY": 0.125,

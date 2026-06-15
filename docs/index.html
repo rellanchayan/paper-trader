@@ -145,19 +145,19 @@
       <section class="page active" id="overview">
         <div class="eyebrow">Overview</div>
         <h2 class="title">A hand-picked stock portfolio with an ETF safety anchor</h2>
-        <p class="lede">The BLEND strategy puts <b>75% of the money into a diversified set of hand-picked individual stocks</b> (the growth engine) and <b>25% into broad ETFs</b> (the ballast). It buys slowly — never more than <b>$5,000 a day</b> — follows trend rules to cut losers, and is built to obey a Robinhood "agentic" investment account: no day trading, no options, no margin.</p>
+        <p class="lede">The BLEND strategy puts <b>75% of the money into a diversified set of hand-picked individual stocks</b> (the growth engine) and <b>25% into broad ETFs</b> (the ballast). It buys slowly — never more than <b>$50,000 a day</b> — follows trend rules to cut losers, and is built to obey a Robinhood "agentic" investment account: no day trading, no options, no margin.</p>
 
         <div class="grid c4">
           <div class="stat"><div class="k">Stocks</div><div class="v">75%</div></div>
           <div class="stat"><div class="k">ETF ballast</div><div class="v">25%</div></div>
-          <div class="stat"><div class="k">Max invested/day</div><div class="v s">$5,000</div></div>
+          <div class="stat"><div class="k">Max invested/day</div><div class="v s">$50,000</div></div>
           <div class="stat"><div class="k">Day trading</div><div class="v s">Never</div></div>
         </div>
 
         <h3>The idea in one minute</h3>
         <div class="card">
           <p>Most of the portfolio (75%) is a basket of roughly a dozen <b>individual stocks</b> chosen for strong, steady uptrends — but spread across sectors so it's never a bet on just one industry. The other 25% is a calm <b>ETF anchor</b> (broad US stocks + bonds + gold) that steadies the ride.</p>
-          <p>It only deploys <b>up to $5,000 per day</b>, so it eases into the market gradually instead of going all-in at once. It sells a stock when its trend breaks, steps aside entirely when the whole market turns down, and parks idle money in interest-earning T-bills.</p>
+          <p>It only deploys <b>up to $50,000 per day</b>, so a single day's prices can never consume the whole account at once. It sells a stock when its trend breaks, steps aside entirely when the whole market turns down, and parks idle money in interest-earning T-bills.</p>
           <p style="margin:0">Every rule is chosen to stay inside what a Robinhood agentic <b>investment</b> account allows — long-term-style investing, never day trading.</p>
         </div>
 
@@ -194,7 +194,7 @@
               <div class="row"><span class="lbl"><span class="swatch" style="background:var(--gold)"></span>GLD — Gold</span><span class="pct">6.25%</span></div>
             </div>
           </div>
-          <div class="figcap">Target when the market is risk-on. Each ETF is trend-gated — if it falls below its 200-day average, its slice moves to T-bills instead. Stocks fill in gradually at ≤$5k/day.</div>
+          <div class="figcap">Target when the market is risk-on. Each ETF is trend-gated — if it falls below its 200-day average, its slice moves to T-bills instead. Stocks fill in gradually at ≤$50k/day.</div>
         </div>
 
         <h3>The 75% — hand-picked stocks</h3>
@@ -241,14 +241,14 @@
         <h2 class="title">Rules &amp; limits (Robinhood-ready)</h2>
         <p class="lede">Every rule here is chosen so the bot fits what a Robinhood <b>agentic investment account</b> allows. It invests; it does not day-trade or speculate with leverage.</p>
         <div class="grid c2">
-          <div class="stat"><div class="k">Daily invest cap</div><div class="v s">$5,000 / day</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">Total buys per day are hard-capped. Selling to reduce risk is never capped.</p></div>
+          <div class="stat"><div class="k">Daily invest cap</div><div class="v s">$50,000 / day</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">Total buys per day are hard-capped. Selling to reduce risk is never capped.</p></div>
           <div class="stat"><div class="k">No day trading</div><div class="v s">Enforced</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">It will never buy and sell the same stock on the same day.</p></div>
           <div class="stat"><div class="k">Cash account</div><div class="v s">Settled funds only</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">No margin, no borrowing. Buys only use money that's actually settled.</p></div>
           <div class="stat"><div class="k">Investments only</div><div class="v s">Equities</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">Stocks &amp; ETFs only — no options, futures, or crypto.</p></div>
         </div>
-        <div class="callout good"><span class="em">🔒</span><b>Double-locked.</b> These limits are enforced in two places: the strategy plans within them, and a separate checker (<span class="kbd">constitution.py</span>) <i>refuses</i> any order that would break the $5,000/day cap, the no-day-trade rule, the 25%-per-holding cap, or spend more cash than is settled.</div>
-        <h3>Why a $5,000/day cap helps</h3>
-        <p>Instead of dumping all your cash into the market in one morning, it eases in over a couple of weeks — a built-in form of <b>dollar-cost averaging</b>. You're never fully exposed on a single day's prices, and a bad pick can't consume the whole account at once.</p>
+        <div class="callout good"><span class="em">🔒</span><b>Double-locked.</b> These limits are enforced in two places: the strategy plans within them, and a separate checker (<span class="kbd">constitution.py</span>) <i>refuses</i> any order that would break the $50,000/day cap, the no-day-trade rule, the 25%-per-holding cap, or spend more cash than is settled.</div>
+        <h3>Why a $50,000/day cap helps</h3>
+        <p>Instead of dumping all your cash into the market in one order, it spreads deployment across a few days — a built-in guardrail. You're never fully exposed to a single day's prices, and a bad pick can't consume the whole account at once.</p>
         <div class="callout warn"><span class="em">🌙</span><b>Honest limit:</b> like any once-a-day system, it can't react to an overnight crash before markets reopen. Owning ~12 diversified names (not one big bet) and capping each at 10% is what limits the damage from any single surprise.</div>
       </section>
 
@@ -270,18 +270,18 @@
       <section class="page" id="day">
         <div class="eyebrow">How it works</div>
         <h2 class="title">How a single day works</h2>
-        <p class="lede">Each weekday morning it runs the same routine: protect first, then invest up to $5,000 — selling fast, buying slow.</p>
+        <p class="lede">Each weekday morning it runs the same routine: protect first, then invest up to $50,000 — selling fast, buying slow.</p>
         <div class="steps">
           <div class="step"><div><h5>Check fills &amp; read the account</h5><p>What actually filled yesterday, how much cash/equity, how far from the peak, how much it has already invested today.</p></div></div>
           <div class="step"><div><h5>Run the brakes</h5><p>Market regime, volatility, drawdown → decide today's target mix.</p></div></div>
           <div class="step"><div><h5>Protect (uncapped)</h5><p>Sell any stock whose trend broke, anything off-plan, or everything if a brake fired. Reducing risk is never throttled.</p></div></div>
-          <div class="step"><div><h5>Invest (capped at $5,000)</h5><p>Top up the stock sleeve toward target, then the ETF anchor, then park leftovers in T-bills — stopping at the daily cap.</p></div></div>
+          <div class="step"><div><h5>Invest (capped at $50,000)</h5><p>Top up the stock sleeve toward target, then the ETF anchor, then park leftovers in T-bills — stopping at the daily cap.</p></div></div>
           <div class="step"><div><h5>Place safe orders &amp; report</h5><p>Sells first, then buys. Limit orders only. No same-day round trips. Save a summary + risk-adjusted report.</p></div></div>
         </div>
         <div class="flow">
           <div class="fnode red"><b>1 · SELLS</b> — broken trends &amp; off-plan names (uncapped)</div>
           <div class="farr">↓</div>
-          <div class="fnode green"><b>2 · BUYS</b> — stocks → ETF anchor → T-bills, until $5,000 is reached</div>
+          <div class="fnode green"><b>2 · BUYS</b> — stocks → ETF anchor → T-bills, until $50,000 is reached</div>
         </div>
       </section>
 
@@ -307,7 +307,7 @@
           <tr><td>Upside vs an index fund</td><td>Can be <b>higher</b> in strong, trending markets</td></tr>
           <tr><td>Drawdowns</td><td><b>Larger</b> than the all-ETF DTA — individual stocks fall harder</td></tr>
           <tr><td>Single-stock surprise (earnings, news, gap)</td><td>Capped at ~10% of the book per name; can't be fully prevented</td></tr>
-          <tr><td>Ramp-up speed</td><td>Slow — ~2–3 weeks to build, by design ($5k/day)</td></tr>
+          <tr><td>Ramp-up speed</td><td>Slow — ~2–3 weeks to build, by design ($50k/day)</td></tr>
           <tr><td>Behavior in a market downturn</td><td>Exits all stocks to T-bills when the S&amp;P breaks its 200-day</td></tr>
         </table>
         <div class="callout bad"><span class="em">📉</span><b>The real risk you chose:</b> 75% in individual stocks means a few bad picks or a sharp sector move will hurt more than a diversified fund would. The sector cap, 10%-per-name cap, correlation filter, and trend exits are there to keep that contained — but a string of stocks gapping down overnight can still bite before the bot acts the next morning.</div>
@@ -324,7 +324,7 @@
         <ul class="checklist">
           <li class="todo"><span class="bx">○</span><div><b>You</b> connect the Robinhood MCP connector and open + fund the agentic account.</div></li>
           <li class="todo"><span class="bx">○</span><div>Build a Robinhood execution adapter — the strategy <i>brain</i> stays identical; only the order-placing layer changes from Alpaca to Robinhood. <span class="tag">to build</span></div></li>
-          <li class="done"><span class="bx">✓</span><div>Compliance already built in: equities-only, cash account, no options/margin, no day trading, $5,000/day cap.</div></li>
+          <li class="done"><span class="bx">✓</span><div>Compliance already built in: equities-only, cash account, no options/margin, no day trading, $50,000/day cap.</div></li>
         </ul>
         <h3>Prove it on paper first</h3>
         <ul class="checklist">
@@ -351,7 +351,7 @@
             <dt>ETF ballast</dt><dd>The steadying 25%: SPY (US market) + IEF (bonds) + GLD (gold).</dd>
             <dt>T-bills / harbor</dt><dd>Ultra-safe short-term government funds where risk-off or idle cash waits, earning interest.</dd>
             <dt>Day trading</dt><dd>Buying and selling the same security the same day. This bot never does it — it's an investor, not a day trader.</dd>
-            <dt>Daily invest cap</dt><dd>It will not place more than $5,000 of buy orders in a single day.</dd>
+            <dt>Daily invest cap</dt><dd>It will not place more than $50,000 of buy orders in a single day.</dd>
             <dt>Drawdown</dt><dd>How far the account has fallen from its highest value.</dd>
             <dt>Regime brake</dt><dd>Stops all stock-picking when the overall market is in a downtrend.</dd>
             <dt>MCP connector</dt><dd>The plug-in standard Robinhood uses to let an AI agent trade your agentic account.</dd>
