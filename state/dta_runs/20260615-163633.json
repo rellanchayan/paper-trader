@@ -1,0 +1,228 @@
+{
+  "timestamp_utc": "2026-06-15T16:36:33.211483+00:00",
+  "strategy": "dta",
+  "mode": "execute",
+  "market_open": true,
+  "blocked": null,
+  "equity": 96571.98,
+  "cash": 31767.12,
+  "drawdown_from_hwm": 0.0292,
+  "regime": "normal",
+  "regime_detail": {
+    "drawdown_brake": "account -3% from high-water mark > -15% brake \u2014 normal operation",
+    "vol_brake": "market vol 16% <= 18% target \u2014 full risk sizing",
+    "spy_risk_on": true,
+    "full_rebalance": true
+  },
+  "gates": {
+    "SPY": "on",
+    "VEA": "on",
+    "IEF": "off",
+    "GLD": "off",
+    "VNQ": "on"
+  },
+  "gate_reasons": {
+    "SPY": "close 756.26 > SMA200 686.82 x 1.02 (700.56) \u2014 uptrend",
+    "VEA": "close 72.50 > SMA200 64.60 x 1.02 (65.89) \u2014 uptrend",
+    "IEF": "close 94.33 in hysteresis band [94.10, 97.95] \u2014 holding prior state 'off'",
+    "GLD": "close 398.43 < SMA200 407.05 x 0.98 (398.91) \u2014 downtrend",
+    "VNQ": "close 98.39 > SMA200 92.04 x 1.02 (93.88) \u2014 uptrend"
+  },
+  "targets": {
+    "SPY": 15451.52,
+    "VEA": 15451.52,
+    "VNQ": 15451.52,
+    "SGOV": 23177.28,
+    "BIL": 23177.28,
+    "USFR": 3862.88
+  },
+  "planned_trades": [
+    {
+      "ticker": "AMD",
+      "side": "SELL",
+      "qty": 18,
+      "limit_price": 545.86,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "AMD: not in the DTA plan \u2014 liquidating to conform to target allocation.",
+      "exit_rule": "not_in_universe"
+    },
+    {
+      "ticker": "JNJ",
+      "side": "SELL",
+      "qty": 35,
+      "limit_price": 232.88,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "JNJ: not in the DTA plan \u2014 liquidating to conform to target allocation.",
+      "exit_rule": "not_in_universe"
+    },
+    {
+      "ticker": "JPM",
+      "side": "SELL",
+      "qty": 24,
+      "limit_price": 320.59,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "JPM: not in the DTA plan \u2014 liquidating to conform to target allocation.",
+      "exit_rule": "not_in_universe"
+    },
+    {
+      "ticker": "LLY",
+      "side": "SELL",
+      "qty": 9,
+      "limit_price": 1106.67,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "LLY: not in the DTA plan \u2014 liquidating to conform to target allocation.",
+      "exit_rule": "not_in_universe"
+    },
+    {
+      "ticker": "MRVL",
+      "side": "SELL",
+      "qty": 32,
+      "limit_price": 299.52,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "MRVL: not in the DTA plan \u2014 liquidating to conform to target allocation.",
+      "exit_rule": "not_in_universe"
+    },
+    {
+      "ticker": "QQQ",
+      "side": "SELL",
+      "qty": 13,
+      "limit_price": 741.88,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "QQQ: not in the DTA plan \u2014 liquidating to conform to target allocation.",
+      "exit_rule": "not_in_universe"
+    },
+    {
+      "ticker": "TSLA",
+      "side": "SELL",
+      "qty": 23,
+      "limit_price": 410.23,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "TSLA: not in the DTA plan \u2014 liquidating to conform to target allocation.",
+      "exit_rule": "not_in_universe"
+    },
+    {
+      "ticker": "SPY",
+      "side": "BUY",
+      "qty": 20,
+      "limit_price": 758.59,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "SPY: risk-on (close 756.26 > SMA200 686.82 x 1.02 (700.56) \u2014 uptrend); building toward 16% target. market vol 16% <= 18% target \u2014 full risk sizing."
+    },
+    {
+      "ticker": "VEA",
+      "side": "BUY",
+      "qty": 212,
+      "limit_price": 72.73,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "VEA: risk-on (close 72.50 > SMA200 64.60 x 1.02 (65.89) \u2014 uptrend); building toward 16% target. market vol 16% <= 18% target \u2014 full risk sizing."
+    },
+    {
+      "ticker": "VNQ",
+      "side": "BUY",
+      "qty": 11,
+      "limit_price": 98.68,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "VNQ: risk-on (close 98.39 > SMA200 92.04 x 1.02 (93.88) \u2014 uptrend); building toward 16% target. market vol 16% <= 18% target \u2014 full risk sizing."
+    },
+    {
+      "ticker": "USFR",
+      "side": "BUY",
+      "qty": 1,
+      "limit_price": 50.58,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "USFR: parking cash in the T-bill harbor (earns the bill rate while risk-off)."
+    }
+  ],
+  "submitted": [
+    {
+      "trade_id": "T-20260615-001",
+      "alpaca_order_id": "525987b1-3726-49d0-a750-8153c0a5178d",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T16:36:25.914333+00:00",
+      "saved_to": "state/completed_trades/T-20260615-001.json"
+    },
+    {
+      "trade_id": "T-20260615-002",
+      "alpaca_order_id": "15e8c733-f99f-41e4-8866-b86939f6ce66",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T16:36:26.662801+00:00",
+      "saved_to": "state/completed_trades/T-20260615-002.json"
+    },
+    {
+      "trade_id": "T-20260615-003",
+      "alpaca_order_id": "90d5088a-e93e-4ffb-a476-14a085dd1914",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T16:36:27.389880+00:00",
+      "saved_to": "state/completed_trades/T-20260615-003.json"
+    },
+    {
+      "trade_id": "T-20260615-004",
+      "alpaca_order_id": "6cd39d53-faf5-4c3a-aa20-602e6510ff29",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T16:36:28.104703+00:00",
+      "saved_to": "state/completed_trades/T-20260615-004.json"
+    },
+    {
+      "trade_id": "T-20260615-005",
+      "alpaca_order_id": "16d5ce7a-865d-4da6-ad29-58c8c55edb29",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T16:36:28.825362+00:00",
+      "saved_to": "state/completed_trades/T-20260615-005.json"
+    },
+    {
+      "trade_id": "T-20260615-006",
+      "alpaca_order_id": "731c1bc3-5e13-42e7-9e64-a10e8f297b3a",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T16:36:29.542504+00:00",
+      "saved_to": "state/completed_trades/T-20260615-006.json"
+    },
+    {
+      "trade_id": "T-20260615-007",
+      "alpaca_order_id": "38c4a8bc-4b78-46c7-8916-31f321ef9684",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T16:36:30.250610+00:00",
+      "saved_to": "state/completed_trades/T-20260615-007.json"
+    },
+    {
+      "trade_id": "T-20260615-008",
+      "alpaca_order_id": "993a6787-5d00-4fc0-8584-dd2c6801911a",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T16:36:30.949103+00:00",
+      "saved_to": "state/completed_trades/T-20260615-008.json"
+    },
+    {
+      "trade_id": "T-20260615-009",
+      "alpaca_order_id": "c33832fa-8c52-4c33-969b-1622f2c637f6",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T16:36:31.661678+00:00",
+      "saved_to": "state/completed_trades/T-20260615-009.json"
+    },
+    {
+      "trade_id": "T-20260615-010",
+      "alpaca_order_id": "d9f6a051-d611-41dc-8131-ea9dd7037b46",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T16:36:32.404597+00:00",
+      "saved_to": "state/completed_trades/T-20260615-010.json"
+    },
+    {
+      "trade_id": "T-20260615-011",
+      "alpaca_order_id": "16f56c36-1c2b-4f11-8dd8-4eef8f675b7b",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T16:36:33.115869+00:00",
+      "saved_to": "state/completed_trades/T-20260615-011.json"
+    }
+  ],
+  "diagnostics": [],
+  "is_new_buy_month": true
+}

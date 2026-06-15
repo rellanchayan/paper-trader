@@ -1,0 +1,72 @@
+{
+  "timestamp_utc": "2026-06-15T16:36:09.418622+00:00",
+  "equity": 96571.98,
+  "cash": 31767.12,
+  "buying_power": 300951.39,
+  "positions": [
+    {
+      "ticker": "AMD",
+      "qty": 18.0,
+      "avg_entry_price": 543.343333,
+      "market_value": 9899.37,
+      "unrealized_pl": 119.190006,
+      "unrealized_plpc": 0.01219,
+      "pct_of_portfolio": 0.1025076839058286
+    },
+    {
+      "ticker": "JNJ",
+      "qty": 35.0,
+      "avg_entry_price": 236.83,
+      "market_value": 8271.025,
+      "unrealized_pl": -18.025,
+      "unrealized_plpc": -0.00217,
+      "pct_of_portfolio": 0.08564621953490029
+    },
+    {
+      "ticker": "JPM",
+      "qty": 24.0,
+      "avg_entry_price": 321.33,
+      "market_value": 7718.4,
+      "unrealized_pl": 6.48,
+      "unrealized_plpc": 0.00084,
+      "pct_of_portfolio": 0.07992380398537961
+    },
+    {
+      "ticker": "LLY",
+      "qty": 9.0,
+      "avg_entry_price": 1086.61,
+      "market_value": 10149.48,
+      "unrealized_pl": 369.99,
+      "unrealized_plpc": 0.03783,
+      "pct_of_portfolio": 0.10509756556715519
+    },
+    {
+      "ticker": "MRVL",
+      "qty": 32.0,
+      "avg_entry_price": 300.517813,
+      "market_value": 9629.28,
+      "unrealized_pl": 12.709984,
+      "unrealized_plpc": 0.00132,
+      "pct_of_portfolio": 0.09971090993474506
+    },
+    {
+      "ticker": "QQQ",
+      "qty": 13.0,
+      "avg_entry_price": 745.57,
+      "market_value": 9673.95,
+      "unrealized_pl": -18.46,
+      "unrealized_plpc": -0.0019,
+      "pct_of_portfolio": 0.10017346646511753
+    },
+    {
+      "ticker": "TSLA",
+      "qty": 23.0,
+      "avg_entry_price": 422.331304,
+      "market_value": 9463.35,
+      "unrealized_pl": -250.269992,
+      "unrealized_plpc": -0.02576,
+      "pct_of_portfolio": 0.09799270968659854
+    }
+  ],
+  "drawdown_from_hwm": 0.02918429126327004
+}
