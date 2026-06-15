@@ -1,0 +1,47 @@
+{
+  "_comment": "BLEND strategy: 75% hand-picked stocks + 25% ETF ballast. Built to fit Robinhood's Agentic Account terms (equities only, cash account, no options/margin, no day trading). All buys are capped at $5,000/day. Frozen params — no learning loop. See CLAUDE.md section 11.",
+
+  "stock_sleeve_pct": 0.75,
+  "etf_sleeve_pct": 0.25,
+
+  "daily_invest_cap_usd": 5000,
+
+  "etf_ballast": {
+    "SPY": 0.125,
+    "IEF": 0.0625,
+    "GLD": 0.0625
+  },
+  "_etf_ballast_note": "The 25% ETF anchor: broad US equity (SPY) plus bond (IEF) and gold (GLD) ballast. Each is trend-gated like the DTA — below its 200d it rotates to T-bills.",
+
+  "harbor_tickers": ["SGOV", "BIL", "USFR", "TBLL", "GBIL"],
+
+  "max_stock_names": 12,
+  "max_per_name_pct": 0.10,
+  "max_per_sector": 2,
+  "max_corr": 0.85,
+  "min_outperformance": 0.0,
+
+  "trend_lookback_days": 200,
+  "trend_gate_on_threshold": 1.02,
+  "trend_gate_off_threshold": 0.98,
+  "stock_trend_break_sma": 50,
+
+  "vol_brake_threshold": 0.18,
+  "vol_brake_lookback_days": 20,
+  "drawdown_brake_threshold": -0.15,
+
+  "no_trade_drift_band": 0.20,
+  "max_single_holding_pct": 0.24,
+
+  "limit_buy_above_ask_pct": 0.003,
+  "limit_sell_below_bid_pct": 0.003,
+
+  "compliance": {
+    "equities_only": true,
+    "cash_account_no_margin": true,
+    "no_options": true,
+    "no_day_trading": true,
+    "settled_funds_only": true,
+    "_note": "Matches Robinhood Agentic Account beta terms (equities only at launch). Buys use settled cash only; no same-day round trips; daily invest cap enforced in code AND constitution.py."
+  }
+}

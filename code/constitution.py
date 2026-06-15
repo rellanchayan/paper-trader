@@ -32,6 +32,10 @@ COMPLETED_DIR = ROOT / "state" / "completed_trades"
 MAX_POSITION_PCT = 0.25
 MAX_TRADES_PER_WEEK = 50
 MAX_TRADES_PER_DAY = 20
+# Most we will deploy into the market (BUY orders) in a single day. Selling to
+# raise cash / de-risk is never capped. Matches the user's "no more than $5,000
+# invested per day" rule and keeps the bot from front-loading risk.
+MAX_DAILY_INVEST_USD = 5000.0
 
 FORBIDDEN_SUBSTRINGS_IN_SYMBOL = {
     # leveraged
@@ -190,6 +194,51 @@ def check_trade_reason(trade: dict) -> CheckResult:
     return CheckResult("trade_reason", True)
 
 
+def _todays_completed() -> list[dict]:
+    """Trades submitted today (UTC), read from completed_trades."""
+    today = datetime.now(timezone.utc).date().isoformat()
+    out: list[dict] = []
+    if not COMPLETED_DIR.exists():
+        return out
+    for f in COMPLETED_DIR.glob("*.json"):
+        try:
+            d = json.loads(f.read_text())
+            if str(d.get("submitted_at_utc", ""))[:10] == today:
+                out.append(d)
+        except Exception:
+            continue
+    return out
+
+
+def check_daily_invest_cap(trade: dict) -> CheckResult:
+    """Total BUY notional submitted today + this order must stay under the cap.
+    Sells are exempt — reducing risk is never throttled."""
+    if trade["side"].upper() != "BUY":
+        return CheckResult("daily_invest_cap", True, "sell — not applicable")
+    notional = float(trade["limit_price"]) * float(trade["qty"])
+    prior = sum(
+        float(d.get("limit_price", 0)) * float(d.get("qty", 0))
+        for d in _todays_completed() if str(d.get("side", "")).upper() == "BUY"
+    )
+    if prior + notional > MAX_DAILY_INVEST_USD + 1e-6:
+        return CheckResult("daily_invest_cap", False,
+                           f"today's buys ${prior:,.0f} + ${notional:,.0f} would exceed ${MAX_DAILY_INVEST_USD:,.0f}/day cap")
+    return CheckResult("daily_invest_cap", True, f"${prior + notional:,.0f} of ${MAX_DAILY_INVEST_USD:,.0f}/day")
+
+
+def check_no_day_trade(trade: dict) -> CheckResult:
+    """No same-day round trips: if the opposite side already traded this ticker
+    today, refuse. Keeps the bot out of 'day trading' (Robinhood agentic = none)."""
+    ticker = trade.get("ticker", "").upper()
+    side = trade.get("side", "").upper()
+    opposite = "SELL" if side == "BUY" else "BUY"
+    for d in _todays_completed():
+        if str(d.get("ticker", "")).upper() == ticker and str(d.get("side", "")).upper() == opposite:
+            return CheckResult("no_day_trade", False,
+                               f"{ticker} already had a {opposite} today — a {side} now would be a same-day round trip (day trade)")
+    return CheckResult("no_day_trade", True)
+
+
 def run_all_checks(trade_path: Path) -> tuple[bool, list[CheckResult]]:
     trade = _load_json(trade_path)
     portfolio = _load_json(PORTFOLIO_FILE) if PORTFOLIO_FILE.exists() else {"equity": 0, "cash": 0, "positions": []}
@@ -203,6 +252,8 @@ def run_all_checks(trade_path: Path) -> tuple[bool, list[CheckResult]]:
         check_position_size(trade, portfolio),
         check_cash_available(trade, portfolio),
         check_frequency(trade),
+        check_daily_invest_cap(trade),
+        check_no_day_trade(trade),
         check_trade_reason(trade),
     ]
     passed = all(r.passed for r in results)

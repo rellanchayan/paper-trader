@@ -128,11 +128,47 @@ Paper money is for practice. Keep the system simple.
 
 ---
 
-## 10. Active Strategy — DTA (Diversified Trend Allocator)
+## 11. ACTIVE Strategy — BLEND (75% hand-picked stocks + 25% ETF ballast)
 
-The active strategy is the **DTA**, in `code/dta_autopilot.py`. The old momentum
-bot (`code/autopilot.py`) is **legacy**, kept only for paper comparison
-(`bash code/run_daily.sh --momentum`).
+The **default** strategy is now the **BLEND**, in `code/blend_autopilot.py`
+(`bash code/run_daily.sh` with no strategy flag). DTA (section 10) and momentum
+are opt-in alternates (`--dta`, `--momentum`).
+
+**What it is:** 75% of the book in hand-picked individual stocks (momentum +
+trend selection from `state/watchlist.txt`) and 25% in ETF ballast (SPY + IEF +
+GLD, each trend-gated). Risk-off capital goes to the T-bill harbor.
+
+**Built to fit a Robinhood agentic INVESTMENT account** (researched Jun 2026):
+- Equities only (stocks + ETFs). No options/crypto/futures/margin.
+- **No day trading** — never buys and sells the same ticker the same day
+  (enforced in `blend_engine.py` and by `constitution.check_no_day_trade`).
+- Cash account: buys use settled cash only.
+- **Invests at most $5,000/day** — `constitution.MAX_DAILY_INVEST_USD` and the
+  engine both cap total daily BUY notional. Sells are never capped.
+- Robinhood has **no official stock API**; agentic trading runs over an MCP
+  connector the user must connect at claude.ai/customize/connectors. This repo
+  still executes via Alpaca paper until that adapter is built.
+
+**Diversification is enforced inside the stock sleeve** so "75% stocks" can't
+become one sector: max 2 per sector, ≤10% per name, correlation gate. Plus the
+DTA safety brakes: market regime gate (no stock-picking when SPY < 200d),
+volatility brake, and a drawdown brake that rotates to T-bills (never halts).
+
+**Files:** `blend_engine.py` (pure planner + stock selection), `blend_autopilot.py`
+(entry point). Config: `state/blend_config.json`. State: `state/blend_state.json`.
+Runs in `state/blend_runs/`. Shares `dta_signals.py` and `dta_metrics.py`.
+
+**No learning loop** (frozen params). Same honesty rule as the DTA: judge it on
+risk-adjusted results, and individual-stock concentration is the known risk the
+diversification caps exist to contain.
+
+---
+
+## 10. Alternate Strategy — DTA (Diversified Trend Allocator)
+
+The **DTA** (`code/dta_autopilot.py`, `--dta`) is the safer ETF-only core. The
+old momentum bot (`code/autopilot.py`) is **legacy**, kept only for paper
+comparison (`bash code/run_daily.sh --momentum`).
 
 **What it is (plain English):** instead of picking hot stocks, hold a small
 basket of broad ETFs — US stocks (SPY), international (VEA), Treasuries (IEF),

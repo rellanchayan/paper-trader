@@ -41,6 +41,22 @@ def annualized_vol(closes: list[float], n: int = 20) -> float:
     return math.sqrt(var) * math.sqrt(252)
 
 
+def correlation(a: list[float], b: list[float]) -> float:
+    """How similarly two daily-return series move. 1 = identical, 0 = unrelated.
+    Used by the stock sleeve so two near-identical names aren't both picked."""
+    n = min(len(a), len(b))
+    if n < 20:
+        return 0.0
+    a, b = a[-n:], b[-n:]
+    ma, mb = sum(a) / n, sum(b) / n
+    cov = sum((x - ma) * (y - mb) for x, y in zip(a, b))
+    va = sum((x - ma) ** 2 for x in a)
+    vb = sum((y - mb) ** 2 for y in b)
+    if va <= 0 or vb <= 0:
+        return 0.0
+    return cov / math.sqrt(va * vb)
+
+
 def trend_gate(
     closes: list[float],
     prior_state: str | None,
