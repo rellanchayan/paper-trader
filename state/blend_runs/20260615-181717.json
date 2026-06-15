@@ -1,0 +1,191 @@
+{
+  "timestamp_utc": "2026-06-15T18:17:17.211057+00:00",
+  "strategy": "blend",
+  "mode": "execute",
+  "market_open": true,
+  "blocked": null,
+  "equity": 96511.94,
+  "cash": 64929.55,
+  "drawdown_from_hwm": 0.0298,
+  "invested_today_before_run": 0.0,
+  "regime": "normal",
+  "regime_detail": {
+    "spy_gate": "close 755.24 > SMA200 686.82 x 1.02 (700.55) \u2014 uptrend",
+    "vol_brake": "market vol 16% <= 18% target \u2014 full risk sizing",
+    "drawdown_brake": "account -3% from high-water mark > -15% brake \u2014 normal operation",
+    "spy_risk_on": true
+  },
+  "gates": {
+    "SPY": "on",
+    "IEF": "off",
+    "GLD": "off"
+  },
+  "targets": {
+    "SPY": 12063.99,
+    "MRVL": 1808.45,
+    "AMD": 2328.17,
+    "MS": 6725.83,
+    "UNH": 5552.23,
+    "TROW": 9651.19,
+    "CAT": 4183.68,
+    "SPG": 8666.23,
+    "LIN": 9375.26,
+    "PLD": 8824.92,
+    "FCX": 3197.07,
+    "D": 6611.28,
+    "LLY": 5093.52,
+    "SGOV": 12430.13
+  },
+  "compliance": {
+    "equities_only": true,
+    "cash_settled_only": true,
+    "no_options_margin": true,
+    "no_day_trading": true,
+    "daily_invest_cap_usd": 5000,
+    "invested_today_before_run": 0.0
+  },
+  "planned_trades": [
+    {
+      "ticker": "SPY",
+      "side": "SELL",
+      "qty": 4,
+      "limit_price": 752.97,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "SPY: above target weight \u2014 trimming (rebalance).",
+      "exit_rule": "rebalance_trim"
+    },
+    {
+      "ticker": "VEA",
+      "side": "SELL",
+      "qty": 212,
+      "limit_price": 72.18,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "VEA: not in the blend plan \u2014 liquidating to conform to target allocation.",
+      "exit_rule": "not_in_universe"
+    },
+    {
+      "ticker": "VNQ",
+      "side": "SELL",
+      "qty": 11,
+      "limit_price": 97.65,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "VNQ: not in the blend plan \u2014 liquidating to conform to target allocation.",
+      "exit_rule": "not_in_universe"
+    },
+    {
+      "ticker": "TROW",
+      "side": "BUY",
+      "qty": 45,
+      "limit_price": 110.26,
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "reason": "TROW: hand-picked stock (momentum/trend), building toward 10% of book."
+    }
+  ],
+  "submitted": [
+    {
+      "trade_id": "T-20260615-001",
+      "alpaca_order_id": "36413963-7ba5-4bc4-ab09-229026e05ce8",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T18:17:14.796774+00:00",
+      "saved_to": "state/completed_trades/T-20260615-001.json"
+    },
+    {
+      "trade_id": "T-20260615-002",
+      "alpaca_order_id": "2e464247-919f-4ac2-a6e4-9aaf7a08217b",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T18:17:15.542964+00:00",
+      "saved_to": "state/completed_trades/T-20260615-002.json"
+    },
+    {
+      "trade_id": "T-20260615-003",
+      "alpaca_order_id": "81986c2d-10fb-4cf7-a1f8-ef7b7099f00c",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T18:17:16.345519+00:00",
+      "saved_to": "state/completed_trades/T-20260615-003.json"
+    },
+    {
+      "trade_id": "T-20260615-004",
+      "alpaca_order_id": "8b66e4e7-d7fb-4356-b7dd-83f5a212dfb3",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T18:17:17.105949+00:00",
+      "saved_to": "state/completed_trades/T-20260615-004.json"
+    }
+  ],
+  "diagnostics": [
+    {
+      "ticker": "GS",
+      "skip": "sector cap (financials)"
+    },
+    {
+      "ticker": "BAC",
+      "skip": "sector cap (financials)"
+    },
+    {
+      "ticker": "MRVL",
+      "stock_target": 1808.45,
+      "score": 2.0
+    },
+    {
+      "ticker": "AMD",
+      "stock_target": 2328.17,
+      "score": 1.738
+    },
+    {
+      "ticker": "MS",
+      "stock_target": 6725.83,
+      "score": 1.075
+    },
+    {
+      "ticker": "UNH",
+      "stock_target": 5552.23,
+      "score": 0.895
+    },
+    {
+      "ticker": "TROW",
+      "stock_target": 9651.19,
+      "score": 0.849
+    },
+    {
+      "ticker": "CAT",
+      "stock_target": 4183.68,
+      "score": 0.744
+    },
+    {
+      "ticker": "SPG",
+      "stock_target": 8666.23,
+      "score": 0.647
+    },
+    {
+      "ticker": "LIN",
+      "stock_target": 9375.26,
+      "score": 0.638
+    },
+    {
+      "ticker": "PLD",
+      "stock_target": 8824.92,
+      "score": 0.513
+    },
+    {
+      "ticker": "FCX",
+      "stock_target": 3197.07,
+      "score": 0.447
+    },
+    {
+      "ticker": "D",
+      "stock_target": 6611.28,
+      "score": 0.405
+    },
+    {
+      "ticker": "LLY",
+      "stock_target": 5093.52,
+      "score": 0.347
+    },
+    {
+      "daily_cap": "$0 invested earlier today; this run capped buys at $5,000 (limit $5,000/day)"
+    }
+  ]
+}
