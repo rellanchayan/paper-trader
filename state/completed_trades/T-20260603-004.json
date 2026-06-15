@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260603-004",
+  "ticker": "TSLA",
+  "side": "BUY",
+  "qty": 23,
+  "limit_price": 428.14,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "TSLA above 50d ($394) and 200d ($413); 20d return +8.5% vs SPY +4.3%. Recovering uptrend with EV and energy storage tailwinds.",
+  "risk": "High volatility; Musk headlines can move stock sharply. Momentum is modest vs other candidates.",
+  "status": "filled",
+  "strategy": "daily_momentum",
+  "alpaca_order_id": "c8203a02-ee34-43e8-85ff-aeb338a1ed47",
+  "submitted_at_utc": "2026-06-03T19:49:03.182596+00:00",
+  "filled_qty": 23.0,
+  "filled_avg_price": 422.331304,
+  "reconciled_at_utc": "2026-06-12T03:26:39.389165+00:00"
+}

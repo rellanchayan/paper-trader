@@ -1,12 +1,89 @@
-SPY
-QQQ
+# Momentum SATELLITE candidate list (S&P 500 large caps across 11 sectors).
+# NOTE: This is ONLY used by the optional momentum satellite, which is OFF by
+# default (see state/dta_config.json -> satellite_enabled). The DTA core trades
+# the fixed ETF universe in state/dta_universe.json, NOT this list.
+# Every ticker here must also appear in state/sectors.json so the per-sector cap works.
+
+# Technology (10)
 AAPL
 MSFT
 NVDA
-AMZN
+ADBE
+CRM
+AMD
+AVGO
+ORCL
+MRVL
+SNOW
+
+# Communication services (3)
 META
 GOOGL
-AVGO
+NFLX
+
+# Healthcare (8)
 LLY
+UNH
+JNJ
+ABBV
+MRK
+TMO
+VRTX
+PFE
+
+# Financials (9)
 JPM
+V
+BAC
+WFC
+GS
+MS
+SCHW
+ICE
+TROW
+
+# Industrials (9)
+GE
+GEV
+CAT
+UNP
+BA
+LMT
+MMM
+RTX
+NSC
+
+# Energy (3)
+XOM
+CVX
+COP
+
+# Consumer discretionary (4)
+AMZN
+TSLA
+HD
+MCD
+
+# Consumer staples (4)
 COST
+WMT
+PG
+KO
+
+# Materials (4)
+LIN
+FCX
+CLF
+NEM
+
+# Real estate (4)
+PLD
+SPG
+AMT
+CCI
+
+# Utilities (4)
+NEE
+D
+SRE
+XEL

@@ -1,0 +1,85 @@
+{
+  "timestamp_utc": "2026-06-12T12:14:17.536038+00:00",
+  "mode": "execute",
+  "market_open": false,
+  "blocked": "market_closed",
+  "reconciled_orders": {
+    "checked": 0,
+    "updated": [],
+    "still_open": []
+  },
+  "equity": 94919.33,
+  "cash": 22056.36,
+  "held": [
+    "AAPL",
+    "AMD",
+    "AVGO",
+    "LLY",
+    "MRVL",
+    "NVDA",
+    "QQQ",
+    "TSLA"
+  ],
+  "spy_ret20": -0.0062,
+  "spy_vol": 0.151,
+  "drawdown_from_hwm": 0.0458,
+  "regime": "normal",
+  "regime_reason": "market trend up, stress normal",
+  "params": {
+    "min_outperformance": 0.02,
+    "stop_loss_pct": -0.08,
+    "cooldown_days": 5,
+    "atr_stop_mult": 3.0,
+    "risk_per_trade": 0.005,
+    "max_corr": 0.85,
+    "max_per_sector": 3
+  },
+  "planned": [
+    {
+      "ticker": "AMD",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "AMD sell: paper loss -8.3% breached the -8% stop.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 458.32,
+      "qty": 18,
+      "exit_rule": "stop_loss",
+      "initial_stop": 0.0
+    },
+    {
+      "ticker": "AVGO",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "AVGO sell: paper loss -20.0% breached the -8% stop.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 361.8,
+      "qty": 20,
+      "exit_rule": "stop_loss",
+      "initial_stop": 0.0
+    },
+    {
+      "ticker": "MRVL",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "MRVL sell: paper loss -8.6% breached the -8% stop.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 264.03,
+      "qty": 32,
+      "exit_rule": "stop_loss",
+      "initial_stop": 0.0
+    },
+    {
+      "ticker": "NVDA",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "NVDA sell: paper loss -8.5% breached the -8% stop.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 191.33,
+      "qty": 44,
+      "exit_rule": "stop_loss",
+      "initial_stop": 0.0
+    }
+  ],
+  "submitted": [],
+  "diagnostics": []
+}

@@ -12,6 +12,7 @@ CLI usage:
     python3 code/alpaca_client.py --is-open
     python3 code/alpaca_client.py --submit state/pending_trades/<trade_id>.json
     python3 code/alpaca_client.py --order-status <order_id>
+    python3 code/alpaca_client.py --reconcile
     python3 code/alpaca_client.py --cancel-all
 """
 
@@ -318,6 +319,61 @@ def order_status(order_id: str) -> int:
         return 1
 
 
+def reconcile() -> int:
+    """Check every submitted trade against Alpaca and record what really happened.
+
+    A trade file stays in status "submitted" until the order reaches a final
+    state (filled, expired, canceled, rejected). This keeps our local records
+    honest — we never assume an order filled.
+    """
+    _require_paper()
+    completed_dir = ROOT / "state" / "completed_trades"
+    if not completed_dir.exists():
+        print(json.dumps({"checked": 0, "updated": [], "still_open": []}))
+        return 0
+
+    FINAL_STATES = {"filled", "canceled", "expired", "rejected", "done_for_day"}
+    updated: list[dict] = []
+    still_open: list[dict] = []
+    checked = 0
+
+    try:
+        c = _client()
+        for path in sorted(completed_dir.glob("*.json")):
+            trade = json.loads(path.read_text())
+            order_id = trade.get("alpaca_order_id")
+            if not order_id or trade.get("status") != "submitted":
+                continue
+            checked += 1
+            o = c.get_order_by_id(order_id)
+            status = str(o.status).split(".")[-1].lower()
+            if status in FINAL_STATES:
+                trade["status"] = status
+                trade["filled_qty"] = float(o.filled_qty or 0)
+                trade["filled_avg_price"] = float(o.filled_avg_price) if o.filled_avg_price else None
+                trade["reconciled_at_utc"] = datetime.now(timezone.utc).isoformat()
+                path.write_text(json.dumps(trade, indent=2))
+                updated.append({
+                    "trade_id": trade.get("trade_id"),
+                    "ticker": trade.get("ticker"),
+                    "side": trade.get("side"),
+                    "status": status,
+                    "filled_qty": trade["filled_qty"],
+                    "filled_avg_price": trade["filled_avg_price"],
+                })
+            else:
+                still_open.append({
+                    "trade_id": trade.get("trade_id"),
+                    "ticker": trade.get("ticker"),
+                    "status": status,
+                })
+        print(json.dumps({"checked": checked, "updated": updated, "still_open": still_open}, indent=2))
+        return 0
+    except Exception as e:
+        print(f"FAIL — {e}", file=sys.stderr)
+        return 1
+
+
 def cancel_all() -> int:
     _require_paper()
     try:
@@ -340,6 +396,7 @@ def main() -> int:
     p.add_argument("--is-open", action="store_true")
     p.add_argument("--submit", metavar="TRADE_JSON")
     p.add_argument("--order-status", metavar="ORDER_ID")
+    p.add_argument("--reconcile", action="store_true")
     p.add_argument("--cancel-all", action="store_true")
     args = p.parse_args()
 
@@ -357,6 +414,8 @@ def main() -> int:
         return submit(args.submit)
     if args.order_status:
         return order_status(args.order_status)
+    if args.reconcile:
+        return reconcile()
     if args.cancel_all:
         return cancel_all()
 

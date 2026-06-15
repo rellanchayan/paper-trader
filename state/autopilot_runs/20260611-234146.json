@@ -1,0 +1,64 @@
+{
+  "timestamp_utc": "2026-06-12T03:41:46.943031+00:00",
+  "mode": "dry_run",
+  "market_open": false,
+  "blocked": null,
+  "reconciled_orders": {
+    "checked": 0,
+    "updated": [],
+    "still_open": []
+  },
+  "equity": 94757.53,
+  "cash": 22056.36,
+  "held": [
+    "AAPL",
+    "AMD",
+    "AVGO",
+    "LLY",
+    "MRVL",
+    "NVDA",
+    "QQQ",
+    "TSLA"
+  ],
+  "spy_ret20": -0.0062,
+  "regime": "normal",
+  "params": {
+    "min_outperformance": 0.02,
+    "stop_loss_pct": -0.08,
+    "cooldown_days": 5
+  },
+  "planned": [
+    {
+      "ticker": "AMD",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "AMD sell: paper loss -9.8% breached the -8% stop.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 458.32,
+      "qty": 18,
+      "exit_rule": "stop_loss"
+    },
+    {
+      "ticker": "AVGO",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "AVGO sell: paper loss -20.0% breached the -8% stop.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 361.8,
+      "qty": 20,
+      "exit_rule": "stop_loss"
+    },
+    {
+      "ticker": "NVDA",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "NVDA sell: paper loss -8.6% breached the -8% stop.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 191.33,
+      "qty": 44,
+      "exit_rule": "stop_loss"
+    }
+  ],
+  "submitted": [],
+  "diagnostics": []
+}

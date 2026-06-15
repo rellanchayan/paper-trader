@@ -1,0 +1,20 @@
+{
+  "trade_id": "T-20260603-001",
+  "created_at_utc": "2026-06-03T19:37:42.464316+00:00",
+  "ticker": "LLY",
+  "side": "BUY",
+  "qty": 9,
+  "limit_price": 1086.72,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "LLY is in an uptrend: close above 50d and 200d averages; 20d return 9.9% vs SPY 4.3%.",
+  "risk": "Momentum can reverse; limit order may fill before a pullback.",
+  "strategy": "daily_momentum",
+  "score": 0.1835,
+  "status": "filled",
+  "alpaca_order_id": "503aabaf-d0d7-4f6a-a5e5-562e29816eb0",
+  "submitted_at_utc": "2026-06-03T19:37:42.981107+00:00",
+  "filled_qty": 9.0,
+  "filled_avg_price": 1086.61,
+  "reconciled_at_utc": "2026-06-12T03:26:39.281367+00:00"
+}

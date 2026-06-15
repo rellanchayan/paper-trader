@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260603-003",
+  "ticker": "AMD",
+  "side": "BUY",
+  "qty": 18,
+  "limit_price": 543.96,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "AMD above 50d ($347) and 200d ($243); 20d return +52.9% vs SPY +4.3%. AI GPU demand lifting both AMD and NVDA.",
+  "risk": "Semiconductor momentum can reverse quickly; already heavily weighted in AI semis with NVDA and MRVL.",
+  "status": "filled",
+  "strategy": "daily_momentum",
+  "alpaca_order_id": "dc4e4fa5-c4fe-42ba-9b46-44d72ecce7a3",
+  "submitted_at_utc": "2026-06-03T19:49:02.670532+00:00",
+  "filled_qty": 18.0,
+  "filled_avg_price": 543.343334,
+  "reconciled_at_utc": "2026-06-12T03:26:39.359839+00:00"
+}

@@ -1,7 +1,7 @@
 ---
 name: daily-paper-trader
 description: Run the autonomous daily Alpaca paper-trading routine. Use this skill directly with /daily-paper-trader or in a scheduled Claude Code routine to plan and optionally execute paper trades.
-allowed-tools: Bash(bash code/run_daily.sh *), Bash(python3 code/autopilot.py *), Bash(python3 code/alpaca_client.py *), Bash(python3 code/constitution.py *), Bash(python3 -m pip install -r requirements.txt), Read, Edit(state/**)
+allowed-tools: Bash(bash code/run_daily.sh *), Bash(python3 code/autopilot.py *), Bash(python3 code/alpaca_client.py *), Bash(python3 code/constitution.py *), Bash(python3 code/performance.py *), Bash(python3 -m pip install -r requirements.txt), Read, Edit(state/**)
 ---
 
 # Daily Paper Trader
@@ -17,16 +17,40 @@ bash code/run_daily.sh --execute
 ```
 
 The script:
-1. Refreshes Alpaca paper positions.
-2. Reads `state/watchlist.txt`.
-3. Uses a simple momentum strategy:
-   - buy candidates above their 50d and 200d moving averages
-   - prefer names outperforming SPY over 20 trading days
-   - sell held names below their 50d average or with paper loss worse than 8%
-4. Creates trade JSON files.
-5. Runs `constitution.py`.
-6. Submits LIMIT + DAY paper orders.
-7. Saves a daily summary in `state/autopilot_runs/`.
+1. Reconciles yesterday's orders (records what really filled, expired, or was canceled).
+2. Refreshes Alpaca paper positions.
+3. Reads `state/watchlist.txt`.
+4. Uses a wealth-manager-style momentum strategy (tunables in `state/strategy_params.json`):
+   - regime checks first: no new buys if SPY is below its 200d average OR the
+     account is >10% below its high-water mark; half-size buys when market
+     volatility is elevated
+   - buy candidates above their 50d and 200d averages that are up at least
+     `min_outperformance` over 20 trading days AND beat SPY by the same
+     margin, ranked by risk-adjusted momentum (1m/3m/6m blend / volatility)
+   - diversification gates: max `max_per_sector` holdings per sector
+     (`state/sectors.json`), skip candidates correlated > `max_corr` with a
+     holding, never chase a >2% gap, cooldown `cooldown_days` after a sell
+   - position sizing by risk: each buy risks ~`risk_per_trade` of equity
+     (ATR-based), capped at 10% of equity per position
+   - exits: hard stop `stop_loss_pct`, trailing stop `atr_stop_mult` ATRs
+     below the 22d high, 50d trend break, and overweight trims above 20%
+5. Creates trade JSON files.
+6. Runs `constitution.py`.
+7. Submits LIMIT + DAY paper orders.
+8. Saves a daily summary in `state/autopilot_runs/`.
+
+After the run, let the bot learn from finished trades and report performance:
+
+```bash
+python3 code/learn.py
+python3 code/performance.py
+```
+
+`learn.py` grades every finished BUY→SELL pair and may adjust ONE setting in
+`state/strategy_params.json` by one small step (within hard bounds enforced by
+`autopilot.py`). Every change is logged with its reason in
+`state/strategy_changes.jsonl`. Do not hand-edit strategy settings in the same
+run; let the evidence-based loop do it.
 
 ## Dry Run
 

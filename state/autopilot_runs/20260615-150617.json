@@ -1,0 +1,310 @@
+{
+  "timestamp_utc": "2026-06-15T15:06:17.663369+00:00",
+  "mode": "execute",
+  "market_open": true,
+  "blocked": null,
+  "reconciled_orders": {
+    "checked": 0,
+    "updated": [],
+    "still_open": []
+  },
+  "equity": 96276.07,
+  "cash": 40056.17,
+  "held": [
+    "AMD",
+    "JPM",
+    "LLY",
+    "MRVL",
+    "QQQ",
+    "TSLA"
+  ],
+  "spy_ret20": 0.0211,
+  "spy_vol": 0.156,
+  "drawdown_from_hwm": 0.0322,
+  "regime": "normal",
+  "regime_reason": "market trend up, stress normal",
+  "params": {
+    "min_outperformance": 0.02,
+    "stop_loss_pct": -0.08,
+    "cooldown_days": 5,
+    "atr_stop_mult": 3.0,
+    "risk_per_trade": 0.005,
+    "max_corr": 0.85,
+    "max_per_sector": 3
+  },
+  "planned": [
+    {
+      "ticker": "JNJ",
+      "action": "BUY",
+      "score": 0.195946659478155,
+      "reason": "JNJ uptrend, stronger than the market: 1m +4.6% vs SPY +2.1%, 3m -2.5%, 6m +13.0%, volatility 18%.",
+      "risk": "Momentum can reverse; protected by a hard stop and a trailing stop.",
+      "limit_price": 236.83,
+      "qty": 35,
+      "exit_rule": "",
+      "initial_stop": 223.26
+    }
+  ],
+  "submitted": [
+    {
+      "trade_id": "T-20260615-001",
+      "alpaca_order_id": "11ce885b-77ed-49b7-81a3-9827bfb54b1d",
+      "status": "OrderStatus.PENDING_NEW",
+      "submitted_at": "2026-06-15T15:06:17.569254+00:00",
+      "saved_to": "state/completed_trades/T-20260615-001.json"
+    }
+  ],
+  "diagnostics": [
+    {
+      "ticker": "AAPL",
+      "skip": "sold within last 5 days (cooldown)"
+    },
+    {
+      "ticker": "AMZN",
+      "close": 246.19,
+      "sma50": 255.5,
+      "sma200": 232.59,
+      "ret20": -0.0683,
+      "ret63": 0.1625,
+      "ret126": 0.0691,
+      "vol": 0.306,
+      "atr": 7.82
+    },
+    {
+      "ticker": "AVGO",
+      "skip": "sold within last 5 days (cooldown)"
+    },
+    {
+      "ticker": "CAT",
+      "close": 932.08,
+      "sma50": 859.51,
+      "sma200": 662.29,
+      "ret20": 0.0495,
+      "ret63": 0.332,
+      "ret126": 0.4897,
+      "vol": 0.444,
+      "atr": 34.96
+    },
+    {
+      "ticker": "COST",
+      "close": 977.77,
+      "sma50": 1004.18,
+      "sma200": 957.53,
+      "ret20": -0.0682,
+      "ret63": -0.0241,
+      "ret126": 0.1054,
+      "vol": 0.209,
+      "atr": 19.77
+    },
+    {
+      "ticker": "GE",
+      "close": 345.22,
+      "sma50": 304.18,
+      "sma200": 304.24,
+      "ret20": 0.2265,
+      "ret63": 0.1352,
+      "ret126": 0.1967,
+      "vol": 0.425,
+      "atr": 10.47
+    },
+    {
+      "ticker": "GEV",
+      "close": 968.27,
+      "sma50": 1014.24,
+      "sma200": 766.02,
+      "ret20": -0.0768,
+      "ret63": 0.17,
+      "ret126": 0.3751,
+      "vol": 0.519,
+      "atr": 43.23
+    },
+    {
+      "ticker": "GOOGL",
+      "close": 370.74,
+      "sma50": 363.77,
+      "sma200": 308.77,
+      "ret20": -0.0656,
+      "ret63": 0.2129,
+      "ret126": 0.1863,
+      "vol": 0.368,
+      "atr": 11.06
+    },
+    {
+      "ticker": "HD",
+      "close": 334.39,
+      "sma50": 322.69,
+      "sma200": 359.84,
+      "ret20": 0.1239,
+      "ret63": -0.0237,
+      "ret126": -0.0647,
+      "vol": 0.284,
+      "atr": 7.62
+    },
+    {
+      "ticker": "JNJ",
+      "close": 237.21,
+      "sma50": 230.86,
+      "sma200": 214.91,
+      "ret20": 0.0461,
+      "ret63": -0.0248,
+      "ret126": 0.1299,
+      "vol": 0.183,
+      "atr": 4.52
+    },
+    {
+      "ticker": "LIN",
+      "close": 522.19,
+      "sma50": 504.9,
+      "sma200": 466.92,
+      "ret20": 0.0316,
+      "ret63": 0.0496,
+      "ret126": 0.2947,
+      "vol": 0.199,
+      "atr": 10.17
+    },
+    {
+      "ticker": "META",
+      "close": 594.21,
+      "sma50": 622.23,
+      "sma200": 657.31,
+      "ret20": -0.0328,
+      "ret63": -0.0531,
+      "ret126": -0.0897,
+      "vol": 0.436,
+      "atr": 21.62
+    },
+    {
+      "ticker": "MSFT",
+      "close": 398.01,
+      "sma50": 412.26,
+      "sma200": 453.18,
+      "ret20": -0.0568,
+      "ret63": -0.0046,
+      "ret126": -0.1771,
+      "vol": 0.321,
+      "atr": 13.28
+    },
+    {
+      "ticker": "NEE",
+      "close": 86.03,
+      "sma50": 91.01,
+      "sma200": 85.59,
+      "ret20": -0.0786,
+      "ret63": -0.0733,
+      "ret126": 0.0591,
+      "vol": 0.277,
+      "atr": 1.58
+    },
+    {
+      "ticker": "NFLX",
+      "close": 81.34,
+      "sma50": 90.5,
+      "sma200": 396.35,
+      "ret20": -0.0656,
+      "ret63": -0.1456,
+      "ret126": -0.1357,
+      "vol": 0.313,
+      "atr": 1.85
+    },
+    {
+      "ticker": "NVDA",
+      "skip": "sold within last 5 days (cooldown)"
+    },
+    {
+      "ticker": "ORCL",
+      "close": 193.56,
+      "sma50": 185.94,
+      "sma200": 205.63,
+      "ret20": 0.003,
+      "ret63": 0.2411,
+      "ret126": -0.0265,
+      "vol": 0.68,
+      "atr": 16.02
+    },
+    {
+      "ticker": "PG",
+      "close": 149.63,
+      "sma50": 144.8,
+      "sma200": 149.04,
+      "ret20": 0.0569,
+      "ret63": -0.0163,
+      "ret126": 0.0632,
+      "vol": 0.214,
+      "atr": 3.17
+    },
+    {
+      "ticker": "SPY",
+      "close": 754.66,
+      "sma50": 724.73,
+      "sma200": 686.82,
+      "ret20": 0.0211,
+      "ret63": 0.1281,
+      "ret126": 0.0951,
+      "vol": 0.155,
+      "atr": 9.92
+    },
+    {
+      "ticker": "UNH",
+      "close": 411.14,
+      "sma50": 366.39,
+      "sma200": 332.12,
+      "ret20": 0.0448,
+      "ret63": 0.4401,
+      "ret126": 0.2208,
+      "vol": 0.336,
+      "atr": 9.44
+    },
+    {
+      "ticker": "UNP",
+      "close": 267.87,
+      "sma50": 263.05,
+      "sma200": 241.56,
+      "ret20": -0.0098,
+      "ret63": 0.1054,
+      "ret126": 0.135,
+      "vol": 0.27,
+      "atr": 6.72
+    },
+    {
+      "ticker": "V",
+      "close": 325.42,
+      "sma50": 319.6,
+      "sma200": 329.42,
+      "ret20": -0.001,
+      "ret63": 0.0489,
+      "ret126": -0.0587,
+      "vol": 0.247,
+      "atr": 6.99
+    },
+    {
+      "ticker": "WMT",
+      "close": 120.09,
+      "sma50": 125.49,
+      "sma200": 116.14,
+      "ret20": -0.0867,
+      "ret63": -0.0469,
+      "ret126": 0.0394,
+      "vol": 0.273,
+      "atr": 2.61
+    },
+    {
+      "ticker": "XOM",
+      "close": 141.65,
+      "sma50": 151.53,
+      "sma200": 134.13,
+      "ret20": -0.1031,
+      "ret63": -0.0991,
+      "ret126": 0.185,
+      "vol": 0.319,
+      "atr": 4.0
+    },
+    {
+      "ticker": "UNH",
+      "skip": "ask $425.00 gapped >2% above signal close \u2014 not chasing"
+    },
+    {
+      "ticker": "CAT",
+      "skip": "ask $977.77 gapped >2% above signal close \u2014 not chasing"
+    }
+  ]
+}

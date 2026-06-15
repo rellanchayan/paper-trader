@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260603-002",
+  "ticker": "MRVL",
+  "side": "BUY",
+  "qty": 32,
+  "limit_price": 302.0,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "MRVL above 50d ($157) and 200d ($101); 20d return +78.6% vs SPY +4.3%. AI custom silicon demand driving strong uptrend.",
+  "risk": "Parabolic move; sharp reversal on AI capex slowdown or any earnings miss.",
+  "status": "filled",
+  "strategy": "daily_momentum",
+  "alpaca_order_id": "d6668e42-4323-429b-a717-1068501d6b64",
+  "submitted_at_utc": "2026-06-03T19:49:02.173972+00:00",
+  "filled_qty": 32.0,
+  "filled_avg_price": 300.517813,
+  "reconciled_at_utc": "2026-06-12T03:26:39.307907+00:00"
+}

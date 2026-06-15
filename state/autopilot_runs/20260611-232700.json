@@ -1,0 +1,55 @@
+{
+  "timestamp_utc": "2026-06-12T03:27:00.907591+00:00",
+  "mode": "dry_run",
+  "market_open": false,
+  "blocked": null,
+  "reconciled_orders": {
+    "checked": 0,
+    "updated": [],
+    "still_open": []
+  },
+  "equity": 94685.21,
+  "cash": 22056.36,
+  "held": [
+    "AAPL",
+    "AMD",
+    "AVGO",
+    "LLY",
+    "MRVL",
+    "NVDA",
+    "QQQ",
+    "TSLA"
+  ],
+  "spy_ret20": -0.0062,
+  "planned": [
+    {
+      "ticker": "AMD",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "AMD sell: price below 50d average or paper loss exceeded 8%.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 458.32,
+      "qty": 18
+    },
+    {
+      "ticker": "AVGO",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "AVGO sell: price below 50d average or paper loss exceeded 8%.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 361.8,
+      "qty": 20
+    },
+    {
+      "ticker": "NVDA",
+      "action": "SELL",
+      "score": 1.0,
+      "reason": "NVDA sell: price below 50d average or paper loss exceeded 8%.",
+      "risk": "May sell before a rebound.",
+      "limit_price": 191.33,
+      "qty": 44
+    }
+  ],
+  "submitted": [],
+  "diagnostics": []
+}
