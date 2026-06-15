@@ -1,125 +1,79 @@
 # Paper Trader 📈
 
-**An automated stock trading bot that buys and sells stocks using fake money.**
+**An automated stock-trading bot that invests with fake money.**
 
-This is a simple, smart robot that watches the stock market every weekday morning, finds good trading opportunities, and places orders automatically. All trades use **fake money only** — nothing is real.
+Every weekday morning it builds and maintains a diversified portfolio — **75% hand-picked stocks + 25% steadying ETFs** — following fixed rules, and places the orders for you. All trades use **paper (fake) money only**. Nothing here is real money or financial advice.
+
+> 📖 There's also a friendly, illustrated docs site: open **`docs/index.html`** in any browser.
 
 ---
 
 ## What This Does (In Plain English)
 
-Every weekday morning at **10:00 AM Eastern Time**, the bot:
+Every weekday morning the bot:
 
-1. **Wakes up** — Connects to your Alpaca paper trading account
-2. **Looks at the market** — Checks 10+ stocks to see which ones are hot
-3. **Finds opportunities** — Identifies stocks that are going up strong
-4. **Makes smart trades** — Buys good stocks, sells weak ones
-5. **Logs everything** — Saves a record of what it did
-6. **Sleeps** — Waits until tomorrow to do it again
+1. **Wakes up** — connects to your Alpaca paper account.
+2. **Reads the market** — checks the trend of each stock on its watchlist and of the broad market.
+3. **Builds a portfolio** — aims for **75% in ~12 diversified hand-picked stocks** and **25% in ETF ballast** (broad market + bonds + gold).
+4. **Invests slowly** — buys at most **$50,000 per day**, easing in instead of going all-in.
+5. **Protects** — sells anything whose trend breaks, and shifts to safe T-bills when the market turns down.
+6. **Logs everything** — saves a record and a risk-adjusted report card.
 
-Think of it like having a mini trader in your computer who works while you sleep. No emotions, no second-guessing — just following the rules.
+Think of it as a disciplined, emotionless investor that follows the same rules every day. It is **not** a day trader.
 
 ---
 
-## Getting Started (5 Minutes)
+## Getting Started
 
-### Step 1: Install Claude Code
+### Step 1 — Install Claude Code
+- **Web:** https://claude.ai/code · **Desktop:** Mac/Windows app · **CLI:** `npm install -g @anthropic-ai/claude`
 
-First, make sure you have Claude Code installed:
-- **Web:** Go to https://claude.ai/code
-- **Desktop:** Download Claude Code for Mac or Windows
-- **CLI:** `npm install -g @anthropic-ai/claude`
+### Step 2 — Get a free Alpaca paper account
+1. Go to https://app.alpaca.markets and sign up.
+2. **Settings → API Keys** → copy your **paper** API key and secret (the word "PAPER" should be in the key name).
+3. Alpaca gives every paper account $100,000 of fake money.
 
-### Step 2: Add the Paper Trader Package
+### Step 3 — Give the bot your keys
 
-```bash
-claude add paper-trader
-```
-
-This downloads the complete trading bot into a new folder.
-
-### Step 3: Get Alpaca Credentials
-
-1. Go to https://app.alpaca.markets
-2. Sign up (free account)
-3. Click **Settings** → **API Keys**
-4. Copy your **paper trading API key** and **secret key**
-   - The word "PAPER" should be visible in your key name
-   - This is fake money only — that's important!
-
-### Step 4: Set Up Your Routine's Environment Variables
-
-Your bot runs in the cloud as a **Claude Code routine** (so your computer doesn't need to stay on). The routine clones this repo into a fresh sandbox and runs with the **environment variables you set on its cloud environment** — it does **not** read GitHub repository secrets. Put your Alpaca keys there:
+The bot runs in the cloud as a **Claude Code routine**, so your laptop doesn't need to stay on. The routine clones this repo into a fresh sandbox and reads the **environment variables on its cloud environment** (it does **not** read GitHub secrets):
 
 1. Go to **https://claude.ai/code/routines** and open your paper-trader routine.
-2. Click the **pencil** icon (**Edit routine**).
-3. Below the **Instructions** box, click the **cloud icon** showing the environment name (e.g. **Default**), hover over the environment in the list, and click the **settings gear** to open **Update cloud environment**.
-4. In the **Environment variables** section, add each of these:
-   - `ALPACA_API_KEY` → (paste your paper API key)
-   - `ALPACA_SECRET_KEY` → (paste your paper secret key)
+2. Click the **pencil** (Edit routine) → click the **cloud/environment** name → **Update cloud environment → Environment variables**.
+3. Add:
+   - `ALPACA_API_KEY` → your paper API key
+   - `ALPACA_SECRET_KEY` → your paper secret key
    - `ALPACA_ENDPOINT` → `https://paper-api.alpaca.markets`
    - `LIVE_TRADING_AUTHORIZED` → `false`
-   - `RISK_FREE_RATE` → `0.045`
-5. Click **Save changes**. Values apply on the next run — click **Run now** to test immediately.
+   - `RISK_FREE_RATE` → `0.045` (used by the report card)
+4. **Save changes.** Use **Run now** to test immediately.
 
-> These are **paper** credentials (no real money), and `constitution.py` refuses any non-paper endpoint regardless, so storing them on the cloud environment is safe here.
+> These are **paper** credentials — no real money — and `constitution.py` refuses any non-paper endpoint anyway.
 >
-> **Running locally instead?** Copy `.env.example` to `.env` and put the same values there — `load_dotenv()` reads them at startup. (`.env` is git-ignored and never committed.)
+> **Running locally instead?** Copy `.env.example` to `.env` and put the same values there (`.env` is git-ignored).
 
-### Step 5: Make It Run Every Morning
+### Step 4 — Schedule it (pick one)
 
-This is the step most people get stuck on, so it has its own section below:
-**[Make It Run Every Morning](#make-it-run-every-morning-pick-one)**. Pick one
-of the three options there and you're done.
+See **[Run it every morning](#run-it-every-morning)** below.
 
 ---
 
-## Make It Run Every Morning (Pick ONE)
+## Run It Every Morning
 
-You only need **one** of these three options. Here they are, easiest first.
+### Option A — Claude Code Routine (recommended)
 
-### Option A: GitHub Actions (recommended — free, runs in the cloud, laptop can be off)
-
-This repo already contains the schedule file (`.github/workflows/daily-trade.yml`).
-GitHub will run the bot every weekday morning for free. You just need to give
-GitHub your Alpaca paper keys, one time:
-
-1. Push this repo to GitHub (it already points at `github.com/rellanchayan/paper-trader`):
-   ```bash
-   git add -A && git commit -m "enable daily schedule" && git push
-   ```
-2. Open your repo on github.com → **Settings** → **Secrets and variables** → **Actions**.
-3. Click **New repository secret** and add these two (paper keys only):
-   - Name: `ALPACA_API_KEY` → Value: your paper API key
-   - Name: `ALPACA_SECRET_KEY` → Value: your paper secret key
-4. Test it right now without waiting for the morning: repo → **Actions** tab →
-   **Daily paper trade** → **Run workflow** button. Watch the log live.
-
-After that, it runs by itself every weekday around 9:35–10:35am New York time.
-Each run also commits its records back to the repo, so you can read the full
-history of what the bot did from any device.
-
-> If your repo is public, note that your trade history (not your keys) will be
-> visible. Make the repo private if you'd rather keep it to yourself:
-> repo → Settings → General → Danger Zone → Change visibility.
-
-### Option B: Claude Code Routine (the bot gets a brain)
-
-Option A runs the script exactly as written. Option B has Claude *run* the
-routine — so it can also notice problems, read the logs, and adapt. In any
-Claude Code session in this folder, type:
+A cloud routine runs the bot for you at a fixed time, with no laptop required and no queue delays. In a Claude Code session in this folder:
 
 ```text
-/schedule every weekday at 10:00am New York time, in the Trading repo, run /daily-paper-trader. This is paper trading only. Alpaca paper credentials are supplied as environment variables on the routine's cloud environment. After trading, commit and push the state/ folder so records persist.
+/schedule every weekday at 10:00am New York time, in the paper-trader repo, run: bash code/run_daily.sh --execute. Paper trading only; Alpaca paper credentials are environment variables on the routine's cloud environment. After trading, commit and push the state/ folder so records persist.
 ```
 
-Then add your Alpaca keys to the routine's **cloud environment** (see Step 4
-above for the click-by-click). Manage runs at https://claude.ai/code/routines.
+Then set your Alpaca keys on the routine's **cloud environment** (Step 3). Manage runs at https://claude.ai/code/routines.
 
-### Option C: Your Own Mac (simple, but the laptop must be awake)
+> Because of daylight saving, a fixed UTC schedule lands at 10:00am ET in winter and 11:00am ET in summer — both safely inside market hours (9:30am–4:00pm ET).
 
-If you'd rather keep everything on your machine, schedule it with `launchd`
-(the Mac's built-in scheduler). One-time setup — paste this into Terminal:
+### Option B — Your own Mac (`launchd`)
+
+Keep everything on your machine (the laptop must be awake at run time):
 
 ```bash
 cat > ~/Library/LaunchAgents/com.paper-trader.daily.plist <<'EOF'
@@ -144,521 +98,205 @@ EOF
 launchctl load ~/Library/LaunchAgents/com.paper-trader.daily.plist
 ```
 
-Notes for Option C:
-- The hour (`10`) is **your Mac's local time** — adjust it so it lands inside
-  US market hours (9:30am–4:00pm New York time). The bot checks the market
-  clock anyway, so a wrong hour just means "no trades", never a bad trade.
-- It also runs on holidays/weekends if you don't add weekday logic — that's
-  fine, the bot sees the market is closed and does nothing.
-- If the Mac is asleep at 10:00, the job fires when it next wakes up — but if
-  it's powered off (or wakes after 4pm), that day is missed. That's the
-  weakness of this option, and why Option A is recommended.
-- To stop it: `launchctl unload ~/Library/LaunchAgents/com.paper-trader.daily.plist`
-- To check the last run: `cat state/launchd.log`
+The hour is **your Mac's local time** — set it inside market hours. The bot checks the market clock anyway, so a wrong hour just means "no trades", never a bad trade. Stop it with `launchctl unload ...`.
 
 ---
 
-## How It Works (The Smart Part)
+## How It Works (The Strategy)
 
-### The Trading Strategy
+The portfolio is split **75% hand-picked stocks / 25% ETF ballast**, built to fit a Robinhood-style agentic **investment** account: equities only, cash account, **no day trading, no options, no margin**.
 
-The bot runs its money the way a professional wealth manager would. Each rule
-below is a real technique used on Wall Street (the pro name is in parentheses).
+### The 75% — hand-picked stocks
 
-**What it buys (momentum / relative strength):**
+Around a dozen individual stocks from the watchlist, chosen for strong, steady uptrends — and **diversified on purpose** so it's never a bet on one industry:
 
-1. **Uptrend** — Price is above its 50-day and 200-day averages.
-   We only buy stocks that are clearly climbing.
-2. **Stronger than the market** — Up at least ~2% itself over the last 20
-   days AND beat SPY by at least ~2%. SPY is "the average market"; we want
-   stocks that are rising on their own, not just falling slower than average.
-3. **Steady climbers beat wild swingers** — Candidates are ranked by their
-   1, 3, and 6-month gains *divided by how jumpy they are* (risk-adjusted
-   momentum). A stock that calmly grinds up scores higher than one that
-   doubles and crashes.
-4. **Well-known companies only** — From the watchlist. No penny stocks.
+1. **Real uptrend** — price above its 50-day *and* 200-day average.
+2. **Beating the market** — outperforming SPY over the last 20 days.
+3. **Steady beats wild** — ranked by 1/3/6-month gains divided by volatility (risk-adjusted momentum). Calm climbers rank above wild swingers, and calmer names get a larger slice (inverse-volatility weighting).
+4. **Hard diversification limits** — **max 2 stocks per sector** (`state/sectors.json`), **≤10% in any one name**, and a **correlation gate** that skips a stock moving almost identically to one already held.
 
-**What stops a buy (diversification):**
+### The 25% — ETF ballast
 
-- **Sector limit** — Never more than 3 holdings from the same industry
-  (`state/sectors.json` says which stock is in which). Five chip stocks is
-  not five ideas; it's one idea five times.
-- **Similarity check (correlation)** — If a candidate has moved almost
-  identically to something you already own, it's skipped. Owning twins isn't
-  diversification. (Index funds you hold, like SPY or QQQ, are exempt from
-  this check — they're your diversified "core", and almost every big stock
-  moves somewhat with them. The sector limit above is what stops you from
-  piling into one industry next to the core.)
-- **No chasing** — If the price gapped more than 2% above where the signal
-  was measured, skip it. Pros don't buy panic.
-- **Cooldown** — Don't re-buy something sold in the last 5 days.
+A steadying anchor: **SPY** (US market), **IEF** (Treasuries), **GLD** (gold). Each follows the same 200-day trend rule — below its average, its money rotates to T-bills instead of riding it down.
 
-**How much it buys (risk-based position sizing):**
+### Cash & safety
 
-This is the most important professional habit. Amateurs put the same dollars
-in every stock. Pros size every position so it risks **the same small slice
-of the account** — by default 0.5% — if its stop is hit:
+- **T-bill harbor** — risk-off or idle cash parks in ultra-short T-bill ETFs (SGOV/BIL/USFR…), spread so no single one breaks the 25%-per-holding cap. Safe, and it earns the bill rate.
+- **$50,000/day invest cap** — total buy orders per day are capped (in `state/config.json` *and* enforced by `constitution.py`). Selling to reduce risk is **never** capped.
+- **No day trading** — it never buys and sells the same ticker on the same day.
 
-- A calm stock (small daily swings) → more shares
-- A jumpy stock (big daily swings) → fewer shares
-- Always capped at 10% of the account per position and 25% max per ticker
+### When it sells
 
-So one bad trade costs about half a percent. Ten bad trades in a row — an
-awful month — costs about 5%, not 50%.
+1. **Trend break** — a stock closes below its 50-day average → sell.
+2. **Market regime** — SPY below its 200-day average → stop picking stocks and exit them to safety.
+3. **Volatility brake** — jumpy markets → shrink risk exposure.
+4. **Drawdown brake** — account 15% below its peak → rotate everything to T-bills (this **rotates**, it does not freeze the bot).
+5. **Overweight trim** — a position grown well past its target gets trimmed back.
 
-### Selling Rules
+### No learning loop
 
-Four ways out, each with its Wall Street name:
+The strategy's parameters are **frozen on purpose** (in `state/config.json`). Tuning a strategy on a few dozen trades fits random noise, not skill. Change settings by hand, with a reason, and re-validate on paper.
 
-1. **Hard stop (stop loss)** — Down more than 8% from what we paid → sell.
-   Cut losses before they become disasters.
-2. **Trailing stop (chandelier exit)** — The stock fell roughly 3 "normal
-   daily swings" (ATRs) below its recent high → sell. This protects profits:
-   a stock that ran up 30% and starts breaking down gets sold while most of
-   the gain is still there.
-3. **Trend break** — Closed below its 50-day average → sell. The ride is over.
-4. **Overweight trim (rebalancing)** — Any position that grows past 20% of
-   the account gets trimmed back to 15%. Winners are great; one position
-   that can sink the whole boat is not.
+### Safety guardrails (never broken)
 
-### Reading the Room (Regime Filter)
+| Rule | Limit |
+|------|-------|
+| Max in one stock | 25% of the account |
+| Invested per day | $50,000 (buys only) |
+| Trades per day / week | 20 / 50 |
+| Day trading | Never (no same-day round trips) |
+| Order type | LIMIT + DAY only |
+| Account | Paper only |
 
-Before buying anything, the bot checks the weather — three separate checks,
-like a real risk desk:
-
-- **Market trend** — SPY below its own 200-day average? The whole market is
-  in a downtrend → **no new buys** (still manages exits).
-- **Market stress** — Market swinging more than ~30% annualized? Nervous
-  markets → **buys at half size**.
-- **Drawdown brake** — Your account more than 10% below its own high-water
-  mark? Something's not working → **no new buys** until it recovers. This is
-  how professional risk desks stop a bad streak from compounding.
-
-### How the Bot Learns
-
-After every run, the bot does homework (`code/learn.py`):
-
-1. **Grades every finished trade.** When a buy and its later sell have both
-   really filled, that's one finished trade. It records the profit or loss,
-   how long it was held, and which rule ended it — in `state/trade_reviews.jsonl`.
-2. **Looks for patterns** in its last 20 finished trades: Is it losing more
-   often than winning? Are the losses bigger than the wins?
-3. **Adjusts at most ONE setting by ONE small step** — for example, "require
-   stocks to beat SPY by 2.5% instead of 2%" — and writes down exactly why in
-   `state/strategy_changes.jsonl`. You can read its reasoning anytime.
-
-Three rules keep the learning honest:
-
-- **It needs evidence.** No changes until at least 10 finished trades.
-  (Changing strategy after 2 trades is superstition, not learning.)
-- **It moves slowly.** One setting, one small step, per day at most — and
-  only after at least 3 *new* finished trades since its last change, so the
-  same old losses can never push a setting twice.
-- **It has hard walls.** The settings live in `state/strategy_params.json`,
-  and the trading code clamps them to fixed safe ranges. Neither the learner
-  nor a typo can make the bot reckless.
-- **It can get scared but never greedy.** After 4 losses in a row it cuts
-  how much each trade risks, and restores it when results improve — but it
-  can never raise risk above the normal level. Only you can do that.
-
-The settings it tunes, in plain English:
-
-| Setting | Meaning | Normal | Allowed range |
-|---|---|---|---|
-| Buy bar | How much a stock must be up, and beat SPY by | 2% | 1% – 6% |
-| Stop loss | Worst loss allowed before selling | -8% | -5% – -12% |
-| Trailing stop | How far below its recent high a stock may fall | 3 ATRs | 2 – 4 |
-| Risk per trade | Slice of the account one trade may lose | 0.5% | 0.3% – 1% |
-
-(One more setting, the 5-day re-buy cooldown, lives in the same file but is
-**not** auto-tuned — you can edit it yourself, between 3 and 10 days.)
-
-Check what it's thinking anytime:
-
-```bash
-python3 code/learn.py --dry-run   # shows the analysis, changes nothing
-cat state/strategy_changes.jsonl  # every change it ever made, with reasons
-```
-
-### Safety Guardrails
-
-Hard limits that can **never** be broken:
-
-| Rule | Limit | Why |
-|------|-------|-----|
-| Max in one stock | 25% of portfolio | Don't over-concentrate risk |
-| Trades per day | 20 maximum | Avoid overtrading |
-| Trades per week | 50 maximum | Stay disciplined |
-| Order type | LIMIT only | Never market orders |
-| Account type | Paper only | Never real money |
-
-If any rule would be broken, the trade is automatically rejected.
+`constitution.py` checks every order and rejects any that breaks a rule.
 
 ---
 
 ## Checking Your Results
 
-### "Am I beating the market?" (one command)
+### Risk-adjusted report card
 
 ```bash
-python3 code/performance.py
+python3 code/metrics.py
 ```
 
-Prints a plain-English report card:
+Prints Sharpe ratio, max drawdown, volatility, and order fill rate — each next to SPY:
 
 ```
-PERFORMANCE REPORT — as of 2026-06-11 (started 2026-06-02)
-  Account value:   $99,432.87 (started at $100,000.00)
-  Your return:     -0.57%
-  SPY return:      +1.20% over the same period
-  Verdict:         You are BEHIND SPY by 1.77%.
-  Biggest drop from your peak so far: 0.57%
-  Orders: 4 filled, 1 expired/canceled, 0 not yet checked
+RISK-ADJUSTED REPORT — as of 2026-06-15 (started 2026-06-03, 9 days)
+  Account value:       $96,500.00   (total return -2.85%)
+  Sharpe ratio:        0.41   vs SPY 0.92
+  Max drawdown:        -4.54%   vs SPY -1.66%
+  Annualized vol:      8.20%   vs SPY 15.10%
+  LIMIT fill rate:     94%
+  Reminder: judge this on Sharpe / drawdown vs SPY, not on raw monthly return.
 ```
 
-The whole point of this project is to beat SPY (the "just buy the whole
-market" option). This command tells you honestly whether you are.
+**Why risk-adjusted?** A diversified, capped strategy aims to deliver a *smoother ride* — better return per unit of risk — not necessarily a bigger raw number every month. Judge it on Sharpe and drawdown, not on whether it beat SPY this week.
 
-### "Did my orders actually fill?" (one command)
+### Did my orders fill?
 
 ```bash
 python3 code/alpaca_client.py --reconcile
 ```
 
-A limit order can sit all day and expire without buying anything. This command
-asks Alpaca what really happened to every order and writes the truth (filled,
-expired, canceled, and at what price) into your trade records. The bot also
-does this automatically at the start of every morning run.
+A LIMIT order can sit all day and expire. This asks Alpaca what really happened and writes the truth into your records. The bot also does this at the start of every run.
 
-### View Live Trades
-Go to https://app.alpaca.markets/paper/dashboard
-- See all your open positions
-- Watch orders fill in real-time
-- Check profit/loss on each trade
-- Track your paper account balance
-
-### View Bot's Daily Log
-In your folder: `state/autopilot_runs/`
-
-Each day gets a file like `20260602-124530.json` showing:
-- Market conditions (SPY return, etc.)
-- All stocks it analyzed
-- Which trades it planned
-- Which orders were actually placed
-- Portfolio balance after trades
-
-### View All Trade History
-In your folder: `state/completed_trades/`
-
-Each file shows:
-- Buy or sell order
-- Stock symbol and quantity
-- Limit price set
-- When it was placed
-- Order ID from Alpaca
+### See it live
+- **Alpaca dashboard:** https://app.alpaca.markets/paper/dashboard
+- **Daily logs:** `state/runs/` (one JSON per run: regime, gates, planned trades, what was submitted)
+- **Trade history:** `state/completed_trades/`
 
 ---
 
-## Testing (Before Running Live)
+## Testing & Safety
 
-Want to see what the bot would do without actually trading? Easy:
-
-### Dry Run (Simulation - No Real Orders)
+### Dry run (no orders)
 ```bash
 bash code/run_daily.sh --dry-run
 ```
+Shows the full plan — what it would buy/sell and how much — without placing anything. Always dry-run first.
 
-Shows you the complete plan:
-- Which trades it would place
-- How much each would cost
-- Exactly what would happen
-- **But doesn't actually order anything**
-
-### Live Run (Real Orders)
+### Live run (places paper orders)
 ```bash
 bash code/run_daily.sh --execute
 ```
 
-Actually places orders on Alpaca for real.
-
-**Pro tip:** Always run `--dry-run` first to see what's coming.
+### Emergency stop
+```bash
+touch .HALT_TRADING      # stop placing any new orders
+rm .HALT_TRADING         # resume
+```
+`.HALT_TRADING` is a manual, human-only kill switch that freezes the whole book. (The automated drawdown brake is separate — it rotates to T-bills, it does not freeze trading.)
 
 ---
 
-## Stopping the Bot (Emergency Only)
-
-If you ever need to pause trading instantly:
-
-```bash
-touch .HALT_TRADING
-```
-
-This creates a "stop sign" file. The bot sees it and:
-- Stops placing new orders immediately
-- Still processes existing orders
-- Doesn't delete any open positions
-
-To resume trading:
-```bash
-rm .HALT_TRADING
-```
-
----
-
-## Understanding the Files
-
-When you install with `claude add paper-trader`, you get this structure:
+## The Files
 
 ```
 paper-trader/
 ├── code/
-│   ├── run_daily.sh          ← Main script (runs every morning at 10am ET)
-│   ├── autopilot.py          ← The trading strategy and decision logic
-│   ├── alpaca_client.py       ← Communicates with Alpaca's API
-│   ├── constitution.py        ← Safety checks (can't be overridden)
-│   └── performance.py         ← Report card: are you beating SPY?
-│
-├── .github/workflows/
-│   └── daily-trade.yml        ← The free cloud schedule (Option A)
+│   ├── run_daily.sh        ← daily driver (what the schedule runs)
+│   ├── autopilot.py        ← entry point: wires data in, submits orders
+│   ├── engine.py           ← the planner: picks stocks, sizes positions
+│   ├── signals.py          ← pure math: trend gates, brakes, momentum
+│   ├── metrics.py          ← risk-adjusted report card
+│   ├── alpaca_client.py    ← talks to Alpaca (paper), fetches prices
+│   ├── constitution.py     ← safety checks (can't be overridden)
+│   └── tests/test_strategy.py  ← unit tests for the strategy brain
 │
 ├── state/
-│   ├── pending_trades/        ← Trades waiting to be checked by constitution.py
-│   ├── completed_trades/      ← Trades that were actually placed with Alpaca
-│   ├── autopilot_runs/        ← Daily log of what happened each morning
-│   ├── portfolio.json         ← Your current positions and balance
-│   ├── portfolio_history.jsonl ← Record of all past positions
-│   └── watchlist.txt          ← Stocks to watch (you can edit this)
+│   ├── config.json         ← frozen strategy settings (75/25, $50k cap, limits)
+│   ├── watchlist.txt        ← stock candidates (edit this)
+│   ├── sectors.json         ← which sector each ticker is in (for the cap)
+│   ├── strategy_state.json  ← trend-gate memory between runs
+│   ├── runs/                ← one JSON per run (the journal)
+│   ├── pending_trades/      ← orders awaiting the constitution check
+│   ├── completed_trades/    ← orders actually sent to Alpaca
+│   ├── portfolio.json       ← current positions & balance
+│   └── portfolio_history.jsonl ← equity over time (for the report card)
 │
-├── .claude/
-│   ├── settings.json          ← Permissions (what Claude can do)
-│   ├── skills/                ← The daily-paper-trader skill
-│   └── agents/                ← Helper bots (research, risk check)
-│
-├── .env.example               ← Template (copy to .env and add your keys)
-├── CLAUDE.md                  ← The official rules (read this!)
-├── README.md                  ← This file
-└── requirements.txt           ← Python libraries needed
+├── docs/index.html          ← illustrated strategy docs (open in a browser)
+├── CLAUDE.md                ← the official rules
+├── MIGRATION_CHECKLIST.md   ← what to prove before real money
+├── .env.example             ← local credentials template
+└── requirements.txt         ← Python dependencies
 ```
 
-### What Each File Does
+### Customizing the watchlist
 
-| File | Purpose |
-|------|---------|
-| `run_daily.sh` | Main entry point. Calls the strategy, checks rules, places orders |
-| `autopilot.py` | The brain. Analyzes stocks, decides what to buy/sell |
-| `alpaca_client.py` | The messenger. Sends orders to Alpaca, gets market data |
-| `constitution.py` | The guardian. Checks every trade against safety rules |
-| `performance.py` | The report card. Compares your returns to SPY |
-| `daily-trade.yml` | The alarm clock. Tells GitHub to run the bot every weekday morning |
-| `watchlist.txt` | The targets. Which stocks to analyze each morning |
-| `portfolio.json` | Your positions. Updated after every trade |
-| `autopilot_runs/` | The journal. One file per morning showing what happened |
+Edit `state/watchlist.txt` (one ticker per line) — these are the candidates for the 75% stock sleeve. **Add each ticker to `state/sectors.json` too**, or the per-sector diversification cap can't protect you. The bot only buys names that pass the strategy's filters.
 
 ---
 
-## Customizing the Watchlist
+## Going to Real Money
 
-The bot watches specific stocks by default. Want to change them?
+Today this runs on **Alpaca paper money**. The honest path to real money is in **`MIGRATION_CHECKLIST.md`** — prove it on paper through at least one full market downturn-and-recovery, with solid risk-adjusted numbers, before risking a dollar.
 
-Edit `state/watchlist.txt` with your favorite stocks:
-
-```
-AAPL
-MSFT
-NVDA
-GOOGL
-TSLA
-META
-```
-
-One stock per line. The bot will automatically analyze your custom list. Add as many as you want — it will only trade if they meet the strategy criteria.
+**Robinhood note:** Robinhood now offers an "agentic" investment account (equities only) that an AI agent connects to via an **MCP connector** — but there is **no official Robinhood stock API**. To trade there you'd connect the connector at https://claude.ai/customize/connectors, fund a dedicated agentic account, and add a Robinhood execution layer (the strategy logic itself is broker-agnostic and wouldn't change). The strategy is already built to comply with those terms (equities only, cash account, no day trading, no options/margin).
 
 ---
 
 ## Common Questions
 
-### How much money do I need?
+**How much money do I need?** None — it's fake. Alpaca gives paper accounts $100,000.
 
-None! It's fake money. Alpaca gives everyone $100,000 in paper trading credit. You can trade like it's real without any risk.
+**Is this guaranteed to make money?** No. The market is unpredictable. This is an experiment in disciplined investing, not a money machine.
 
-### Can it lose money?
+**Is it a day trader?** No. It holds positions for weeks/months and never buys and sells the same stock the same day. It's an investor.
 
-Yes. Paper trading is practice, but the losses are fake. If the bot loses, you learn. If it wins, great! Either way, no real money is at risk.
+**Why only LIMIT orders?** A LIMIT order says "buy only at my price or better." Market orders take whatever price is available — risky in fast markets.
 
-### Is this guaranteed to make money?
+**Why 75% individual stocks?** That's the chosen, growth-tilted setup. It can outperform a plain index fund in good times — and fall harder in bad times. The sector/name/correlation caps and trend exits are what keep that risk contained. Want a calmer ride? Lower the caps or the daily invest amount in `state/config.json`.
 
-No. The stock market is unpredictable. This bot uses a simple momentum strategy that works sometimes and fails sometimes. Think of it as an experiment, not a guaranteed money maker.
+**What if the market is closed?** The bot checks first and does nothing on holidays/weekends.
 
-### Why LIMIT orders only?
-
-LIMIT orders let you say "I'll buy AAPL but only at $150 or less." Market orders just buy at whatever price is available — which can be bad during volatile markets. We're disciplined.
-
-### What if market is closed?
-
-The bot checks if the market is open before placing orders. If it's a holiday or weekend, it does nothing. Orders are only for market hours (9:30am - 4:00pm ET).
-
-### Can I run it without Claude Code?
-
-Yes, if you're comfortable with the command line:
-```bash
-python3 -m pip install -r requirements.txt
-bash code/run_daily.sh --execute
-```
-
-But Claude Code makes it easier because it runs in the cloud (you don't need to keep your laptop on).
-
-### What if I find a bug?
-
-Check the `state/autopilot_runs/` folder for the log. It shows exactly what happened. If something looks wrong:
-1. Report it with the log
-2. You can edit the strategy in `code/autopilot.py`
-3. Test changes with `--dry-run` first
-4. Use Claude Opus 4.8 to help debug and improve
-
-### Can I trade real money with this?
-
-**Not yet — and that's on purpose.** The code has three separate locks that all refuse real money:
-
-1. `alpaca_client.py` creates the connection with `paper=True` hard-coded — the Alpaca library then talks to the paper system no matter what.
-2. `_require_paper()` checks that your endpoint setting contains `paper-api.alpaca.markets` and exits if it doesn't.
-3. `constitution.py` re-checks the same thing before every single trade.
-
-**The honest path to real money looks like this:**
-
-1. **Run on paper for at least 3–6 months.** Anyone can get lucky for two weeks. Months of data is what tells you something.
-2. **Check `python3 code/performance.py` regularly.** If you're not beating SPY on paper, real money would just lose to SPY with extra steps — you'd be better off buying SPY and walking away.
-3. **Understand every trade.** Read the daily logs until nothing the bot does surprises you. If you can't explain why it bought something, you're not ready to fund it.
-4. **Only then**, if you still want to: the locks are the three places listed above, and you would remove them yourself, deliberately, understanding that you're taking the training wheels off. Start with a small amount you can fully afford to lose. Real trading also brings things paper trading hides: taxes on every sale, real fills that are worse than paper fills, and your own emotions when the number is real.
-
-This README won't walk you through removing the locks — that's a decision you should make slowly, not copy-paste. But everything else (the strategy, the limits, the daily routine, the logs) is exactly what you'd use with real money. That's the point of practicing this way.
-
-### Will it work during market crashes?
-
-Yes, but be aware: during huge crashes, limit prices might not fill (stock falls faster than your limit). The bot handles this correctly — it just keeps the order open or lets it expire.
-
----
-
-## Power User Features
-
-### Use Claude Opus 4.8 for Analysis
-
-Claude Opus 4.8 is the best model for:
-- Understanding market trends
-- Tuning the strategy
-- Analyzing why trades succeeded or failed
-- Getting smarter about which stocks to watch
-
-Ask it questions about your logs:
-> "Why did the bot sell MSFT yesterday? Was it the right call?"
-
-### Custom Strategy
-
-The trading logic is in `code/autopilot.py`. You can edit:
-- How much to buy/sell per trade
-- When to buy (different moving averages, different momentum thresholds)
-- When to sell (different loss thresholds)
-- Which stocks to ignore
-
-Just test with `--dry-run` before running `--execute`.
-
-### Manual Trades
-
-You can place trades manually via Alpaca's web dashboard. The bot won't interfere — it just adds to what you do.
-
-### Monitoring Routines
-
-The bot uses Claude Code routines to run automatically. Check:
-- https://claude.ai/code/routines to see scheduled runs
-- View logs of past runs
-- See any error messages
-- Re-run manually if needed
+**Can I trade real money?** Not yet, on purpose. `alpaca_client.py` is hard-wired to `paper=True`, and both it and `constitution.py` refuse any non-paper endpoint. See `MIGRATION_CHECKLIST.md`.
 
 ---
 
 ## Troubleshooting
 
-| Problem | Check First | Solution |
-|---------|-----|----------|
-| Bot isn't running | `.HALT_TRADING` file exists? | Delete it: `rm .HALT_TRADING` |
-| No trades placed | Run `--dry-run` to see plan | Check if market is open. Check logs. |
-| Orders not filling | Limit price set too low? | Check Alpaca dashboard for order status |
-| Python errors | Requirements installed? | Run `pip install -r requirements.txt` |
-| Settings not working | `.claude/settings.json` correct? | Check paths are relative (not hardcoded) |
-| Credentials rejected | Env vars set on the routine? | At claude.ai/code/routines, edit the routine's cloud environment and verify `ALPACA_API_KEY`, `ALPACA_SECRET_KEY`, `ALPACA_ENDPOINT` are set |
-
-### Reading the Logs
-
-When something goes wrong, check `state/autopilot_runs/` for the daily log:
-
-```json
-{
-  "timestamp_utc": "2026-06-02T16:43:22",
-  "mode": "execute",
-  "market_open": true,
-  "blocked": null,
-  "equity": 99873.67,
-  "cash": 80344.75,
-  "held": ["AVGO", "NVDA"],
-  "planned": [...],
-  "submitted": [...],
-  "diagnostics": [...]
-}
-```
-
-- **equity** = Total account value
-- **cash** = Money not invested
-- **held** = Stocks you own
-- **planned** = Trades the bot wanted to make
-- **submitted** = Orders actually placed
-- **diagnostics** = Data on each stock analyzed
+| Problem | Check | Fix |
+|---|---|---|
+| Bot isn't trading | Does `.HALT_TRADING` exist? | `rm .HALT_TRADING` |
+| No trades placed | `--dry-run` to see the plan | Market may be closed, or nothing passed the filters that day |
+| Orders not filling | Alpaca dashboard order status | LIMIT orders only fill at your price; they expire otherwise |
+| Python errors | Dependencies installed? | `pip install -r requirements.txt` |
+| Credentials rejected | Env vars on the routine? | At claude.ai/code/routines, check `ALPACA_API_KEY/SECRET_KEY/ENDPOINT` |
+| Deploying too slowly | `daily_invest_cap_usd` in `state/config.json` | Raise the daily cap |
 
 ---
 
-## The Rules (From CLAUDE.md)
+## The Rules (from CLAUDE.md)
 
-Read `CLAUDE.md` in the folder for the official rules. Quick summary:
-
-- **Paper money only** — Never real money
-- **Simple orders** — LIMIT + DAY only (no risky stuff)
-- **Position limits** — Max 25% in one stock, max 20 trades/day
-- **Honest logging** — Never hide losses or fake data
-- **Ask when stuck** — If rules don't cover something, ask before doing it
-
----
-
-## Tips for Success
-
-1. **Start with dry-runs** — Run `--dry-run` first to get comfortable
-2. **Watch the logs** — Read `state/autopilot_runs/` every day to learn
-3. **Check your portfolio** — Log into Alpaca daily to see positions
-4. **Be patient** — Momentum trading takes time. Don't expect instant profits
-5. **Keep learning** — Edit the strategy, test changes, experiment
-6. **Use Claude Opus 4.8** — It's the best brain for market analysis
-7. **Journal your trades** — Write down why each trade happened and what you learned
+- **Paper money only** — never real money
+- **LIMIT + DAY orders only** — no market orders, options, margin, shorts, or crypto
+- **Position limits** — max 25% in one ticker, ≤20 trades/day, ≤50/week, ≤$50k invested/day
+- **No day trading** — no same-day round trips
+- **Honest logging** — never hide losses or invent data
+- **Ask when stuck** — if the rules don't cover something, ask before acting
 
 ---
 
-## Next Steps
-
-1. ✅ Install with `claude add paper-trader`
-2. ✅ Set up Alpaca account and get API keys
-3. ✅ Add Alpaca env vars to your routine's cloud environment
-4. ✅ Run a dry-run to see the strategy
-5. ✅ Let it run automatically (10am ET weekdays)
-6. ✅ Check results in Alpaca and logs folder
-7. ✅ Tune the strategy as you learn
-
----
-
-## Need Help?
-
-- **About the code** — Ask Claude Code (type `/help`)
-- **About trading strategy** — Ask Claude Opus 4.8 (best model for this)
-- **About Alpaca API** — Visit https://docs.alpaca.markets
-- **About this bot** — Read `CLAUDE.md` for official rules and tech details
-
----
-
-**Made with ❤️ for learning, not for guaranteed profits.**
-
-Paper trading is practice. Have fun. Learn. Experiment. 🎯
+**Made with ❤️ for learning, not for guaranteed profits.** Paper trading is practice. 🎯
