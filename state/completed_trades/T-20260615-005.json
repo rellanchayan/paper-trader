@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260615-005",
+  "created_at_utc": "2026-06-15T18:52:46.198026+00:00",
+  "ticker": "MS",
+  "side": "BUY",
+  "qty": 27,
+  "limit_price": 222.0,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "MS: confirmed uptrend with relative strength edge of +12bps. Recent momentum (+13.9% vs SPY +2.2%) extends 3m (+40.8%) and 6m (+21.6%) gains. Profile: moderate volatility ($5.76 daily swing). Risk-adjusted score 1.07.",
+  "risk": "Momentum can reverse. Protected by: (1) hard stop at --8%, (2) trailing stop 3.0x ATR ($17.27), (3) trend break at SMA50 ($195.01).",
+  "strategy": "daily_momentum",
+  "score": 1.0709,
+  "status": "submitted",
+  "initial_stop": 204.73,
+  "alpaca_order_id": "22c9d397-7443-471b-9ede-4e3f9121d9d0",
+  "submitted_at_utc": "2026-06-15T18:52:46.847916+00:00"
+}

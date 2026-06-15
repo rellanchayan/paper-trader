@@ -1,17 +1,26 @@
 {
-  "timestamp_utc": "2026-06-15T18:16:09.744112+00:00",
-  "equity": 96511.94,
-  "cash": 64929.55,
-  "buying_power": 348148.88,
+  "timestamp_utc": "2026-06-15T18:51:47.354556+00:00",
+  "equity": 96507.6,
+  "cash": 79429.69,
+  "buying_power": 365536.9,
   "positions": [
     {
       "ticker": "SPY",
-      "qty": 20.0,
+      "qty": 16.0,
       "avg_entry_price": 756.29,
-      "market_value": 15104.6,
-      "unrealized_pl": -21.2,
-      "unrealized_plpc": -0.0014,
-      "pct_of_portfolio": 0.15650498788025605
+      "market_value": 12081.536,
+      "unrealized_pl": -19.104,
+      "unrealized_plpc": -0.00158,
+      "pct_of_portfolio": 0.12518740492976718
+    },
+    {
+      "ticker": "TROW",
+      "qty": 45.0,
+      "avg_entry_price": 109.93,
+      "market_value": 4945.95,
+      "unrealized_pl": -0.9,
+      "unrealized_plpc": -0.00018,
+      "pct_of_portfolio": 0.05124933165885381
     },
     {
       "ticker": "USFR",
@@ -20,26 +29,8 @@
       "market_value": 50.42,
       "unrealized_pl": -0.01,
       "unrealized_plpc": -0.0002,
-      "pct_of_portfolio": 0.0005224224070099513
-    },
-    {
-      "ticker": "VEA",
-      "qty": 212.0,
-      "avg_entry_price": 72.52,
-      "market_value": 15349.86,
-      "unrealized_pl": -24.38,
-      "unrealized_plpc": -0.00159,
-      "pct_of_portfolio": 0.15904622785533065
-    },
-    {
-      "ticker": "VNQ",
-      "qty": 11.0,
-      "avg_entry_price": 98.39,
-      "market_value": 1077.505,
-      "unrealized_pl": -4.785,
-      "unrealized_plpc": -0.00442,
-      "pct_of_portfolio": 0.011164473535606062
+      "pct_of_portfolio": 0.0005224459006337325
     }
   ],
-  "drawdown_from_hwm": 0.029787859453054975
+  "drawdown_from_hwm": 0.02983148846610735
 }

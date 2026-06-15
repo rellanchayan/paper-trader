@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260615-006",
+  "created_at_utc": "2026-06-15T18:52:46.923340+00:00",
+  "ticker": "GS",
+  "side": "BUY",
+  "qty": 4,
+  "limit_price": 1081.72,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "GS: confirmed uptrend with relative strength edge of +12bps. Recent momentum (+13.9% vs SPY +2.2%) extends 3m (+36.1%) and 6m (+18.7%) gains. Profile: moderate volatility ($35.87 daily swing). Risk-adjusted score 0.82.",
+  "risk": "Momentum can reverse. Protected by: (1) hard stop at --8%, (2) trailing stop 3.0x ATR ($107.61), (3) trend break at SMA50 ($961.08).",
+  "strategy": "daily_momentum",
+  "score": 0.8199,
+  "status": "submitted",
+  "initial_stop": 974.11,
+  "alpaca_order_id": "36325915-e05d-4135-b5f0-5539a9ee0310",
+  "submitted_at_utc": "2026-06-15T18:52:47.579769+00:00"
+}

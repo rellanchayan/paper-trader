@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260615-007",
+  "created_at_utc": "2026-06-15T18:52:47.655878+00:00",
+  "ticker": "CAT",
+  "side": "BUY",
+  "qty": 4,
+  "limit_price": 936.79,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "CAT: confirmed uptrend with relative strength edge of +3bps. Recent momentum (+5.5% vs SPY +2.2%) extends 3m (+33.9%) and 6m (+49.7%) gains. Profile: volatile volatility ($34.96 daily swing). Risk-adjusted score 0.74.",
+  "risk": "Momentum can reverse. Protected by: (1) hard stop at --8%, (2) trailing stop 3.0x ATR ($104.87), (3) trend break at SMA50 ($859.60).",
+  "strategy": "daily_momentum",
+  "score": 0.7397,
+  "status": "submitted",
+  "initial_stop": 831.92,
+  "alpaca_order_id": "9ee40a4b-919f-47e0-ac7f-ed214f7723d9",
+  "submitted_at_utc": "2026-06-15T18:52:48.315158+00:00"
+}

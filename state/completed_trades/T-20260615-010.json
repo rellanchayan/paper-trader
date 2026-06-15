@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260615-010",
+  "created_at_utc": "2026-06-15T18:52:49.948946+00:00",
+  "ticker": "FCX",
+  "side": "BUY",
+  "qty": 46,
+  "limit_price": 70.23,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "FCX: confirmed uptrend with relative strength edge of +9bps. Recent momentum (+11.5% vs SPY +2.2%) extends 3m (+21.2%) and 6m (+45.9%) gains. Profile: volatile volatility ($3.43 daily swing). Risk-adjusted score 0.46.",
+  "risk": "Momentum can reverse. Protected by: (1) hard stop at --8%, (2) trailing stop 3.0x ATR ($10.30), (3) trend break at SMA50 ($64.20).",
+  "strategy": "daily_momentum",
+  "score": 0.4568,
+  "status": "submitted",
+  "initial_stop": 59.93,
+  "alpaca_order_id": "6eae169d-fae8-4f94-9039-510de93f3ff6",
+  "submitted_at_utc": "2026-06-15T18:52:50.604768+00:00"
+}

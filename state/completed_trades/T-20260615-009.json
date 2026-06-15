@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260615-009",
+  "created_at_utc": "2026-06-15T18:52:49.124354+00:00",
+  "ticker": "PLD",
+  "side": "BUY",
+  "qty": 56,
+  "limit_price": 148.59,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "PLD: confirmed uptrend with relative strength edge of +4bps. Recent momentum (+5.7% vs SPY +2.2%) extends 3m (+10.8%) and 6m (+13.7%) gains. Profile: steady volatility ($2.86 daily swing). Risk-adjusted score 0.50.",
+  "risk": "Momentum can reverse. Protected by: (1) hard stop at --8%, (2) trailing stop 3.0x ATR ($8.57), (3) trend break at SMA50 ($142.23).",
+  "strategy": "daily_momentum",
+  "score": 0.503,
+  "status": "submitted",
+  "initial_stop": 140.02,
+  "alpaca_order_id": "f7c3ac48-985d-47ea-ba16-fe2304457f13",
+  "submitted_at_utc": "2026-06-15T18:52:49.872486+00:00"
+}

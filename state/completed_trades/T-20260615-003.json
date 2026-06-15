@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260615-003",
+  "created_at_utc": "2026-06-15T18:52:44.717176+00:00",
+  "ticker": "MRVL",
+  "side": "BUY",
+  "qty": 4,
+  "limit_price": 309.96,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "MRVL: confirmed uptrend with relative strength edge of +73bps. Recent momentum (+75.0% vs SPY +2.2%) extends 3m (+238.1%) and 6m (+246.2%) gains. Profile: volatile volatility ($33.99 daily swing). Risk-adjusted score 2.01.",
+  "risk": "Momentum can reverse. Protected by: (1) hard stop at --8%, (2) trailing stop 3.0x ATR ($101.98), (3) trend break at SMA50 ($187.04).",
+  "strategy": "daily_momentum",
+  "score": 2.0121,
+  "status": "submitted",
+  "initial_stop": 207.98,
+  "alpaca_order_id": "b8f4f20f-3d1c-49da-ab87-d1870bc82f9d",
+  "submitted_at_utc": "2026-06-15T18:52:45.380893+00:00"
+}

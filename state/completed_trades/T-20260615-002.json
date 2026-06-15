@@ -1,0 +1,18 @@
+{
+  "trade_id": "T-20260615-002",
+  "created_at_utc": "2026-06-15T18:52:43.985184+00:00",
+  "ticker": "USFR",
+  "side": "SELL",
+  "qty": 1,
+  "limit_price": 50.41,
+  "order_type": "LIMIT",
+  "time_in_force": "DAY",
+  "reason": "USFR: only 0.1% of portfolio ($50) \u2014 position is too small to influence performance. Liquidating to reduce noise.",
+  "risk": "Tiny position has negligible impact.",
+  "strategy": "daily_momentum",
+  "score": 1.0,
+  "status": "submitted",
+  "exit_rule": "position_too_small",
+  "alpaca_order_id": "5e4077a0-ae02-4e5c-af46-119bd7f34f2b",
+  "submitted_at_utc": "2026-06-15T18:52:44.641365+00:00"
+}
