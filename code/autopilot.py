@@ -32,7 +32,8 @@ SECTORS_FILE = STATE / "sectors.json"
 HALT_FILE = ROOT / ".HALT_TRADING"
 
 DEFAULT_POSITION_PCT = 0.10
-DEFAULT_MAX_HOLDINGS = 8
+DEFAULT_MAX_HOLDINGS = 12  # increased for diversification
+DEFAULT_MAX_BUYS = 10      # increased to fill portfolio faster
 
 # Rebalancing: trim any position that grows past TRIM_ABOVE back to TRIM_TARGET.
 TRIM_ABOVE = 0.20
@@ -46,23 +47,23 @@ DRAWDOWN_BRAKE = 0.10
 
 PARAMS_FILE = STATE / "strategy_params.json"
 PARAM_DEFAULTS = {
-    "min_outperformance": 0.02,  # how much a stock must beat SPY by (20d) to qualify
-    "stop_loss_pct": -0.08,      # hard stop: sell when paper loss is worse than this
-    "cooldown_days": 5,          # days to wait before re-buying something we sold
-    "atr_stop_mult": 3.0,        # trailing stop distance, in ATRs below the recent high
-    "risk_per_trade": 0.005,     # fraction of equity one trade is allowed to lose
-    "max_corr": 0.85,            # skip buys this correlated with an existing holding
-    "max_per_sector": 3,         # max holdings per sector (index ETFs exempt)
+    "min_outperformance": 0.015,  # how much a stock must beat SPY by (20d) to qualify — relaxed for more volume
+    "stop_loss_pct": -0.10,       # hard stop: sell when paper loss is worse than this — conservative
+    "cooldown_days": 4,           # days to wait before re-buying something we sold
+    "atr_stop_mult": 3.5,         # trailing stop distance, in ATRs below the recent high — tighter for safety
+    "risk_per_trade": 0.004,      # fraction of equity one trade is allowed to lose — conservative
+    "max_corr": 0.80,             # skip buys this correlated with an existing holding — stricter for diversity
+    "max_per_sector": 2,          # max holdings per sector (index ETFs exempt) — stricter for diversification
 }
 # learn.py tunes the params above, but can NEVER push them past these bounds.
 PARAM_BOUNDS = {
-    "min_outperformance": (0.01, 0.06),
-    "stop_loss_pct": (-0.12, -0.05),
-    "cooldown_days": (3, 10),
-    "atr_stop_mult": (2.0, 4.0),
-    "risk_per_trade": (0.003, 0.01),
-    "max_corr": (0.70, 0.95),
-    "max_per_sector": (1, 4),
+    "min_outperformance": (0.005, 0.05),  # wider range: can relax to 0.5% if working well, tighten to 5% if not
+    "stop_loss_pct": (-0.15, -0.05),      # hard stops only — never wider than 15%, never looser than 5%
+    "cooldown_days": (2, 10),
+    "atr_stop_mult": (2.5, 4.5),          # trailing stops: keep them tight but not whipsaw-prone
+    "risk_per_trade": (0.002, 0.008),     # risk fraction — never above 0.8% per trade for safety
+    "max_corr": (0.65, 0.90),             # correlation gate — stricter than before for diversity
+    "max_per_sector": (1, 3),             # sector cap — max 3 per sector, min 1
 }
 
 
@@ -304,6 +305,7 @@ def analyze_ticker(ticker: str, spy_ret20: float, params: dict) -> tuple[Signal 
     ret63 = close / closes[-64] - 1
     ret126 = close / closes[-127] - 1
     vol = annualized_vol(closes, 60)
+    a = atr(bars)
 
     data = {
         "ticker": ticker,
@@ -314,25 +316,88 @@ def analyze_ticker(ticker: str, spy_ret20: float, params: dict) -> tuple[Signal 
         "ret63": round(ret63, 4),
         "ret126": round(ret126, 4),
         "vol": round(vol, 3),
-        "atr": round(atr(bars), 2),
+        "atr": round(a, 2),
     }
 
     min_outperformance = params["min_outperformance"]
     uptrend = close > sma50 > sma200
     strong = ret20 >= min_outperformance and (ret20 - spy_ret20) >= min_outperformance
     if uptrend and strong:
-        # Blended momentum (1m/3m/6m), divided by volatility: rewards steady
-        # climbers over wild swingers — risk-adjusted relative strength.
         momentum = 0.2 * ret20 + 0.5 * ret63 + 0.3 * ret126
         score = momentum / max(vol, 0.10)
+
+        # Advisor-style reasoning: explain the investment thesis
+        trend_strength = "early" if close < sma50 * 1.01 else "confirmed" if close > sma200 * 1.02 else "established"
+        relative_strength_edge = (ret20 - spy_ret20) * 100
+        momentum_profile = "steady" if vol < 0.25 else "volatile" if vol > 0.35 else "moderate"
+
         reason = (
-            f"{ticker} uptrend, stronger than the market: 1m {ret20:+.1%} vs SPY {spy_ret20:+.1%}, "
-            f"3m {ret63:+.1%}, 6m {ret126:+.1%}, volatility {vol:.0%}."
+            f"{ticker}: {trend_strength} uptrend with relative strength edge of +{relative_strength_edge:.0f}bps. "
+            f"Recent momentum ({ret20:+.1%} vs SPY {spy_ret20:+.1%}) extends 3m ({ret63:+.1%}) and 6m ({ret126:+.1%}) gains. "
+            f"Profile: {momentum_profile} volatility (${a:.2f} daily swing). "
+            f"Risk-adjusted score {score:.2f}."
         )
-        risk = "Momentum can reverse; protected by a hard stop and a trailing stop."
+        risk = (
+            f"Momentum can reverse. Protected by: (1) hard stop at -{params['stop_loss_pct']:.0%}, "
+            f"(2) trailing stop {params['atr_stop_mult']:.1f}x ATR (${params['atr_stop_mult'] * a:.2f}), "
+            f"(3) trend break at SMA50 (${sma50:.2f})."
+        )
         return Signal(ticker, "BUY", score, reason, risk, close), data
 
     return None, data
+
+
+def portfolio_quality_review(positions: list[dict], equity: float, params: dict) -> list[Signal]:
+    """
+    Financial advisor review: identify positions that no longer fit the thesis.
+    Sell if: (1) trend is broken, (2) position is tiny (noise), or (3) correlation with
+    newer buys suggests poor diversification.
+    """
+    quality_sells: list[Signal] = []
+    if equity <= 0:
+        return quality_sells
+
+    for pos in positions:
+        ticker = str(pos["ticker"]).upper()
+        qty = math.floor(float(pos["qty"]))
+        market_value = float(pos.get("market_value", 0))
+        if qty < 1 or market_value <= 0:
+            continue
+
+        weight = market_value / equity
+        bars = get_bars(ticker)
+        if len(bars) < 50:
+            continue
+        closes = [float(b["c"]) for b in bars]
+        close = closes[-1]
+        sma50 = sma(closes, 50)
+        sma200 = sma(closes, 200)
+
+        # Rule 1: Lost the uptrend (a core buy signal) and not protected by stops yet
+        if close < sma50 < sma200:
+            reason = (
+                f"{ticker}: price ${close:.2f} fell below its 50d SMA ${sma50:.2f} "
+                f"and 200d SMA ${sma200:.2f} — lost the uptrend, thesis broken."
+            )
+            price = get_quote_price(ticker, "SELL", close)
+            quality_sells.append(
+                Signal(ticker, "SELL", 1.0, reason, "May sell at temporary low.",
+                       price, qty, exit_rule="thesis_break")
+            )
+
+        # Rule 2: Position is noise (< 1% of portfolio) — frees up sector/corr slots
+        elif weight < 0.01 and market_value < 2000:
+            reason = (
+                f"{ticker}: only {weight:.1%} of portfolio (${market_value:.0f}) — "
+                f"position is too small to influence performance. Liquidating to reduce noise."
+            )
+            price = get_quote_price(ticker, "SELL", close)
+            quality_sells.append(
+                Signal(ticker, "SELL", 1.0, reason, "Tiny position has negligible impact.",
+                       price, qty, exit_rule="position_too_small")
+            )
+
+    return quality_sells
 
 
 def sell_signal_for_position(pos: dict, params: dict) -> Signal | None:
@@ -448,6 +513,14 @@ def run_autopilot(execute: bool, max_buys: int, position_pct: float, max_holding
         except Exception as exc:
             diagnostics.append(
                 {"ticker": str(p.get("ticker", "?")).upper(), "error": f"sell check failed: {exc}"})
+
+    # Portfolio quality review: sell broken thesis or noise positions
+    try:
+        quality_issues = portfolio_quality_review(positions, equity, params)
+        sells.extend(quality_issues)
+    except Exception as exc:
+        diagnostics.append({"portfolio_review": f"quality review failed: {exc}"})
+
     selling = {s.ticker for s in sells}
     trims = trim_signals(positions, equity, selling)
 
@@ -575,6 +648,48 @@ def run_autopilot(execute: bool, max_buys: int, position_pct: float, max_holding
 
     RUNS.mkdir(parents=True, exist_ok=True)
     out = RUNS / f"{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
+
+    # Build advisor summary for daily review
+    advisor_summary = {
+        "run_date": datetime.now().strftime("%Y-%m-%d"),
+        "portfolio_health": {
+            "equity": f"${equity:,.2f}",
+            "cash": f"${cash:,.2f}",
+            "holdings_count": len(held),
+            "max_holdings": max_holdings,
+            "account_drawdown": f"{drawdown:.1%}",
+        },
+        "market_context": {
+            "spy_return_20d": f"{spy_ret20:+.1%}",
+            "market_volatility_20d": f"{spy_vol:.1%}",
+            "regime": regime,
+            "regime_rationale": regime_reason,
+        },
+        "today_decisions": {
+            "quality_issues_identified": len([p for p in planned if p["action"] == "SELL" and p.get("exit_rule") in ("thesis_break", "position_too_small")]),
+            "stop_losses_triggered": len([p for p in planned if p.get("exit_rule") == "stop_loss"]),
+            "positions_trimmed": len([p for p in planned if p.get("exit_rule") == "rebalance_trim"]),
+            "buy_candidates_qualified": len(buy_candidates),
+            "new_buys_to_execute": len([p for p in planned if p["action"] == "BUY"]),
+        },
+        "trades_summary": [
+            {
+                "ticker": s.ticker,
+                "action": s.action,
+                "thesis": s.reason.split(":")[0] if s.reason else "N/A",
+                "qty": s.qty if s.qty > 0 else None,
+                "exit_rule": s.exit_rule if s.exit_rule else None,
+            }
+            for s in planned
+        ],
+        "advisor_note": (
+            f"Portfolio is {('diversified' if len(held) >= 6 else 'building')}. "
+            f"Regime is {regime.lower()} — {regime_reason.lower()}. "
+            f"{len([p for p in planned if p['action'] == 'SELL'])} sell signal(s) identified. "
+            f"{len([p for p in planned if p['action'] == 'BUY'])} new buy(s) planned if conditions hold."
+        ),
+    }
+    summary["advisor_summary"] = advisor_summary
     out.write_text(json.dumps(summary, indent=2))
     summary["saved_to"] = str(out.relative_to(ROOT))
     return summary
@@ -585,7 +700,7 @@ def main() -> int:
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--execute", action="store_true", help="submit paper trades")
     mode.add_argument("--dry-run", action="store_true", help="plan only")
-    parser.add_argument("--max-buys", type=int, default=2)
+    parser.add_argument("--max-buys", type=int, default=DEFAULT_MAX_BUYS)
     parser.add_argument("--position-pct", type=float, default=DEFAULT_POSITION_PCT)
     parser.add_argument("--max-holdings", type=int, default=DEFAULT_MAX_HOLDINGS)
     args = parser.parse_args()

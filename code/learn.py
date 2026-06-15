@@ -157,6 +157,16 @@ def stats_for(trips: list[dict]) -> dict:
         entry["win_rate"] = round(entry["wins"] / entry["trades"], 3)
         entry["avg_pnl_pct"] = round(entry.pop("pnl_pct_sum") / entry["trades"], 4)
 
+    by_ticker: dict[str, dict] = {}
+    for t in trips:
+        ticker = t["ticker"]
+        entry = by_ticker.setdefault(ticker, {"trades": 0, "wins": 0, "total_pnl": 0.0})
+        entry["trades"] += 1
+        entry["wins"] += 1 if t["win"] else 0
+        entry["total_pnl"] += t["pnl"]
+    for ticker, entry in by_ticker.items():
+        entry["win_rate"] = round(entry["wins"] / entry["trades"], 3) if entry["trades"] > 0 else 0
+
     losing_streak = 0
     for t in reversed(trips):
         if t["win"]:
@@ -168,9 +178,11 @@ def stats_for(trips: list[dict]) -> dict:
         "win_rate": round(len(wins) / len(trips), 3) if trips else None,
         "avg_win_pct": round(sum(t["pnl_pct"] for t in wins) / len(wins), 4) if wins else None,
         "avg_loss_pct": round(sum(t["pnl_pct"] for t in losses) / len(losses), 4) if losses else None,
+        "profit_factor": round(sum(t["pnl"] for t in wins) / abs(sum(t["pnl"] for t in losses)), 3) if losses and sum(t["pnl"] for t in losses) != 0 else None,
         "losing_streak": losing_streak,
         "total_pnl": round(sum(t["pnl"] for t in trips), 2),
         "by_rule": by_rule,
+        "by_ticker": by_ticker,
     }
 
 
@@ -184,7 +196,9 @@ def propose_change(stats: dict, params: dict) -> tuple[dict, str] | None:
     win_rate = stats["win_rate"]
     avg_win = stats["avg_win_pct"]
     avg_loss = stats["avg_loss_pct"]
+    profit_factor = stats.get("profit_factor")
     by_rule = stats.get("by_rule", {})
+    by_ticker = stats.get("by_ticker", {})
 
     # 0. Capital preservation first: a losing streak means risk less per trade.
     #    (The learner can cut risk and later restore it, but never raise it
@@ -223,6 +237,15 @@ def propose_change(stats: dict, params: dict) -> tuple[dict, str] | None:
                       f"(win rate {trail['win_rate']:.0%}) — it is cutting too early. "
                       f"Widening it to {new:g} ATRs (was {params['atr_stop_mult']:g}).")
             return {"atr_stop_mult": new}, reason
+
+    # 3b. If profit factor is strong (wins > 1.5x losses), ease off restrictions.
+    if profit_factor is not None and profit_factor > 1.5:
+        if params["min_outperformance"] > PARAM_DEFAULTS["min_outperformance"]:
+            new = max(_clamp("min_outperformance", params["min_outperformance"] - STEPS["min_outperformance"]),
+                      PARAM_DEFAULTS["min_outperformance"])
+            reason = (f"Profit factor is strong ({profit_factor:.2f}x) — easing the entry bar "
+                      f"to {new:.1%} (was {params['min_outperformance']:.1%}) to capture more setups.")
+            return {"min_outperformance": new}, reason
 
     # 4. Strategy is working well -> relax one previously-tightened setting,
     #    one step back toward its default (risk gets restored first).
@@ -319,11 +342,25 @@ def main() -> int:
             parts.append(f"avg win {s['avg_win_pct']:+.1%}")
         if s["avg_loss_pct"] is not None:
             parts.append(f"avg loss {s['avg_loss_pct']:+.1%}")
+        if s.get("profit_factor"):
+            parts.append(f"profit factor {s['profit_factor']:.2f}x")
         parts.append(f"total P&L ${s['total_pnl']:,.2f}")
         print(f"  Last {s['trades']} trades: " + ", ".join(parts))
+
+        # Show exit rule breakdown
         for rule, r in sorted(s["by_rule"].items()):
             print(f"    exits via {rule}: {r['trades']} trades, "
                   f"win rate {r['win_rate']:.0%}, avg {r['avg_pnl_pct']:+.1%}")
+
+        # Show best/worst performers
+        if s.get("by_ticker"):
+            by_ticker = s["by_ticker"]
+            best = sorted(by_ticker.items(), key=lambda x: x[1]["total_pnl"], reverse=True)[:3]
+            worst = sorted(by_ticker.items(), key=lambda x: x[1]["total_pnl"])[:3]
+            if best:
+                print(f"  Best performers: {', '.join(f\"{t[0]} ({t[1]['trades']}t, +${t[1]['total_pnl']:.0f})\" for t in best)}")
+            if worst and worst[0][1]["total_pnl"] < 0:
+                print(f"  Worst performers: {', '.join(f\"{t[0]} ({t[1]['trades']}t, ${t[1]['total_pnl']:.0f})\" for t in worst)}")
     print(f"  Current settings: buy bar {params['min_outperformance']:.1%} over SPY, "
           f"stop loss {params['stop_loss_pct']:.1%}, trail {params['atr_stop_mult']:g} ATRs, "
           f"risk/trade {params['risk_per_trade']:.1%}, cooldown {params['cooldown_days']}d")

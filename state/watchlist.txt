@@ -1,31 +1,74 @@
-SPY
-QQQ
+# S&P 500 Diversified Watchlist — updated 2026-06-15
+# Sectors: Technology, Healthcare, Financials, Energy, Industrials, Cons Staples, Cons Disc, Materials, Real Estate, Utilities, Comm Services
+# Goal: 40-50 liquid large-cap stocks for trend/momentum screening
+
+# Technology & Software (12)
 AAPL
 MSFT
 NVDA
-AMZN
-META
 GOOGL
+GOOG
+META
+ADBE
+CRM
+SNOWFLAKE
+TSLA
+AMD
 AVGO
-LLY
-JPM
-COST
-# --- Added 2026-06-03: candidates for next 3 positions ---
-MRVL
-GE
-GEV
-CAT
-XOM
-WMT
-# --- Added 2026-06-12: sector diversification (so the bot has good
-# candidates outside tech; see state/sectors.json) ---
-UNH
+
+# Healthcare & Pharma (8)
 JNJ
-V
-HD
+UNH
+PFE
+ABBV
+MRK
+LLY
+TMO
+VRTX
+
+# Financials & Banking (8)
+JPM
+BAC
+WFC
+GS
+MS
+SCHW
+ICE
+TROW
+
+# Industrials & Transportation (6)
+BA
+CAT
+LMT
+MMM
+RTX
+NSC
+
+# Energy & Materials (6)
+XOM
+CVX
+COP
+FCX
+CLF
+NEM
+
+# Consumer & Retail (6)
+AMZN
+WMT
+MCD
+KO
 PG
-ORCL
+COST
+
+# Real Estate & Infrastructure (4)
+PLD
+SPG
+AMT
+CCI
+
+# Utilities & Staples (4)
 NEE
-LIN
-UNP
-NFLX
+D
+SRE
+XEL
+
