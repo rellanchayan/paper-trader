@@ -666,17 +666,17 @@ def run_autopilot(execute: bool, max_buys: int, position_pct: float, max_holding
             "regime_rationale": regime_reason,
         },
         "today_decisions": {
-            "quality_issues_identified": len([p for p in planned if p["action"] == "SELL" and p.get("exit_rule") in ("thesis_break", "position_too_small")]),
-            "stop_losses_triggered": len([p for p in planned if p.get("exit_rule") == "stop_loss"]),
-            "positions_trimmed": len([p for p in planned if p.get("exit_rule") == "rebalance_trim"]),
+            "quality_issues_identified": len([p for p in planned if p.action == "SELL" and p.exit_rule in ("thesis_break", "position_too_small")]),
+            "stop_losses_triggered": len([p for p in planned if p.exit_rule == "stop_loss"]),
+            "positions_trimmed": len([p for p in planned if p.exit_rule == "rebalance_trim"]),
             "buy_candidates_qualified": len(buy_candidates),
-            "new_buys_to_execute": len([p for p in planned if p["action"] == "BUY"]),
+            "new_buys_to_execute": len([p for p in planned if p.action == "BUY"]),
         },
         "trades_summary": [
             {
                 "ticker": s.ticker,
                 "action": s.action,
-                "thesis": s.reason.split(":")[0] if s.reason else "N/A",
+                "reason": s.reason[:80] if s.reason else "N/A",
                 "qty": s.qty if s.qty > 0 else None,
                 "exit_rule": s.exit_rule if s.exit_rule else None,
             }
@@ -685,8 +685,8 @@ def run_autopilot(execute: bool, max_buys: int, position_pct: float, max_holding
         "advisor_note": (
             f"Portfolio is {('diversified' if len(held) >= 6 else 'building')}. "
             f"Regime is {regime.lower()} — {regime_reason.lower()}. "
-            f"{len([p for p in planned if p['action'] == 'SELL'])} sell signal(s) identified. "
-            f"{len([p for p in planned if p['action'] == 'BUY'])} new buy(s) planned if conditions hold."
+            f"{len([p for p in planned if p.action == 'SELL'])} sell signal(s) identified. "
+            f"{len([p for p in planned if p.action == 'BUY'])} new buy(s) planned if conditions hold."
         ),
     }
     summary["advisor_summary"] = advisor_summary
